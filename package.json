@@ -1,0 +1,17 @@
+{
+  "name": "web-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1",
+      "HeThongChinh": "cd HeThongChinh && npm start",
+      "HeThongPhu": "cd HeThongPhu && npm start",
+      "dev": "concurrently \"npm run HeThongChinh\" \"npm run HeThongPhu \""
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
