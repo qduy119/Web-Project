@@ -1,13 +1,14 @@
 require("dotenv").config({ path: "../.env" });
 const express = require("express");
 const hbsEngine = require("express-handlebars");
+const helpers = require('./services/handlebarsHelpers');
 const morgan = require("morgan");
 const path = require("path");
 const session = require("express-session");
 const { connectDB } = require("./utils/db");
 const cookieParser = require("cookie-parser");
 const viewRouter = require("./router/viewRouter");
-const adminHomeRouter = require("./router/admin/homeRouter");
+const adminRouter = require("./router/admin/adminRouter");
 
 const app = express();
 
@@ -32,20 +33,25 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static("www"));
 
-app.engine(
-    "hbs",
-    hbsEngine.engine({
-        extname: "hbs",
-        helpers: {},
-    })
-);
+const hbs = hbsEngine.create({
+    //defaultLayout: '_layout' ,
+    extname: 'hbs',
+    layoutsDir: path.join(__dirname, 'views/layouts/'),
+    helpers: {
+      ...helpers.helpers,
+      subtract: helpers.subtract,
+      add: helpers.add,
+      eq: helpers.eq
+    }
+  });
 
-app.set("view engine", "hbs");
-app.set("views", path.join(__dirname, "views"));
+app.engine('hbs', hbs.engine);
+app.set('view engine', 'hbs');
+app.set('views', path.join(__dirname, 'views'));
 
 // routing
 app.use("/", viewRouter);
-app.use("/admin", adminHomeRouter);
+app.use("/admin", adminRouter);
 
 app.all("*", (req, res, next) => {
     const err = new Error(`Can't find ${req.originalUrl} on server`);
@@ -61,6 +67,7 @@ app.use((err, req, res, next) => {
 });
 
 connectDB();
+
 
 app.listen(PORT, () => {
     console.log(`Main server listening on ${PORT}`);
