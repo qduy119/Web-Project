@@ -7,6 +7,7 @@ const session = require("express-session");
 const { connectDB } = require("./utils/db");
 const cookieParser = require("cookie-parser");
 const viewRouter = require("./router/viewRouter");
+const adminHomeRouter = require("./router/admin/homeRouter");
 
 const app = express();
 
@@ -29,7 +30,7 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(express.static("public"));
+app.use(express.static("www"));
 
 app.engine(
     "hbs",
@@ -42,7 +43,9 @@ app.engine(
 app.set("view engine", "hbs");
 app.set("views", path.join(__dirname, "views"));
 
+// routing
 app.use("/", viewRouter);
+app.use("/admin", adminHomeRouter);
 
 app.all("*", (req, res, next) => {
     const err = new Error(`Can't find ${req.originalUrl} on server`);
