@@ -4,59 +4,29 @@
         <form class="my-3">
             <div class="row d-flex align-items-center">
                 <div class="col-5">
-                <input type="text" class="form-control" name="search">
-            </div>
-            <div class="col-4">
-                <input type="submit" value="Search" class="btn btn-success">
-            </div>
-            <div class="col-3">
-                <td><a href="" class="btn btn-info">Create</a></td>
-            </div>
-            
+                    <input type="text" class="form-control" name="search">
+                </div>
+                <div class="col-4">
+                    <input type="submit" value="Search" class="btn btn-success">
+                </div>
+                <div class="col-3">
+                    <td><a href="/admin/category/create" class="btn btn-info">Create</a></td>
+                </div>
+
             </div>
         </form>
-        <div class="table-responsive">
-            <table class="table table-hover table-bordered table-contextual">
-                <thead>
-                    <tr>
-                        <th> Id </th>
-                        <th> Title </th>
-                        <th> Description </th>
-                        <th> Thumbnail </th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{#each model}}
-                    <tr class="table-info">
-                        <td> {{ this.id }} </td>
-                        <td> {{ this.title }} </td>
-                        <td> {{ this.description }} </td>
-                        <td> <img src="{{ this.thumbnail }}" /> </td>
-                        <td><a href="" class="btn btn-warning">Edit</a></td>
-                        <td><a href="" class="btn btn-danger">Delete</a></td>
-                    </tr>
-                    {{/each}}
+        <div class="table-responsive" id="manager-table">
 
-
-                </tbody>
-            </table>
         </div>
         <ul class="pagination my-3">
-            <li class="paginate_button page-item previous {{#if (eq pager.currentPage 1)}}disabled{{/if}}">
-                <a href="/admin/category?page={{subtract pager.currentPage 1}}&search={{ pager.searchText }}" class="page-link">Previous</a>
-            </li>
 
             {{#each pager.range}}
             <li class="paginate_button page-item {{#if (eq ../pager.currentPage this)}}active{{/if}}">
-                <a href="/admin/category?page={{this}}&search={{ ../pager.searchText }}" class="page-link">{{this}}</a>
+                <a href="/admin/ajax-table/category?page={{this}}&keyword={{ ../pager.searchText }}" class="page-link">{{this}}</a>
             </li>
             {{/each}}
 
-            <li class="paginate_button page-item next {{#if (eq pager.currentPage pager.totalPages)}}disabled{{/if}}">
-                <a href="/admin/category?page={{add pager.currentPage 1}}&search={{ pager.searchText }}" class="page-link">Next</a>
-            </li>
         </ul>
     </div>
 </div>
+

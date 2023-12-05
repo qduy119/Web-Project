@@ -216,7 +216,62 @@ async function connectDB() {
     }
 }
 
+const categoryOperations = {
+    getAllCategories: async function() {
+        db = pgp({
+            ...connection,
+            database: process.env.DB_DATABASE,
+            max: 30,
+        });
+        const query = `
+            select id, title, description, thumbnail
+            from "Categories";
+        `;
+        return await db.any(query);
+    },
+    insertCategory: async function(category) {
+        try {
+            let id = await executeScalar(`select max("id") from "Categories"`);
+            id = parseInt(id) + 1;
+            const query =  `insert into "Categories" ("id", "title", "description", "thumbnail") values('${id}', '${category.title}', '${category.description}', '${category.thumbnail}')`;
+    
+            const data = await db.many(query + " RETURNING *");
+            return data;
+        } catch (err) {
+            console.error(err);
+        }
+    }
+}
+
+// async function executeNonQuery(command) {
+//     try {
+//         await this.connection.none(command);
+//     } catch(err) {
+//         console.log(err);
+//         throw err;
+//     }
+// }
+// async function executeReader(command) {
+//     try {
+//         let res = await this.connection.any(command);
+//         return res;
+//     } catch(err) {
+//         console.log(err);
+//         throw err;
+//     }
+// }
+async function executeScalar(command) {
+    try {
+        const result = await db.one(command);
+        return result[Object.keys(result)[0]];
+    } catch(err) {
+        console.log(err);
+        throw err;
+    }
+}
+
 
 module.exports = {
     connectDB,
+    categoryOperations
 };

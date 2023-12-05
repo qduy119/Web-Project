@@ -1,6 +1,6 @@
 module.exports = class Pager {
-    constructor(totalItems, searchText, page = 1, pageSize = 5) {
-        this.searchText = searchText;
+    constructor(totalItems, keyword, page = 1, pageSize = 5) {
+        this.keyword = keyword;
         this.totalItems = totalItems;
         this.currentPage = page;
         this.pageSize = pageSize;

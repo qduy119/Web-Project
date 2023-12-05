@@ -27,7 +27,7 @@ app.use(
     })
 );
 
-app.use(morgan("dev"));
+//app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -37,6 +37,7 @@ const hbs = hbsEngine.create({
     //defaultLayout: '_layout' ,
     extname: 'hbs',
     layoutsDir: path.join(__dirname, 'views/layouts/'),
+    partialsDir: path.join(__dirname, '/views/partials/'),
     helpers: {
       ...helpers.helpers,
       subtract: helpers.subtract,
