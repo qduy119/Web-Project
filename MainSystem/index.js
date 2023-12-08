@@ -1,58 +1,47 @@
 require("dotenv").config({ path: "../.env" });
 const express = require("express");
 const hbsEngine = require("express-handlebars");
-const helpers = require('./services/handlebarsHelpers');
+const helpers = require("./services/handlebarsHelpers");
 const morgan = require("morgan");
 const path = require("path");
-const session = require("express-session");
 const { connectDB } = require("./utils/db");
 const cookieParser = require("cookie-parser");
-const viewRouter = require("./router/viewRouter");
+const viewRouter = require("./router/client/viewRouter");
+const authRouter = require("./router/client/authRouter");
 const adminRouter = require("./router/admin/adminRouter");
 
 const app = express();
 
 const PORT = process.env.MAIN_PORT || 5050;
 
-app.use(
-    session({
-        secret: process.env.SESSION_SECRET,
-        saveUninitialized: true,
-        cookie: {
-            sameSite: true,
-            httpOnly: true,
-            maxAge: +process.env.SESSION_EXPIRATION,
-        },
-        resave: false,
-    })
-);
-
-//app.use(morgan("dev"));
+app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(express.static("public"));
 app.use(express.static("www"));
 
 const hbs = hbsEngine.create({
-    //defaultLayout: '_layout' ,
-    extname: 'hbs',
-    layoutsDir: path.join(__dirname, 'views/layouts/'),
-    partialsDir: path.join(__dirname, '/views/partials/'),
+    extname: "hbs",
+    layoutsDir: path.join(__dirname, "views/layouts/"),
+    partialsDir: path.join(__dirname, "views/partials/"),
     helpers: {
-      ...helpers.helpers,
-      subtract: helpers.subtract,
-      add: helpers.add,
-      eq: helpers.eq
-    }
-  });
+        ...helpers.helpers,
+        subtract: helpers.subtract,
+        add: helpers.add,
+        eq: helpers.eq,
+    },
+});
 
-app.engine('hbs', hbs.engine);
-app.set('view engine', 'hbs');
-app.set('views', path.join(__dirname, 'views'));
+app.engine("hbs", hbs.engine);
+app.set("view engine", "hbs");
+app.set("views", path.join(__dirname, "views"));
 
 // routing
 app.use("/", viewRouter);
 app.use("/admin", adminRouter);
+// api
+app.use("/api/auth", authRouter);
 
 app.all("*", (req, res, next) => {
     const err = new Error(`Can't find ${req.originalUrl} on server`);
@@ -68,7 +57,6 @@ app.use((err, req, res, next) => {
 });
 
 connectDB();
-
 
 app.listen(PORT, () => {
     console.log(`Main server listening on ${PORT}`);
