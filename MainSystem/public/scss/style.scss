@@ -25,6 +25,8 @@ $input-btn-focus-box-shadow: none;
 
 $input-placeholder-color: #999999;
 
+@import "bootstrap/scss/bootstrap";
+
 /********** Custom CSS ************/
 
 p {
@@ -94,7 +96,7 @@ h6 {
     color: $primary;
 }
 
-@media (max-width: 991.98px) {
+@media (max-width: 992px) {
     .navbar-dark .navbar-nav .nav-link {
         padding: 5px 0px;
     }
@@ -146,7 +148,7 @@ h6 {
     height: 0;
     top: 50%;
     left: 0;
-    border-top: 1px dashed lighten($dark, 50%);
+    border-top: 1px dashed lighten($dark, 30%);
     z-index: -1;
 }
 
@@ -284,6 +286,23 @@ h6 {
     z-index: 11;
     -webkit-animation: action 1s infinite alternate;
     animation: action 1s infinite alternate;
+}
+
+.hover {
+    transition: all 0.5s !important;
+}
+
+.cursor {
+    cursor: pointer !important;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.search-btn {
+    border-top-left-radius: 0px !important;
+    border-bottom-left-radius: 0px !important;
 }
 
 @-webkit-keyframes action {

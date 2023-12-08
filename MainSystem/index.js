@@ -6,9 +6,14 @@ const morgan = require("morgan");
 const path = require("path");
 const { connectDB } = require("./utils/db");
 const cookieParser = require("cookie-parser");
-const viewRouter = require("./router/client/viewRouter");
-const authRouter = require("./router/client/authRouter");
-const adminRouter = require("./router/admin/adminRouter");
+const viewRouter = require("./routes/client/viewRoute");
+const authRouter = require("./routes/client/authRoute");
+const productRouter = require("./routes/client/productRoute");
+const categoryRouter = require("./routes/client/categoryRoute");
+const cartRouter = require("./routes/client/cartRoute");
+const orderRouter = require("./routes/client/orderRoute");
+const favoritesRouter = require("./routes/client/favoriteRoute");
+const adminRouter = require("./routes/admin/adminRoute");
 
 const app = express();
 
@@ -39,8 +44,12 @@ app.set("views", path.join(__dirname, "views"));
 
 // routing
 app.use("/", viewRouter);
+app.use("/", productRouter);
+app.use("/", categoryRouter);
+app.use("/", cartRouter);
+app.use("/", orderRouter);
+app.use("/", favoritesRouter);
 app.use("/admin", adminRouter);
-// api
 app.use("/api/auth", authRouter);
 
 app.all("*", (req, res, next) => {

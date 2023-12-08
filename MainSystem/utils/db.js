@@ -18,7 +18,7 @@ let db = pgp(connection);
 async function createCategories() {
     const query = `
         create table "Categories" (
-            id integer not null,
+            id serial not null,
             title text,
             description text,
             thumbnail text,
@@ -31,7 +31,7 @@ async function createCategories() {
 async function createProducts() {
     const query = `
         create table "Products" (
-            id integer not null,
+            id serial not null,
             "categoryId" integer not null,
             title text,
             description text,
@@ -51,11 +51,10 @@ async function createProducts() {
 async function createUsers() {
     const query = `
         create table "Users" (
-            id integer not null,
-            email text not null,
+            id serial not null,
+            username text not null,
             password text not null,
             role text default 'user'::text,
-            username text not null,
             avatar text default 'https://res.cloudinary.com/dlzyiprib/image/upload/v1700326876/e-commerces/user/download_ae0aln.png'::text,
             gender text,
             dob date,
@@ -65,10 +64,23 @@ async function createUsers() {
     await db.none(query);
 }
 
+async function createFavoriteProducts() {
+    const query = `
+        create table "FavoriteProducts" (
+            "userId" integer not null,
+            "productId" integer not null,
+            foreign key ("userId") references "Users" (id),
+            foreign key ("productId") references "Products" (id),
+            primary key ("userId", "productId")
+        )
+    `;
+    await db.none(query);
+}
+
 async function createCartDetails() {
     const query = `
         create table "CartDetails" (
-            id integer not null,
+            id serial not null,
             "userId" integer not null,
             "productId" integer not null,
             quantity integer not null,
@@ -83,7 +95,7 @@ async function createCartDetails() {
 async function createOrders() {
     const query = `
         create table "Orders" (
-            id integer not null,
+            id serial not null,
             "userId" integer not null,
             date date not null,
             total real not null,
@@ -98,7 +110,7 @@ async function createOrders() {
 async function createOrderDetails() {
     const query = `
         create table "OrderDetails" (
-            id integer not null,
+            id serial not null,
             "orderId" integer not null,
             "productId" integer not null,
             quantity integer not null,
@@ -113,7 +125,7 @@ async function createOrderDetails() {
 async function createPayments() {
     const query = `
         create table "Payments" (
-            id integer not null,
+            id serial not null,
             "orderId" integer not null,
             "userId" integer not null,
             date date not null,
@@ -131,7 +143,7 @@ async function createPayments() {
 async function createReviews() {
     const query = `
         create table "Reviews" (
-            id integer not null,
+            id serial not null,
             "userId" integer not null,
             content text,
             rate integer,
@@ -147,6 +159,7 @@ async function createTable() {
     await createCategories();
     await createProducts();
     await createUsers();
+    await createFavoriteProducts();
     await createCartDetails();
     await createOrders();
     await createOrderDetails();
@@ -195,7 +208,6 @@ async function connectDB() {
             db = pgp({
                 ...connection,
                 database: process.env.DB_DATABASE,
-                max: 30,
             });
             flag = 1;
             // create table
@@ -208,7 +220,6 @@ async function connectDB() {
             db = pgp({
                 ...connection,
                 database: process.env.DB_DATABASE,
-                max: 30,
             });
         }
     } catch (err) {
@@ -217,7 +228,7 @@ async function connectDB() {
 }
 
 const categoryOperations = {
-    getAllCategories: async function() {
+    getAllCategories: async function () {
         db = pgp({
             ...connection,
             database: process.env.DB_DATABASE,
@@ -229,19 +240,19 @@ const categoryOperations = {
         `;
         return await db.any(query);
     },
-    insertCategory: async function(category) {
+    insertCategory: async function (category) {
         try {
             let id = await executeScalar(`select max("id") from "Categories"`);
             id = parseInt(id) + 1;
-            const query =  `insert into "Categories" ("id", "title", "description", "thumbnail") values('${id}', '${category.title}', '${category.description}', '${category.thumbnail}')`;
-    
+            const query = `insert into "Categories" ("id", "title", "description", "thumbnail") values('${id}', '${category.title}', '${category.description}', '${category.thumbnail}')`;
+
             const data = await db.many(query + " RETURNING *");
             return data;
         } catch (err) {
             console.error(err);
         }
-    }
-}
+    },
+};
 
 // async function executeNonQuery(command) {
 //     try {
@@ -264,14 +275,13 @@ async function executeScalar(command) {
     try {
         const result = await db.one(command);
         return result[Object.keys(result)[0]];
-    } catch(err) {
+    } catch (err) {
         console.log(err);
         throw err;
     }
 }
 
-
 module.exports = {
     connectDB,
-    categoryOperations
+    categoryOperations,
 };
