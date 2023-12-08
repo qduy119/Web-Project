@@ -1,0 +1,139 @@
+.headerDecor {
+      border-top-right-radius: 3px;
+      border-top-left-radius: 3px;
+}
+
+.navbarContent {
+      padding: 2px;
+      margin-top: 2px;
+      background-color: black;
+      border-radius: 3px;
+}
+
+.bodyContent {
+      padding: 2px;
+      margin-top: 2px;
+      background-color:  rgba(238, 238, 238, 0);
+      /* background-color: black; */
+      border-radius:  3px;
+}
+
+.footerDecor{ 
+      height: 3rem;
+      margin-top: 4px;
+      background-color: burlywood;
+      border-bottom-left-radius: 3px;
+      border-bottom-right-radius: 3px;
+      color: brown;
+      text-align: center;
+      font-size: 30px;
+      margin-bottom: 2px;
+}
+
+.chart-container {
+      width: 50%;
+      height: 50%;
+      margin: auto;
+    }
+
+/* Import Google font - Poppins */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+*{
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+}
+.wrapper{
+      background-color: #dfeced;
+      border-radius: 10px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+}
+
+.icons span:last-child{
+      margin-right: -10px;
+}
+
+.calendar{
+      padding: 2px;
+}
+
+.calendar ul{
+      display: flex;
+      flex-wrap: wrap;
+      list-style: none;
+      text-align: center;
+}
+.calendar .days{
+      margin-bottom: 20px;
+}
+.calendar li{
+      color: #4b0505;
+      width: calc(100% / 7);
+      font-size: 1.07rem;
+}
+.calendar .weeks li{
+      font-weight: 500;
+      cursor: default;
+}
+.calendar .days li{
+      z-index: 1;
+      cursor: pointer;
+      position: relative;
+      margin-top: 30px;
+}
+.days li.inactive{
+      color: #846161;
+}
+.days li.active{
+      color: #530707;
+}
+.days li::before{
+      position: absolute;
+      content: "";
+      left: 50%;
+      top: 50%;
+      height: 40px;
+      width: 40px;
+      z-index: -1;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+}
+.days li.active::before{
+      background: #1174e4;
+}
+.days li:not(.active):hover::before{
+      background: #f2f2f2;
+}
+.icons:hover{
+      cursor: pointer;
+}
+
+/* table decoration */
+.text-white{
+      color: antiquewhite;
+}
+
+#contentTableInListUser{
+      height: 100px;
+      overflow-y:auto;
+}
+
+.title{
+      content: rgb(0, 132, 255)
+}
+
+/* decoration list admin */
+.decorListAdmin{
+      border-radius: 4px;
+      margin-bottom: 4px;
+      padding: 1px;
+}
+
+.decorListAdmin:hover{
+      cursor: pointer;
+}
+
+/* *{
+      color:rgb(181, 214, 204)
+} */
