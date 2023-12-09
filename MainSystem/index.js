@@ -4,7 +4,7 @@ const hbsEngine = require("express-handlebars");
 const morgan = require("morgan");
 const path = require("path");
 const session = require("express-session");
-const { connectDB } = require("../utils/db");
+const db = require("../utils/db");
 const cookieParser = require("cookie-parser");
 const viewRouter = require("./router/viewRouter");
 
@@ -56,8 +56,6 @@ app.use((err, req, res, next) => {
       err.status = err.status || "Something went wrong";
       res.status(err.statusCode).send(`${err.status}: ${err.message} !`);
 });
-
-connectDB();
 
 app.listen(PORT, () => {
       console.log(`Main server listening on ${PORT}`);

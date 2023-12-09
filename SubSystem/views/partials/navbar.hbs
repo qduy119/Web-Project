@@ -1,12 +1,14 @@
 <div class="itemNavbar">
-      <div>Đối soát giao dịch</div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
+      <h5><b><i class="fa fa-bank"></i> Đối soát giao dịch</b></h5>
+      <div class="mb-2 decorItemNavbar" id = "controlTotalRevenue"><i class="fa fa-key"></i> Đối soát tổng doanh thu</div>
+      <div class="mb-2 decorItemNavbar" id = "detailControlRevenue"><i class="fa fa-key"></i> Đối soát doanh thu chi tiết</div>
 </div>
+
+<script type = "module">
+      $("#controlTotalRevenue").click(() => {
+            location.href = "/control-total-revenue"
+      })
+      $("#detailControlRevenue").click(() => {
+            location.href = "/detail-control-revenue"
+      })
+</script>

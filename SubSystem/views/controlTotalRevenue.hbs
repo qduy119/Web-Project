@@ -1,0 +1,133 @@
+<div>
+      <h1 style="text-align: center;color : rgb(7, 216, 189)"><b>Control Total Revenue</b></h1>
+      <h5><i class="fa fa-bar-chart" style="color : rgb(164, 242, 229)"></i><b>Specific Time</b></h5>
+      <div>
+            <div class="d-flex justify-content-between flex-wrap mb-2 backgroundDecor">
+                  <select name="criteria" id="criteriaControlTotalRevenue">
+                        <option value="0">Criteria</option>
+                        <option value="day">Day</option>
+                        <option value="month">Month</option>
+                        <option value="year">Year</option>
+                  </select>
+                  <select name="day" id="dayParticular">
+                        <option value="0">Day</option>
+                  </select>
+
+                  <select name="criteria" id="monthParticular">
+                        <option value="0">Month</option>
+                  </select>
+                  <select name="criteria" id="yearParticular">
+                        <option value="0">Year</option>
+                  </select>
+                  <button type="button" class="btn btn-secondary" style="width : 100px"
+                        id="submitCriteria">Submit</button>
+            </div>
+      </div>
+      <h5><i class="fa fa-bar-chart" style="color : rgb(164, 242, 229)"></i><b>Period Time</b></h5>
+      <div class="d-flex justify-content-between flex-wrap mb-2 backgroundDecor">
+            <input type="date" id="startTime" required>
+            <i class="fa fa-arrow-right" style="font-size: 30px;padding-top:8px"></i>
+            <input type="date" id="endTime" required>
+            <button type="button" class="btn btn-secondary" style="width : 100px;" id="submitDuration">Submit</button>
+      </div>
+
+      <table class="table table-striped text-start align-middle table-bordered table-hover mb-0 decorTableListUser">
+            <thead>
+                  <tr class="text-white">
+                        <th scope="col">Sub System (MILLION VNĐ)</th>
+                        <th scope="col">Main System (MILLION VNĐ)</th>
+                  </tr>
+            </thead>
+            <tbody id="resultControlTotalRevenue">
+            </tbody>
+      </table>
+      {{>statisticChart}}
+</div>
+
+<script type="module">
+      for (let i = 1; i <= 31; i++) {
+            $("#dayParticular").append(`<option value=${i}>${i}</option>`)
+            if (i <= 12) {
+                  $("#monthParticular").append(`<option value = ${i}>${i}</option>`)
+            }
+      }
+      const currYear = (new Date()).getFullYear();
+      for (let i = currYear; i > 2000; i--) {
+            $("#yearParticular").append(`<option value = ${i}>${i}</option>`)
+      }
+
+      $("#submitCriteria").click(async () => {
+            const criteria = $("#criteriaControlTotalRevenue").val();
+            const day = $("#dayParticular").val();
+            const month = $("#monthParticular").val();
+            const year = $("#yearParticular").val();
+            const obj = {
+                  criteria: criteria,
+                  day: day,
+                  month: month,
+                  year: year
+            }
+            console.log(obj)
+            if (criteria === "0") {
+                  alert("Bạn chưa chọn tiêu chí")
+            }
+            else if (year === "0") {
+                  alert("Bạn chưa chọn năm");
+            }
+            else if (month === "0" && (criteria === "month" || criteria === "day")) {
+                  alert("Bạn chưa chọn tháng")
+            }
+            else if (day === "0" && criteria === "day") {
+                  alert("Bạn chưa chọn ngày")
+            }
+            else {
+                  const res = await fetch("/control-total-revenue", {
+                        method: "POST",
+                        headers: {
+                              "Content-type": "application/json; charset=UTF-8"
+                        },
+                        body: JSON.stringify(obj)
+                  })
+                  const data = await res.json();
+                  $("#resultControlTotalRevenue").html(`
+                        <tr>
+                              <td>${data.subSystem[0].revenue ? data.subSystem[0].revenue : 0}</td>
+                              <td>${data.mainSystem[0].revenue ? data.subSystem[0].revenue : 0}</td>
+                        </tr>
+                  `)
+            }
+      })
+
+      $("#submitDuration").click(async () => {
+            const start = $("#startTime").val();
+            const end = $("#endTime").val();
+            const obj = {
+                  criteria: "duration",
+                  start: start,
+                  end: end
+            }
+            console.log(obj);
+            if (start === "") {
+                  alert("Bạn chưa chọn thời gian bắt đầu")
+            }
+            else if (end === "") {
+                  alert("Bạn chưa chọn thời gian kết thúc")
+            }
+            else {
+                  const res = await fetch("/control-total-revenue", {
+                        method: "POST",
+                        headers: {
+                              "Content-type": "application/json; charset=UTF-8"
+                        },
+                        body: JSON.stringify(obj)
+                  })
+                  const data = await res.json();
+                  $("#resultControlTotalRevenue").html(`
+                        <tr>
+                              <td>${data.subSystem[0].revenue ? data.subSystem[0].revenue : 0}</td>
+                              <td>${data.mainSystem[0].revenue ? data.subSystem[0].revenue : 0}</td>
+                        </tr>
+                  `)
+            }
+      })
+</script>

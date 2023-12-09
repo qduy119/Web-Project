@@ -1,0 +1,270 @@
+<div>
+      <h1 style="text-align: center;"><b>Detail Control Revenue</b></h1>
+      <h5><i class="fa fa-bar-chart" style="color : rgb(164, 242, 229)"></i><b>Specific Time</b></h5>
+      <div>
+            <div class="d-flex justify-content-between flex-wrap mb-2 backgroundDecor">
+                  <select name="criteria" id="criteriaDetailControlRevenue">
+                        <option value="0">Criteria</option>
+                        <option value="day">Day</option>
+                        <option value="month">Month</option>
+                        <option value="year">Year</option>
+                  </select>
+                  <select name="day" id="dayParticular">
+                        <option value="0">Day</option>
+                  </select>
+
+                  <select name="criteria" id="monthParticular">
+                        <option value="0">Month</option>
+                  </select>
+                  <select name="criteria" id="yearParticular">
+                        <option value="0">Year</option>
+                  </select>
+                  <button type="button" class="btn btn-secondary" style="width : 100px"
+                        id="submitCriteria">Submit</button>
+            </div>
+      </div>
+
+      <h5><i class="fa fa-bar-chart" style="color : rgb(164, 242, 229)"></i><b>Period Time</b></h5>
+      <div class="d-flex justify-content-between flex-wrap mb-2 backgroundDecor">
+            <input type="date" id="startTime" required>
+            <i class="fa fa-arrow-right" style="font-size: 30px;padding-top:8px"></i>
+            <input type="date" id="endTime" required>
+            <button type="button" class="btn btn-secondary" style="width : 100px;" id="submitDuration">Submit</button>
+      </div>
+
+      <div class="mt-4 removePadding">
+            <div class="text-center rounded p-4 backgroundDecor">
+                  <div class="d-flex align-items-center justify-content-between mb-4">
+                        <h6 class="mb-0" style="text-decoration: none; color : rgb(0, 132, 255)"><b>Sub System</b></h6>
+                        <div class="bg-light" style="text-decoration: none; color : rgb(0, 132, 255)"
+                              id="totalRevenueSubSystem"></div>
+                  </div>
+                  <div class="table-responsive">
+                        <table
+                              class="table table-striped text-start align-middle table-bordered table-hover mb-0 decorTableListUser">
+                              <thead>
+                                    <tr class="text-white">
+                                          <th scope="col">ID</th>
+                                          <th scope="col">Date</th>
+                                          <th scope="col">UserID</th>
+                                          <th scope="col">OrderID</th>
+                                          <th scope="col">Amount</th>
+                                          <th scope="col">Detail</th>
+                                    </tr>
+                              </thead>
+                              <tbody id="contentTableInSubSystem">
+                              </tbody>
+                        </table>
+                  </div>
+            </div>
+      </div>
+
+      <div class="mt-4 removePadding">
+            <div class="text-center rounded p-4 backgroundDecor">
+                  <div class="d-flex align-items-center justify-content-between mb-4">
+                        <h6 class="mb-0" style="text-decoration: none; color : rgb(0, 132, 255)"><b>Main System</b></h6>
+                        <div class="bg-light" style="text-decoration: none; color : rgb(0, 132, 255)"
+                              id="totalRevenueMainSystem"></div>
+                  </div>
+                  <div class="table-responsive">
+                        <table
+                              class="table table-striped text-start align-middle table-bordered table-hover mb-0 decorTableListUser">
+                              <thead>
+                                    <tr class="text-white">
+                                          <th scope="col">ID</th>
+                                          <th scope="col">Date</th>
+                                          <th scope="col">UserID</th>
+                                          <th scope="col">OrderID</th>
+                                          <th scope="col">Amount</th>
+                                          <th scope="col">Detail</th>
+                                    </tr>
+                              </thead>
+                              <tbody id="contentTableInMainSystem">
+                              </tbody>
+                        </table>
+                  </div>
+            </div>
+      </div>
+
+      {{!-- {{>statisticChart}} --}}
+</div>
+
+<script type="module">
+      for (let i = 1; i <= 31; i++) {
+            $("#dayParticular").append(`<option value=${i}>${i}</option>`)
+            if (i <= 12) {
+                  $("#monthParticular").append(`<option value = ${i}>${i}</option>`)
+            }
+      }
+      const currYear = (new Date()).getFullYear();
+      for (let i = currYear; i > 2000; i--) {
+            $("#yearParticular").append(`<option value = ${i}>${i}</option>`)
+      }
+
+
+      const renderContentInDetailControlRevenue = async (obj) => {
+            const res = await fetch("/detail-control-revenue", {
+                  method: "POST",
+                  headers: {
+                        "Content-type": "application/json; charset=UTF-8"
+                  },
+                  body: JSON.stringify(obj)
+            })
+            const { subSystem, mainSystem, index} = await res.json();
+            let strContentTableInSubSystem = "";
+            for (let i = 0; i < subSystem.length; i++) {
+                  const item = subSystem[i];
+                  if(i === parseInt(index)) {
+                        strContentTableInSubSystem += `
+                              <tr class = "table-danger">
+                                    <td>${item.id}</td>
+                                    <td>${item.dateTransfer}</td>
+                                    <td>${item.userID}</td>
+                                    <td>${item.orderId}</td>
+                                    <td>${item.amount}</td>
+                                    <td style="text-align: center;"><button class="btn btn-sm btn-primary viewDetailTransactionSubSystem"
+                                    type="button">Detail</button></td>
+                              </tr>
+                        `
+                  }
+                  else{
+                        strContentTableInSubSystem += `
+                              <tr>
+                                    <td>${item.id}</td>
+                                    <td>${item.dateTransfer}</td>
+                                    <td>${item.userID}</td>
+                                    <td>${item.orderId}</td>
+                                    <td>${item.amount}</td>
+                                    <td style="text-align: center;"><button class="btn btn-sm btn-primary viewDetailTransactionSubSystem"
+                                    type="button">Detail</button></td>
+                              </tr>
+                        `
+                  }
+            }
+
+            $("#contentTableInSubSystem").html(strContentTableInSubSystem);
+
+            let strContentTableInMainSystem = "";
+            for (let i = 0; i < mainSystem.length; i++) {
+                  const item = mainSystem[i];
+                  if(i === parseInt(index)) {
+                        strContentTableInMainSystem += `
+                              <tr class = "table-danger">
+                                    <td>${item.id}</td>
+                                    <td>${item.date}</td>
+                                    <td>${item.userId}</td>
+                                    <td>${item.orderId}</td>
+                                    <td>${item.amount}</td>
+                                    <td style="text-align: center;"><button class="btn btn-sm btn-primary viewDetailTransactionMainSystem"
+                                    type="button">Detail</button></td>
+                              </tr>
+                        `
+                  }
+                  else{
+                        strContentTableInMainSystem += `
+                              <tr>
+                                    <td>${item.id}</td>
+                                    <td>${item.date}</td>
+                                    <td>${item.userId}</td>
+                                    <td>${item.orderId}</td>
+                                    <td>${item.amount}</td>
+                                    <td style="text-align: center;"><button class="btn btn-sm btn-primary viewDetailTransactionMainSystem"
+                                    type="button">Detail</button></td>
+                              </tr>
+                        `
+                  }
+            }
+
+            $("#contentTableInMainSystem").html(strContentTableInMainSystem)
+      }
+
+      const renderTotalRevenueInDetailControlRevenue = async (obj) => {
+            const resTotal = await fetch("/control-total-revenue", {
+                  method: "POST",
+                  headers: {
+                        "Content-type": "application/json; charset=UTF-8"
+                  },
+                  body: JSON.stringify(obj)
+            })
+            const dataTotal = await resTotal.json();
+            $("#totalRevenueSubSystem").html(`
+                  <b>${dataTotal.subSystem[0].revenue ? dataTotal.subSystem[0].revenue : 0} MILLION VNĐ</b>
+            `)
+            $("#totalRevenueMainSystem").html(`
+                  <b>${dataTotal.mainSystem[0].revenue ? dataTotal.mainSystem[0].revenue : 0} MILLION VNĐ</b>
+            `)
+      }
+
+      const handelViewDetailTransaction = () => {
+            const viewDetailTransactionSubSystem = $(".viewDetailTransactionSubSystem");
+            for (let i = 0; i < viewDetailTransactionSubSystem.length; i++) {
+                  const item = viewDetailTransactionSubSystem.eq(i);
+                  const idTransaction = item.parent().parent().children().first().text();
+                  item.click(() => {
+                        location.href = `/detail-transaction-subsystem?id=${idTransaction}`
+                  })
+            }
+
+            const viewDetailTransactionMainSystem = $(".viewDetailTransactionMainSystem");
+            for (let i = 0; i < viewDetailTransactionMainSystem.length; i++) {
+                  const item = viewDetailTransactionMainSystem.eq(i);
+                  const idTransaction = item.parent().parent().children().first().text();
+                  item.click(() => {
+                        location.href = `/detail-transaction-mainsystem?id=${idTransaction}`
+                  })
+            }
+      }
+
+      $("#submitCriteria").click(async () => {
+            const criteria = $("#criteriaDetailControlRevenue").val();
+            const day = $("#dayParticular").val();
+            const month = $("#monthParticular").val();
+            const year = $("#yearParticular").val();
+            const obj = {
+                  criteria: criteria,
+                  day: day,
+                  month: month,
+                  year: year
+            }
+            console.log(obj)
+            if (criteria === "0") {
+                  alert("Bạn chưa chọn tiêu chí")
+            }
+            else if (year === "0") {
+                  alert("Bạn chưa chọn năm");
+            }
+            else if (month === "0" && (criteria === "month" || criteria === "day")) {
+                  alert("Bạn chưa chọn tháng")
+            }
+            else if (day === "0" && criteria === "day") {
+                  alert("Bạn chưa chọn ngày")
+            }
+            else {
+                  await renderContentInDetailControlRevenue(obj);
+                  await renderTotalRevenueInDetailControlRevenue(obj);
+                  handelViewDetailTransaction();
+            }
+      })
+
+      $("#submitDuration").click(async () => {
+            const start = $("#startTime").val();
+            const end = $("#endTime").val();
+            const obj = {
+                  criteria: "duration",
+                  start: start,
+                  end: end
+            }
+            console.log(obj);
+            if (start === "") {
+                  alert("Bạn chưa chọn thời gian bắt đầu")
+            }
+            else if (end === "") {
+                  alert("Bạn chưa chọn thời gian kết thúc")
+            }
+            else {
+                  await renderContentInDetailControlRevenue(obj);
+                  await renderTotalRevenueInDetailControlRevenue(obj);
+                  handelViewDetailTransaction();
+            }
+      })
+</script>

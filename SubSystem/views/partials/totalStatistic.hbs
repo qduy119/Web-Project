@@ -1,38 +1,38 @@
-<div class="container-fluid pt-4 px-4">
+<div class="removePadding">
       <div class="row g-4">
             <div class="col-sm-6 col-xl-3">
-                  <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                  <div class="rounded d-flex align-items-center justify-content-between p-4 backgroundDecor">
                         <i class="fa fa-chart-line fa-3x text-primary "></i>
                         <div class="ms-3">
-                              <p class="mb-2"><b>Today Sale</b></p>
-                              <h6 class="mb-0"><b>$1234</b></h6>
+                              <p class="mb-2"><b>Expected Revenue Today</b></p>
+                              <h6 class="mb-0 title" id="expectedRevenueToday"><b>$1234</b></h6>
                         </div>
                   </div>
             </div>
             <div class="col-sm-6 col-xl-3">
-                  <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                  <div class="rounded d-flex align-items-center justify-content-between p-4 backgroundDecor">
                         <i class="fa fa-chart-bar fa-3x text-primary "></i>
                         <div class="ms-3">
-                              <p class="mb-2"><b>Total Sale</b></p>
-                              <h6 class="mb-0"><b>$1234</b></h6>
+                              <p class="mb-2"><b>Total Expected Revenue</b></p>
+                              <h6 class="mb-0 title" id="totalExpectedRevenue"><b>$1234</b></h6>
                         </div>
                   </div>
             </div>
             <div class="col-sm-6 col-xl-3">
-                  <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                  <div class="rounded d-flex align-items-center justify-content-between p-4 backgroundDecor">
                         <i class="fa fa-chart-area fa-3x text-primary "></i>
                         <div class="ms-3">
                               <p class="mb-2"><b>Today Revenue</b></p>
-                              <h6 class="mb-0"><b>$1234</b></h6>
+                              <h6 class="mb-0 title" id="todayRevenue"><b>$1234</b></h6>
                         </div>
                   </div>
             </div>
             <div class="col-sm-6 col-xl-3">
-                  <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                  <div class="rounded d-flex align-items-center justify-content-between p-4 backgroundDecor">
                         <i class="fa fa-chart-pie fa-3x text-primary "></i>
                         <div class="ms-3">
                               <p class="mb-2"><b>Total Revenue</b></p>
-                              <h6 class="mb-0"><b>$1234</b></h6>
+                              <h6 class="mb-0 title" id="totalRevenue"><b>$1234</b></h6>
                         </div>
                   </div>
             </div>
@@ -40,5 +40,29 @@
 </div>
 
 <script type="module">
+      const resTotalRevenue = await fetch("/get-all-revenue");
+      const dataTotalRevenue = await resTotalRevenue.json();
+      $("#totalRevenue").html(`<b>${dataTotalRevenue.revenue} MILLION VNĐ</b>`)
 
+      const resTodayRevenue = await fetch("/get-today-revenue");
+      const dataTodayRevenue = await resTodayRevenue.json();
+      if (dataTodayRevenue.length !== 0) {
+            $("#todayRevenue").html(`<b>${dataTodayRevenue[0].revenue} MILLION VNĐ</b>`)
+      }
+      else {
+            $("#todayRevenue").html(`<b>0 VNĐ</b>`)
+      }
+
+      const resTotalExpectedRevenue = await fetch("/get-total-expected-revenue");
+      const dataTotalExpectedRevenue = await resTotalExpectedRevenue.json();
+      $("#totalExpectedRevenue").html(`<b>${dataTotalExpectedRevenue.revenue} MILLION VNĐ</b>`)
+
+      const resExpectedRevenueToday = await fetch("/get-expected-revenue-today");
+      const dataExpectedRevenueToday = await resExpectedRevenueToday.json();
+      if (dataExpectedRevenueToday.length !== 0) {
+            $("#expectedRevenueToday").html(`<b>${dataExpectedRevenueToday[0].revenue} MILLION VNĐ</b>`)
+      }
+      else {
+            $("#expectedRevenueToday").html(`<b>VNĐ 0 </b>`)
+      }
 </script>

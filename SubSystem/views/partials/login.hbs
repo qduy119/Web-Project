@@ -1,0 +1,87 @@
+<div>
+      <div id="formLogin" class="modal" style="display: none;">
+            <form class="modal-content animate">
+                  <div class="imgcontainer">
+                        <span class="close" title="Close Modal">&times;</span>
+                        <img src="/img/admin.png" alt="Avatar" class="avatar">
+                  </div>
+
+                  <div class="container">
+                        <label for="usernameLogin"><b>Username</b></label>
+                        <input type="text" placeholder="Enter Username" name="username" id="usernameLogin" required>
+
+                        <label for="passwordLogin"><b>Password</b></label>
+                        <input type="password" placeholder="Enter Password" name="password" id="passwordLogin" required>
+
+                        <span id="errorLogin" style="color : red"></span>
+
+                        <button type="button" id="btnSubmitLogin">Login</button>
+                  </div>
+
+                  <div class="container" style="background-color:#f1f1f1">
+                        <button type="button" class="cancelbtn">Cancel</button>
+                  </div>
+            </form>
+      </div>
+</div>
+
+<script>
+
+
+      // When the user clicks anywhere outside of the modal, close it
+      window.onclick = function (event) {
+            if (event.target == document.getElementById('formLogin')) {
+                  document.getElementById('formLogin').style.display = "none";
+            }
+            else if (event.target == document.getElementById("formRegister")) {
+                  document.getElementById('formRegister').style.display = "none";
+            }
+      }
+      $("#loginHeader").click(() => {
+            document.getElementById('formLogin').style.display = 'block'
+      })
+
+      $(".close").first().click(() => {
+            console.log(document.getElementById('formLogin'))
+            document.getElementById('formLogin').style.display = 'none';
+      })
+
+      $(".cancelbtn").first().click(() => {
+            console.log(document.getElementById('formLogin'))
+            document.getElementById('formLogin').style.display = 'none';
+      })
+
+      $("#btnSubmitLogin").click(async () => {
+            const password = $("#passwordLogin").val().trim();
+            const username = $("#usernameLogin").val().trim();
+            if (username.length === 0) {
+                  $("#errorLogin").html("Chưa nhập username");
+            }
+            else if (password.length === 0) {
+                  $("#errorLogin").html("Chưa nhập mật khẩu")
+            }
+            else {
+                  const res = await fetch("/login-admin", {
+                        method: "POST",
+                        headers: {
+                              "Content-type": "application/json; charset=UTF-8"
+                        },
+                        body: JSON.stringify({
+                              username: username,
+                              password: password
+                        })
+                  })
+                  const data = await res.json();
+                  if (data.status === 403) {
+                        $("#errorLogin").html("Tài khoản này không có quyền truy cập web")
+                  }
+                  else if (data.status === 401) {
+                        $("$errorLogin".html(data.message));
+                  }
+                  else {
+                        sessionStorage.username = username;
+                        location.href = "/";
+                  }
+            }
+      })
+</script>

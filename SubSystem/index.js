@@ -6,7 +6,7 @@ const hbsEngine = require("express-handlebars");
 const morgan = require("morgan");
 const path = require("path");
 const session = require("express-session");
-const { connectDB } = require("../utils/db");
+const db = require("../utils/db");
 const cookieParser = require("cookie-parser");
 const route = require("./routes/route.js")
 
@@ -42,7 +42,6 @@ app.engine(
 app.set("view engine", "hbs");
 app.set("views", path.join(__dirname, "views"));
 
-connectDB();
 route(app);
 app.listen(PORT, () => {
       console.log(`Sub server listening on ${PORT}`);

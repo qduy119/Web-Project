@@ -7,7 +7,7 @@ const pgp = require("pg-promise")({
 const connection = {
       host: process.env.DB_HOST,
       port: process.env.DB_PORT,
-      database: process.env.DB,
+      database: process.env.DB_DATABASE,
       user: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       max: 30,
@@ -162,6 +162,8 @@ const createHistoryTransfer = async () => {
                   "dateTransfer" date not null,
                   "userID" integer not null,
                   amount real not null,
+                  "orderId" integer not null,
+                  foreign key ("orderId") references "Orders"(id),
                   foreign key ("userID") references "Users" (id),
                   primary key (id)
             )
@@ -216,6 +218,33 @@ async function insertBulk(tableName, entity) {
 
 async function connectDB() {
       try {
+            const result = await db.one("SELECT NOW()");
+            console.log("Connected to the database:", result.now);
+            // await db.none(str)
+      } catch (error){
+            delete connection.database;
+            db = pg(connection)
+            await  db.none(`create database "${process.env.DB_DATABASE}"`)
+            connection.database = process.env.DB_DATABASE;
+            db = pg(connection);
+            
+            const result = await db.one("SELECT NOW()");
+            console.error("Connected to the database : ", result.now);
+            //neu nhu db moi tao ta insert data
+            await createTable();
+            await importData();
+      }
+}
+
+connectDB();
+
+module.exports = db;
+
+
+
+
+/**
+       try {
             let flag = 0;
             if (!(await isDBExist())) {
                   await db.none(`create database "${process.env.DB_DATABASE}"`);
@@ -232,6 +261,7 @@ async function connectDB() {
                   console.log("Import data successfully");
             }
             if (!flag) {
+                  console.log("ton tai db ");
                   db = pgp({
                         ...connection,
                         database: process.env.DB_DATABASE,
@@ -241,15 +271,6 @@ async function connectDB() {
       } catch (err) {
             console.log(err.message);
       }
-}
-
-module.exports = {
-    connectDB,
-    db,
-};
-
-/**
- 
 
 INSERT INTO "Users"(email, password, role, username, avatar, gender, dob) VALUES
 ('user1@example.com', 'password1', 'user', 'username1', 'avatar1.png', 'Male', '1990-05-15'),
@@ -263,56 +284,56 @@ INSERT INTO "Users"(email, password, role, username, avatar, gender, dob) VALUES
 ('user9@example.com', 'password9', 'user', 'username9', 'avatar9.png', 'Female', '1997-02-14'),
 ('user10@example.com', 'password10', 'user', 'username10', 'avatar10.png', 'Male', '1996-08-07')
 
-(1,'2022-12-12', 1, 123.3, 'yes', 'ck'),
-(2, '2023-10-12', 1, 123.3, 'yes', 'ck'),
-(3, '2022-4-12', 7, 123.3, 'yes', 'ck'),
-(4, '2023-12-12', 5, 123.3, 'yes', 'ck'),
-(5,'2022-3-12', 8, 123.3, 'yes', 'ck'),
-(6,'2023-7-12', 6, 123.3, 'yes', 'ck'),
-(7,'2023-12-12', 1, 123.3, 'yes', 'ck'),
-(8,'2023-1-12', 1, 123.3, 'yes', 'ck'),
-(9.'2023-3-12', 1, 123.3, 'yes', 'ck'),
-(10,'2023-2-12', 2, 123.3, 'yes', 'ck'),
-(11,'2022-4-12', 2, 123.3, 'yes', 'ck'),
-(12,'2023-1-12', 2, 123.3, 'yes', 'ck'),
-(13,'2022-3-12', 1, 123.3, 'yes', 'ck'),
-(14,'2023-2-12', 2, 123.3, 'yes', 'ck'),
-(15,'2022-12-12', 2, 123.3, 'yes', 'ck'),
-(16,'2022-12-12', 2, 123.3, 'yes', 'ck'),
-(17,'2023-12-12', 8, 123.3, 'yes', 'ck'),
-(18,'2023-5-12', 3, 123.3, 'yes', 'ck'),
-(19,'2023-8-12', 9, 123.3, 'yes', 'ck'),
-(20,'2023-12-12', 9, 123.3, 'yes', 'ck'),
-(21,'2023-12-12', 9, 123.3, 'yes', 'ck'),
-(22,'2023-3-12', 7, 123.3, 'yes', 'ck'),
-(23,'2022-12-12', 3, 123.3, 'yes', 'ck'),
-(24,'2023-4-12', 3, 123.3, 'yes', 'ck'),
-(25,'2022-1-12', 4, 123.3, 'yes', 'ck'),
-(26,'2023-1-12', 10, 123.3, 'yes', 'ck'),
-(27,'2022-12-12',5, 123.3, 'yes', 'ck'),
-(28,'2023-1-12', 9, 123.3, 'yes', 'ck'),
-(29,'2023-4-12', 4, 123.3, 'yes', 'ck'),
-(30,'2023-5-12', 4, 123.3, 'yes', 'ck'),
-(31,'2023-5-12', 4, 123.3, 'yes', 'ck'),
-(32,'2022-1-12', 5, 123.3, 'yes', 'ck'),
-(33,'2022-5-12', 5, 123.3, 'yes', 'ck'),
-(34,'2022-2-12', 5, 123.3, 'yes', 'ck'),
-(35,'2023-5-12', 5, 123.3, 'yes', 'ck'),
-(36,'2023-1-12', 10, 123.3, 'yes', 'ck'),
-(37,'2023-9-12', 9, 123.3, 'yes', 'ck'),
-(38,'2023-8-12', 1, 123.3, 'yes', 'ck'),
-(39,'2023-5-12', 5, 123.3, 'yes', 'ck'),
-(40,'2022-3-12', 6, 123.3, 'yes', 'ck'),
-(41,'2023-5-12', 9, 123.3, 'yes', 'ck'),
-(42,'2023-5-12', 1, 123.3, 'yes', 'ck'),
-(43,'2023-5-12', 2, 123.3, 'yes', 'ck'),
-(44,'2023-5-12', 3, 123.3, 'yes', 'ck'),
-(45,'2023-5-12', 4, 123.3, 'yes', 'ck'),
-(46,'2023-5-12', 9, 123.3, 'yes', 'ck'),
-(47,'2022-5-12', 6, 123.3, 'yes', 'ck'),
-(48,'2023-5-12', 9, 123.3, 'yes', 'ck'),
-(49,'2022-5-12', 10, 123.3, 'yes', 'ck'),
-(50,'2023-5-12', 6, 123.3, 'yes', 'ck')
+(1,'2022-12-12', 1, 123.3),
+(2, '2023-10-12', 1, 123.3),
+(3, '2022-4-12', 7, 123.3),
+(4, '2023-12-12', 5, 123.3),
+(5,'2022-3-12', 8, 123.3),
+(6,'2023-7-12', 6, 123.3),
+(7,'2023-12-12', 1, 123.3),
+(8,'2023-1-12', 1, 123.3),
+(9.'2023-3-12', 1, 123.3),
+(10,'2023-2-12', 2, 123.3),
+(11,'2022-4-12', 2, 123.3),
+(12,'2023-1-12', 2, 123.3),
+(13,'2022-3-12', 1, 123.3),
+(14,'2023-2-12', 2, 123.3),
+(15,'2022-12-12', 2, 123.3),
+(16,'2022-12-12', 2, 123.3),
+(17,'2023-12-12', 8, 123.3),
+(18,'2023-5-12', 3, 123.3),
+(19,'2023-8-12', 9, 123.3),
+(20,'2023-12-12', 9, 123.3),
+(21,'2023-12-12', 9, 123.3),
+(22,'2023-3-12', 7, 123.3),
+(23,'2022-12-12', 3, 123.3),
+(24,'2023-4-12', 3, 123.3),
+(25,'2022-1-12', 4, 123.3),
+(26,'2023-1-12', 10, 123.3),
+(27,'2022-12-12',5, 123.3),
+(28,'2023-1-12', 9, 123.3),
+(29,'2023-4-12', 4, 123.3),
+(30,'2023-5-12', 4, 123.3),
+(31,'2023-5-12', 4, 123.3),
+(32,'2022-1-12', 5, 123.3),
+(33,'2022-5-12', 5, 123.3),
+(34,'2022-2-12', 5, 123.3),
+(35,'2023-5-12', 5, 123.3),
+(36,'2023-1-12', 10, 123.3),
+(37,'2023-9-12', 9, 123.3),
+(38,'2023-8-12', 1, 123.3),
+(39,'2023-5-12', 5, 123.3),
+(40,'2022-3-12', 6, 123.3),
+(41,'2023-5-12', 9, 123.3),
+(42,'2023-5-12', 1, 123.3),
+(43,'2023-5-12', 2, 123.3),
+(44,'2023-5-12', 3, 123.3),
+(45,'2023-5-12', 4, 123.3),
+(46,'2023-5-12', 9, 123.3),
+(47,'2022-5-12', 6, 123.3),
+(48,'2023-5-12', 9, 123.3),
+(49,'2022-5-12', 10, 123.3),
+(50,'2023-5-12', 6, 123.3)
 
 ('2022-12-12', 1, 123.3, 'yes'),
 ('2023-10-12', 1, 123.3, 'yes'),
