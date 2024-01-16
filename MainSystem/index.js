@@ -1,5 +1,6 @@
 require("dotenv").config({ path: "../.env" });
 const express = require("express");
+const expressLayouts = require('express-ejs-layouts');
 const path = require("path");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
@@ -32,6 +33,22 @@ app.use(express.static("www"));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
+// Sử dụng express-ejs-layouts
+app.use(expressLayouts);
+
+// Middleware để xác định layout dựa trên tuyến đường
+app.use((req, res, next) => {
+  const [area] = req.originalUrl.split('/').filter(Boolean)[0];
+  let renderArea = area;
+  if (req.originalUrl.split('/').filter(Boolean).length == 3) { 
+    const [area, controller, action] = req.originalUrl.split('/').filter(Boolean);
+    app.set('layout', `layouts/${area}Layout`);
+  } else {
+    app.set('layout', 'layouts/customerLayout');
+  } 
+
+  next();
+});
 
 app.use("/:area/:controller/:action", require('./routes/admin/adminRoute'));
 app.use("/:controller/:action", require('./routes/customer/customerRoute'));
