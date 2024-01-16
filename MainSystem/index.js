@@ -1,14 +1,9 @@
 require("dotenv").config({ path: "../.env" });
 const express = require("express");
-const hbsEngine = require("express-handlebars");
-const helpers = require('./services/handlebarsHelpers');
-const morgan = require("morgan");
 const path = require("path");
 const session = require("express-session");
-const { connectDB } = require("./utils/db");
 const cookieParser = require("cookie-parser");
-const viewRouter = require("./router/viewRouter");
-const adminRouter = require("./router/admin/adminRouter");
+const { connectDB } = require("./utils/db");
 
 const app = express();
 
@@ -27,32 +22,21 @@ app.use(
     })
 );
 
-//app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static("www"));
 
-const hbs = hbsEngine.create({
-    //defaultLayout: '_layout' ,
-    extname: 'hbs',
-    layoutsDir: path.join(__dirname, 'views/layouts/'),
-    partialsDir: path.join(__dirname, '/views/partials/'),
-    helpers: {
-      ...helpers.helpers,
-      subtract: helpers.subtract,
-      add: helpers.add,
-      eq: helpers.eq
-    }
-  });
 
-app.engine('hbs', hbs.engine);
-app.set('view engine', 'hbs');
+// Đặt đường dẫn thư mục views và sử dụng EJS làm view engine
 app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
 
-// routing
-app.use("/", viewRouter);
-app.use("/admin", adminRouter);
+
+app.use("/:area/:controller/:action", require('./routes/admin/adminRoute'));
+app.use("/:controller/:action", require('./routes/customer/customerRoute'));
+
+
 
 app.all("*", (req, res, next) => {
     const err = new Error(`Can't find ${req.originalUrl} on server`);
@@ -67,8 +51,8 @@ app.use((err, req, res, next) => {
     res.status(err.statusCode).send(`${err.status}: ${err.message} !`);
 });
 
-connectDB();
 
+connectDB();
 
 app.listen(PORT, () => {
     console.log(`Main server listening on ${PORT}`);
