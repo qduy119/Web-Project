@@ -223,10 +223,10 @@ async function connectDB() {
             // await db.none(str)
       } catch (error){
             delete connection.database;
-            db = pg(connection)
+            db = pgp(connection)
             await  db.none(`create database "${process.env.DB_DATABASE}"`)
             connection.database = process.env.DB_DATABASE;
-            db = pg(connection);
+            db = pgp(connection);
             
             const result = await db.one("SELECT NOW()");
             console.error("Connected to the database : ", result.now);
