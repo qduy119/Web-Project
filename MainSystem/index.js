@@ -50,9 +50,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/:area/:controller/:action", require('./routes/admin/adminRoute'));
-app.use("/:controller/:action", require('./routes/customer/customerRoute'));
-
+app.use("/:area/:controller/:action", require('./routes/route'));
 
 
 app.all("*", (req, res, next) => {
@@ -70,6 +68,9 @@ app.use((err, req, res, next) => {
 
 
 connectDB();
+
+const sequelize = require('./utils/sequelize');
+
 
 app.listen(PORT, () => {
     console.log(`Main server listening on ${PORT}`);

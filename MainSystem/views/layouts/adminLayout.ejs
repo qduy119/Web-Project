@@ -9,11 +9,19 @@
     <link rel="stylesheet" href="/styles/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet"
+    href="https://cdn.jsdelivr.net/gh/Loopple/loopple-public-assets@main/riva-dashboard-tailwind/riva-dashboard.css">
+   
+    <link
+  rel="stylesheet"
+  href="https://unpkg.com/@material-tailwind/html@latest/styles/material-tailwind.css"
+/>
+
     <title>Dashboard</title>
 </head>
 
 <body>
-    <div class="flex flex-col h-screen bg-gray-100">
+    <div class="flex flex-col h-screen">
        
         <!-- Top Navigation Bar -->
         <div class="bg-white text-white shadow w-full p-2 flex items-center justify-between">
@@ -55,8 +63,8 @@
             </div>
     
             <!-- Main Content Area -->
-            <div class="flex-1 p-4 w-full md:w-1/2">
-                <div class="mt-8 flex flex-wrap space-x-0 space-y-2 md:space-x-4 md:space-y-0">
+            <div class="flex-1 p-4 w-full">
+                <div id="mainArea" class="mt-8 flex flex-wrap space-x-0 space-y-2 md:space-x-4 md:space-y-0">
                     <%- body %>
                 </div>
                 
@@ -64,6 +72,7 @@
         </div>
     </div>
     <script src="/scripts/main.js"></script>
+    <script src="https://unpkg.com/@material-tailwind/html@latest/scripts/ripple.js"></script>
     </body>
 
 </html>

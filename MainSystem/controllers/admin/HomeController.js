@@ -3,7 +3,7 @@ const BaseController = require('./BaseController');
 class HomeController {
 
   index(req, res, next) {
-    BaseController.View(req, res, {name: 'Cường'}, 'index');
+    BaseController.View(req, res, {name: 'Cuong'});
     try {
       
     } catch (error) {
