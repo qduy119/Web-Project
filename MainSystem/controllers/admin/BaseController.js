@@ -1,7 +1,9 @@
 const BaseController = {
   View: (req, res, paramsObj = null, viewName = null) => {
     if (req.originalUrl.split('/').filter(Boolean).length == 3) {
-      const [area, controller, action] = req.originalUrl.split('/').filter(Boolean);
+      let index = req.originalUrl.indexOf('?');
+            if (index < 0) index = req.originalUrl.length;
+      const [area, controller, action] = req.originalUrl.slice(0, index).split('/').filter(Boolean);
       let renderArea = area;
       let renderController = controller;
       let renderAction = action;
@@ -14,7 +16,9 @@ const BaseController = {
         res.render(`${renderArea}/${renderController}/${renderAction}`);
       }
     } else if (req.originalUrl.split('/').filter(Boolean).length == 2) {
-      const [controller, action] = req.originalUrl.split('/').filter(Boolean);
+      let index = req.originalUrl.indexOf('?');
+            if (index < 0) index = req.originalUrl.length;
+      const [controller, action] = req.originalUrl.slice(0, index).split('/').filter(Boolean);
       let renderController = controller;
       let renderAction = action;
       if (viewName) {
