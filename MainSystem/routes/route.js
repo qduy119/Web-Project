@@ -1,7 +1,7 @@
 // routes.js
 const express = require('express');
 const router = express.Router();
-
+const cloudUploader = require('../utils/cloudinary');
 
 
 router.get('/', (req, res, next) => {
@@ -29,7 +29,7 @@ router.get('/', (req, res, next) => {
     
 });
 
-router.post('/', (req, res, next) => {
+router.post('/', cloudUploader.single('image'), (req, res, next) => {
     try {
         if (req.originalUrl.split('/').filter(Boolean).length == 3) {
             let index = req.originalUrl.indexOf('?');
