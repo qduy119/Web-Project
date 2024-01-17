@@ -1,7 +1,7 @@
 const BaseController = require('./BaseController');
 const Category = require('../../models/Category');
 const pageSize = 5;
-
+const cloudinary = require('cloudinary').v2;
 class CategoryController {
 
   async index_GET(req, res, next) {
@@ -39,6 +39,28 @@ class CategoryController {
     try {
         
         BaseController.View(req, res);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async create_POST(req, res, next) {
+    try {
+        const { title, description } = req.body;
+        const image = req.file;
+        
+      
+        if (image) cloudinary.uploader.destroy(image.filename);
+        
+        const maxId = await Category.max('id');
+        const category = await Category.create({
+          id: maxId + 1, 
+          title: title, 
+          description: description, 
+          thumbnail: image.path
+        });
+        console.log(category.id);
+        res.redirect('/admin/category/index');
     } catch (error) {
       next(error);
     }
