@@ -1,57 +1,109 @@
 
 
-<div class="isolate bg-white mx-auto">
+<div class="isolate bg-white w-10/12 mx-auto">
     <div class="mx-auto max-w-2xl text-center">
-      <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl"> 
+      <h2 class="text-3xl font-bold text-gray-900 sm:text-4xl"> 
         Tạo danh mục mới
       </h2>
     </div>
-    <form action="/admin/category/create" method="POST" enctype="multipart/form-data" class="mx-auto mt-4 w-fit">
-      <div class="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
-        <div class="sm:col-span-12">
-            <label for="title" class="block text-sm font-semibold leading-6 text-green-600">Tên danh mục</label>
+    <form action="/admin/category/create" method="POST" enctype="multipart/form-data" class="mt-4 w-full">
+      <div class="">
+        <% if (errors) { %>
+          <div class="">
+         
+            <% for (let i = 0; i < errors.length; i++) { %>
+              <div class="text-red-700 font-bold"><%= errors[i].message %></div>
+            <% }%> 
+        </div>
+          <% } %>
+        <div class="w-full mb-3">
+            <label for="title" class="block text-xl font-semibold leading-6 text-green-600">Tên danh mục</label>
             <div class="mt-2.5">
-              <input type="text" name="title" id="title" class="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset shadow-blue-500 ring-blue-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-400 sm:text-sm sm:leading-6">
+              <input type="text" name="title" id="title" class="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset shadow-blue-500 ring-blue-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-400 text-lg sm:leading-6">
             </div>
           </div>
         
-        <div class="sm:col-span-12">
-          <label for="description" class="block text-sm font-semibold leading-6 text-green-600">Mô tả</label>
+        <div class="w-full mb-3">
+          <label for="description" class="block text-xl font-semibold leading-6 text-green-600">Mô tả</label>
           <div class="mt-2.5">
-            <textarea name="description" id="description" rows="4" class="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+            <textarea name="description" id="description" rows="4" class="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-lg sm:leading-6"></textarea>
           </div>
         </div>  
         
-        <div class="mb-8">
-          <input type="file" name="image" id="image" />
+        <div class="w-full mb-3">
+          <label for="upload" class="block text-xl font-semibold leading-6 text-green-600">Tải lên thumbnail</label>
+          
+          <div id="image-preview" class="max-w-sm p-6 mb-4 bg-gray-100 border-dashed border-2 border-gray-400 rounded-lg items-center mx-auto text-center cursor-pointer">
+            <input id="upload" name="upload" type="file" class="hidden" />
+
+            <label for="upload" class="cursor-pointer">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8 text-gray-700 mx-auto mb-4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+              </svg>
+              <h5 class="mb-2 text-xl font-bold tracking-tight text-gray-700">Tải ảnh lên</h5>
+              <span id="filename" class="text-gray-500 bg-gray-200 z-50"></span>
+            </label>
+          </div>
+
           
         </div>
-        <!-- <button id="upload_widget" class="cloudinary-button">Upload files</button> -->
+
       </div>
-      <div class="mt-10">
-        <button type="submit" class="block w-full rounded-md bg-cyan-600 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-            Tạo danh mục    
+      <div class="mt-10 flex">
+        <button type="submit" class="block flex-1 me-2 rounded-md bg-cyan-500 px-3.5 py-2.5 text-center text-xl font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+          Tạo danh mục    
         </button>
+        <a href="/admin/category/index" class="block flex-1 rounded-md bg-purple-500 px-3.5 py-2.5 text-center text-xl font-semibold text-white shadow-sm hover:bg-rose-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+            Trở về danh sách danh mục  
+        </a>
       </div>
     </form>
   </div>
 
 
-
-  <!-- <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>  
   
-  <script type="text/javascript">  
-  var myWidget = cloudinary.createUploadWidget({
-    cloudName: 'my_cloud_name', 
-    uploadPreset: 'my_preset'}, (error, result) => { 
-      if (!error && result && result.event === "success") { 
-        console.log('Done! Here is the image info: ', result.info); 
+  <script>
+    const uploadInput = document.getElementById('upload');
+    const filenameLabel = document.getElementById('filename');
+    const imagePreview = document.getElementById('image-preview');
+  
+    // Check if the event listener has been added before
+    let isEventListenerAdded = false;
+  
+    uploadInput.addEventListener('change', (event) => {
+      const file = event.target.files[0];
+  
+      if (file) {
+        filenameLabel.textContent = file.name;
+  
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          imagePreview.innerHTML =
+            `<img src="${e.target.result}" class="max-h-48 rounded-lg mx-auto" alt="Image preview" />`;
+          imagePreview.classList.remove('border-dashed', 'border-2', 'border-gray-400');
+  
+          // Add event listener for image preview only once
+          if (!isEventListenerAdded) {
+            imagePreview.addEventListener('click', () => {
+              uploadInput.click();
+            });
+  
+            isEventListenerAdded = true;
+          }
+        };
+        reader.readAsDataURL(file);
+      } else {
+        filenameLabel.textContent = '';
+        imagePreview.innerHTML =
+          `<div class="bg-gray-200 h-48 rounded-lg flex items-center justify-center text-gray-500">No image preview</div>`;
+        imagePreview.classList.add('border-dashed', 'border-2', 'border-gray-400');
+  
+        // Remove the event listener when there's no image
+        imagePreview.removeEventListener('click', () => {
+          uploadInput.click();
+        });
+  
+        isEventListenerAdded = false;
       }
-    }
-  )
-  
-  document.getElementById("upload_widget").addEventListener("click", function(e) {
-        e.preventDefault();
-      myWidget.open();
-    }, false);
-  </script> -->
+    });
+  </script>

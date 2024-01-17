@@ -29,7 +29,8 @@ router.get('/', (req, res, next) => {
     
 });
 
-router.post('/', cloudUploader.single('image'), (req, res, next) => {
+router.post('/', cloudUploader.single('upload'), (req, res, next) => {
+
     try {
         if (req.originalUrl.split('/').filter(Boolean).length == 3) {
             let index = req.originalUrl.indexOf('?');
