@@ -1,8 +1,34 @@
 <div class="row">
     <div class="container-fluid pt-5 pb-3">
-        <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4">
+        <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-2">
             <span class="bg-secondary pr-3">Danh sách sản phẩm</span>
         </h2>
+        <div class="d-flex px-xl-5 justify-content-end mb-4">
+            <div class="dropdown">
+                <button
+                    class="btn btn-outline-success dropdown-toggle"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                >
+                    Lọc sản phẩm
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="/customer/homepage">Không</a></li>
+                    <li><a class="dropdown-item" href="?range=under_50">Dưới 50$</a></li>
+                    <li>
+                        <a class="dropdown-item" href="?range=50_100">Từ 50$ đến 100$</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="?range=100_500">Từ 100$ đến 500$</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="?range=500_1000">Từ 500$ đến 1000$</a>
+                    </li>
+                    <li><a class="dropdown-item" href="?range=above_1000">Trên 1000$</a></li>
+                </ul>
+            </div>
+        </div>
         <div class="row px-xl-5">
             <% products.forEach(product => { %>
             <div class="col-lg-3 col-md-4 col-sm-6 pb-1">

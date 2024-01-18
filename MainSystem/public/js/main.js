@@ -97,4 +97,16 @@
         }
         button.parent().parent().find("input").val(newVal);
     });
+
+    // Search Input
+    $(".form-search").on("submit", (e) => {
+        if (!$(".search-input").val().trim()) {
+            e.preventDefault();
+        }
+    });
+    $(".form-lg-search").on("submit", (e) => {
+        if (!$(".search-lg-input").val().trim()) {
+            e.preventDefault();
+        }
+    });
 })(jQuery);

@@ -9,7 +9,6 @@ const paymentController = require("../controllers/customer/paymentController");
 const checkoutController = require("../controllers/customer/checkoutController");
 
 router.route("/homepage").get(mainController.home);
-router.route("/search").get(mainController.search);
 router.route("/category/:id").get(categoryController.category);
 router.route("/product/:id").get(productController.product);
 router.route("/cart").get(cartController.cart);

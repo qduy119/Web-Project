@@ -1,10 +1,64 @@
-<div class="row">
+<div class="row mt-body">
     <div class="container-fluid py-3">
-        <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-5">
+        <h2 class="section-title position-relative mx-xl-5 mb-2">
             <span class="bg-secondary pr-3"
                 >KẾT QUẢ TÌM KIẾM CHO <strong><%= query %></strong></span
             >
         </h2>
+        <div class="d-flex px-xl-5 justify-content-end mb-4">
+            <div class="dropdown">
+                <button
+                    class="btn btn-outline-success dropdown-toggle"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                >
+                    Lọc sản phẩm
+                </button>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a class="dropdown-item" href="?query=<%= query %>"
+                            >Không</a
+                        >
+                    </li>
+                    <li>
+                        <a
+                            class="dropdown-item"
+                            href="?query=<%= query %>&range=under_50"
+                            >Dưới 50$</a
+                        >
+                    </li>
+                    <li>
+                        <a
+                            class="dropdown-item"
+                            href="?query=<%= query %>&range=50_100"
+                            >Từ 50$ đến 100$</a
+                        >
+                    </li>
+                    <li>
+                        <a
+                            class="dropdown-item"
+                            href="?query=<%= query %>&range=100_500"
+                            >Từ 100$ đến 500$</a
+                        >
+                    </li>
+                    <li>
+                        <a
+                            class="dropdown-item"
+                            href="?query=<%= query %>&range=500_1000"
+                            >Từ 500$ đến 1000$</a
+                        >
+                    </li>
+                    <li>
+                        <a
+                            class="dropdown-item"
+                            href="?query=<%= query %>&range=above_1000"
+                            >Trên 1000$</a
+                        >
+                    </li>
+                </ul>
+            </div>
+        </div>
         <div class="row px-xl-5">
             <% products.forEach(product => { %>
             <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
@@ -55,6 +109,45 @@
                 </div>
             </div>
             <% }) %>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="container-fluid py-3">
+        <div class="d-flex justify-content-center align-items-center">
+            <nav aria-label="Pagination">
+                <ul class="pagination">
+                    <li class="page-item">
+                        <a
+                            class="page-link"
+                            href="<%= currPage === 1 ? `javascript:void(0);` : range ? `?query=${query}&range=${range}&page=${currPage-1}` : `?query=${query}&page=${currPage-1}`%>"
+                            aria-label="Previous"
+                        >
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <% for (let page = 1; page <= totalPage; page++) { %>
+                    <li
+                        class="page-item <%= page === currPage ? 'active' : '' %>"
+                    >
+                        <a
+                            class="page-link"
+                            href="<%= range ? `?query=${query}&range=${range}&page=${page}` : `?query=${query}&page=${page}`%>"
+                            ><%= page %></a
+                        >
+                    </li>
+                    <% } %>
+                    <li class="page-item">
+                        <a
+                            class="page-link"
+                            href="<%= currPage === totalPage ? `javascript:void(0);` : range ? `?query=${query}&range=${range}&page=${currPage+1}` : `?query=${query}&page=${currPage+1}`%>"
+                            aria-label="Next"
+                        >
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
         </div>
     </div>
 </div>

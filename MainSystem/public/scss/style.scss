@@ -57,6 +57,16 @@ h6 {
     padding: 30px;
 }
 
+.mt-body {
+    margin-top: 160px;
+}
+
+@media only screen and (min-width: 992px) {
+    .mt-body {
+        margin-top: 210px;
+    }
+}
+
 .btn.btn-primary {
     color: $dark !important;
 }
