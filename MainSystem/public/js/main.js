@@ -33,55 +33,6 @@
         return false;
     });
 
-    // Vendor carousel
-    $(".vendor-carousel").owlCarousel({
-        loop: true,
-        margin: 29,
-        nav: false,
-        autoplay: true,
-        smartSpeed: 1000,
-        responsive: {
-            0: {
-                items: 2,
-            },
-            576: {
-                items: 3,
-            },
-            768: {
-                items: 4,
-            },
-            992: {
-                items: 5,
-            },
-            1200: {
-                items: 6,
-            },
-        },
-    });
-
-    // Related carousel
-    $(".related-carousel").owlCarousel({
-        loop: true,
-        margin: 29,
-        nav: false,
-        autoplay: true,
-        smartSpeed: 1000,
-        responsive: {
-            0: {
-                items: 1,
-            },
-            576: {
-                items: 2,
-            },
-            768: {
-                items: 3,
-            },
-            992: {
-                items: 4,
-            },
-        },
-    });
-
     // Product Quantity
     $(".quantity button").on("click", function () {
         var button = $(this);
@@ -107,6 +58,41 @@
     $(".form-lg-search").on("submit", (e) => {
         if (!$(".search-lg-input").val().trim()) {
             e.preventDefault();
+        }
+    });
+    $(".register-form").on("submit", async (e) => {
+        e.preventDefault();
+        const username = $("#username").val();
+        const password = $("#password").val();
+        const confirmPassword = $("#confirm-password").val();
+        let block = 0;
+
+        if (password !== confirmPassword) {
+            $(".error-register").html("Mật khẩu xác nhận không chính xác");
+            block = 1;
+        }
+        if (block === 0) {
+            $(".bar").removeClass("hidden");
+            const res = await fetch("/api/register", {
+                method: "post",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ username, password }),
+            });
+            const { status, message } = await res.json();
+            $(".bar").addClass("hidden");
+            if (status === "success") {
+                const toastLiveExample = $("#liveToast");
+                const toastBootstrap =
+                    bootstrap.Toast.getOrCreateInstance(toastLiveExample);
+                toastBootstrap.show();
+                setTimeout(() => {
+                    window.location.href = "/login";
+                }, 1000);
+            } else {
+                $(".error-register").html(message);
+            }
         }
     });
 })(jQuery);

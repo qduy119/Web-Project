@@ -29,6 +29,7 @@ exports.home = async (req, res, next) => {
         });
         if (query) {
             res.render("customer/search", {
+                user: req.user,
                 categories,
                 products,
                 query,
@@ -38,6 +39,7 @@ exports.home = async (req, res, next) => {
             });
         } else {
             res.render("customer/home", {
+                user: req.user,
                 categories,
                 products,
                 range,

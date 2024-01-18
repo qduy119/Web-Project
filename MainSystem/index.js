@@ -4,7 +4,9 @@ const expressLayouts = require("express-ejs-layouts");
 const path = require("path");
 const morgan = require("morgan");
 const session = require("express-session");
+const store = new session.MemoryStore();
 const cookieParser = require("cookie-parser");
+const flash = require("connect-flash");
 
 const app = express();
 
@@ -20,10 +22,14 @@ app.use(
             maxAge: +process.env.SESSION_EXPIRATION,
         },
         resave: false,
+        store,
     })
 );
 
+require("./utils/passport")(app);
+
 app.use(morgan("dev"));
+app.use(flash());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -63,6 +69,7 @@ app.use((req, res, next) => {
 app.use("/", require("./routes/authRoute"));
 app.use("/customer", require("./routes/customerRoute"));
 app.use("/:area/:controller/:action", require("./routes/route"));
+app.use("/api", require("./routes/apiRoute"));
 
 app.all("*", (req, res, next) => {
     const err = new Error(`Can't find ${req.originalUrl} on server`);

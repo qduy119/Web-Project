@@ -10,10 +10,13 @@ exports.product = async (req, res) => {
                 categoryId: product.categoryId,
             },
         });
-        const relatedProducts = products.filter((product) => product.id !== +id);
+        const relatedProducts = products.filter(
+            (product) => product.id !== +id
+        );
         const categories = await Category.findAll();
-    
+
         res.render("customer/productDetail", {
+            user: req.user,
             product,
             categories,
             relatedProducts,

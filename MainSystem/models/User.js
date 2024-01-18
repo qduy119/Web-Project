@@ -1,7 +1,12 @@
 const { DataTypes, Model } = require("sequelize");
 const sequelize = require("../utils/sequelize");
+const bcrypt = require("bcrypt");
 
-class User extends Model {}
+class User extends Model {
+    async correctPassword(userPassword) {
+        return await bcrypt.compare(userPassword, this.password);
+    }
+}
 
 User.init(
     {
@@ -17,7 +22,7 @@ User.init(
         username: DataTypes.TEXT,
         avatar: DataTypes.TEXT,
         gender: DataTypes.TEXT,
-        dob: DataTypes.DATEONLY
+        dob: DataTypes.DATEONLY,
     },
     {
         sequelize,
@@ -25,5 +30,9 @@ User.init(
         timestamps: false,
     }
 );
+User.beforeSave(async (user) => {
+    const salt = await bcrypt.genSalt(16);
+    user.password = await bcrypt.hash(user.password, salt);
+});
 
 module.exports = User;

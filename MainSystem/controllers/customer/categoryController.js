@@ -13,6 +13,7 @@ exports.category = async (req, res) => {
         const category = categories.find((category) => category.id === +id);
     
         res.render("customer/category", {
+            user: req.user,
             products,
             category,
             categories,
