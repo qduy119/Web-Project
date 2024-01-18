@@ -3,10 +3,10 @@
 <div class="isolate bg-white w-8/12 mx-auto">
     <div class="mx-auto max-w-2xl text-center">
       <h2 class="text-3xl font-bold text-gray-900 sm:text-4xl"> 
-        Tạo danh mục mới
+        Chỉnh sửa danh mục
       </h2>
     </div>
-    <form action="/admin/category/create" method="POST" enctype="multipart/form-data" class="mt-4 w-full">
+    <form action="/admin/category/edit" method="POST" enctype="multipart/form-data" class="mt-4 w-full">
       <div class="">
         <% if (errors) { %>
           <div class="">
@@ -16,19 +16,23 @@
             <% }%> 
         </div>
           <% } %>
+
+        <input type="hidden" name="id" id="id" value="<%= entity.id %>"/>
         <div class="w-full mb-3">
             <label for="title" class="block text-xl font-semibold leading-6 text-green-600">Tên danh mục</label>
             <div class="mt-2.5">
-              <input type="text" name="title" id="title" class="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset shadow-blue-500 ring-blue-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-400 text-lg sm:leading-6">
+              <input type="text" name="title" value="<%= entity.title %>" id="title" class="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset shadow-blue-500 ring-blue-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-400 text-lg sm:leading-6">
             </div>
           </div>
         
         <div class="w-full mb-3">
           <label for="description" class="block text-xl font-semibold leading-6 text-green-600">Mô tả</label>
           <div class="mt-2.5">
-            <textarea name="description" id="description" rows="4" class="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-lg sm:leading-6"></textarea>
+            <textarea name="description" id="description" rows="4" class="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-lg sm:leading-6">
+              <%= entity.description %>
+            </textarea>
           </div>
-        </div>  
+        </div>    
         
         <div class="w-full mb-3">
           <label for="upload" class="block text-xl font-semibold leading-6 text-green-600">Tải lên thumbnail</label>
@@ -51,7 +55,7 @@
       </div>
       <div class="mt-10 flex">
         <button type="submit" class="block flex-1 me-2 rounded-md bg-cyan-500 px-3.5 py-2.5 text-center text-xl font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-          Tạo danh mục    
+          Cập nhật danh mục    
         </button>
         <a href="/admin/category/index" class="block flex-1 rounded-md bg-purple-500 px-3.5 py-2.5 text-center text-xl font-semibold text-white shadow-sm hover:bg-rose-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
             Trở về danh sách danh mục  
@@ -61,6 +65,7 @@
   </div>
 
 
+  
   <script>
     const uploadInput = document.getElementById('upload');
     const filenameLabel = document.getElementById('filename');
@@ -81,7 +86,7 @@
             `<img src="${e.target.result}" class="max-h-48 rounded-lg mx-auto" alt="Image preview" />`;
           imagePreview.classList.remove('border-dashed', 'border-2', 'border-gray-400');
   
-
+          // Add event listener for image preview only once
           if (!isEventListenerAdded) {
             imagePreview.addEventListener('click', () => {
               uploadInput.click();
@@ -96,7 +101,8 @@
         imagePreview.innerHTML =
           `<div class="bg-gray-200 h-48 rounded-lg flex items-center justify-center text-gray-500">No image preview</div>`;
         imagePreview.classList.add('border-dashed', 'border-2', 'border-gray-400');
-
+  
+        // Remove the event listener when there's no image
         imagePreview.removeEventListener('click', () => {
           uploadInput.click();
         });
@@ -104,7 +110,4 @@
         isEventListenerAdded = false;
       }
     });
-  
-
   </script>
-  
