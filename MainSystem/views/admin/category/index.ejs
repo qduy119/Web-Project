@@ -65,33 +65,20 @@
                         <tbody>
                             <% const len=pager.pageSize> list.length ? list.length : pager.pageSize %>
                                 <% for(let i=0; i < len; i++) { %>
-                                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                    <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700"">
                                         <td
                                             class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                            <span class="font-semibold text-light-inverse text-lg/normal text-center">
-                                                <%= list[i].id %>
-                                            </span>
+                                            <%= list[i].id %>
                                         </td>
                                         <td class="px-6 py-4">
-                                            <div class="flex items-center">
-                                                <div class="relative inline-block shrink-0 rounded-2xl me-3">
-                                                    <img src="<%= list[i].thumbnail %>"
+                                            <img src="<%= list[i].thumbnail %>"
                                                         class="w-[40px] h-[40px] inline-block shrink-0 rounded-2xl"
                                                         alt="">
-                                                </div>
-                                                <div class="flex items-center">
-                                                    <span
-                                                        class="mb-1 font-semibold text-lg/normal text-secondary-inverse">
                                                         <%= list[i].title %>
-                                                    </span>
-                                                </div>
-                                            </div>
                                         </td>
 
                                         <td class="px-6 py-4">
-                                            <span class="mb-1 font-semibold text-lg/normal text-secondary-inverse">
-                                                <%= list[i].description %>
-                                            </span>
+                                            <%= list[i].description %>
                                         </td>
                                         <td class="px-6 py-4">
                                             <a href="/admin/category/edit?id=<%= list[i].id %>"
@@ -230,7 +217,7 @@
         const tableBodyRows = document.querySelectorAll('table tbody tr');
         if (tableBodyRows.length < 5) {
             for (let i = 0; i < 5 - tableBodyRows.length; i++) {
-                const trStr = `<tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                const trStr = `<tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
             <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"></td>
             <td class="px-6 py-4"></td>
             <td class="px-6 py-4"></td>
@@ -288,23 +275,11 @@
 
             const cols = tableRows[i].querySelectorAll('td');
 
-            cols[0].innerHTML = `<span class="font-semibold text-light-inverse text-lg/normal text-center">
-                  ${responseData.data[i].id}
-                </span>`;
-            cols[1].innerHTML = `<div class="flex items-center">
-                  <div class="relative inline-block shrink-0 rounded-2xl me-3">
-                    <img src="${responseData.data[i].thumbnail}" class="w-[40px] h-[40px] inline-block shrink-0 rounded-2xl" alt="">
-                  </div>
-                  <div class="flex items-center">
-                    <span class="mb-1 font-semibold text-lg/normal text-secondary-inverse">
-                      ${responseData.data[i].title}
-                    </span>
-                  </div>
-                </div>`;
+            cols[0].innerHTML = `${responseData.data[i].id}`;
+            cols[1].innerHTML = `<img src="${responseData.data[i].thumbnail}" class="w-[40px] h-[40px] inline-block shrink-0 rounded-2xl" alt="">
+                    ${responseData.data[i].title}`;
 
-            cols[2].innerHTML = `<span class="mb-1 font-semibold text-lg/normal text-secondary-inverse">
-                  ${responseData.data[i].description}
-                </span>`;
+            cols[2].innerHTML = `${responseData.data[i].description}`;
 
             cols[3].innerHTML = `<a href="/admin/category/edit?id=${responseData.data[i].id}"
                                         class="middle none relative h-10 max-h-[40px] w-10 max-w-[40px] rounded-lg bg-yellow-500 text-center text-xs font-medium uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
