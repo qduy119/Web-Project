@@ -69,7 +69,6 @@ app.use((req, res, next) => {
 app.use("/", require("./routes/authRoute"));
 app.use("/customer", require("./routes/customerRoute"));
 app.use("/:area/:controller/:action", require("./routes/route"));
-app.use("/api", require("./routes/apiRoute"));
 
 app.all("*", (req, res, next) => {
     const err = new Error(`Can't find ${req.originalUrl} on server`);

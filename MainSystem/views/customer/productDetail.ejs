@@ -2,13 +2,18 @@
     <div class="row px-xl-5">
         <div class="col-12">
             <nav class="breadcrumb bg-light mb-30">
-                <a class="breadcrumb-item text-dark" href="/customer/homepage">Home</a>
+                <a class="breadcrumb-item text-dark" href="/customer/homepage"
+                    >Home</a
+                >
                 <span class="breadcrumb-item active"><%= product.title %></span>
             </nav>
         </div>
     </div>
     <div class="row px-xl-5">
-        <div class="col-lg-5 mb-30">
+        <div
+            class="col-lg-5 mb-30 userData"
+            data-userid="<%= user ? user.id : '' %>"
+        >
             <div
                 id="product-carousel"
                 class="carousel slide"
@@ -109,7 +114,10 @@
                             type="text"
                             class="form-control bg-secondary border-0 text-center"
                             value="1"
+                            id="product-quantity"
+                            name="product-quantity"
                             max="<%= product.stock %>"
+                            min="1"
                         />
                         <div class="input-group-btn">
                             <button class="btn btn-primary btn-plus h-100">
@@ -117,7 +125,10 @@
                             </button>
                         </div>
                     </div>
-                    <button class="btn btn-primary px-3">
+                    <button
+                        class="btn btn-primary px-3 addToCart"
+                        data-productid="<%= product.id %>"
+                    >
                         <i class="fa fa-cart-plus mr-1"></i> Thêm vào giỏ hàng
                     </button>
                 </div>
@@ -143,9 +154,6 @@
                             alt=""
                         />
                         <div class="product-action">
-                            <a class="btn btn-outline-dark btn-square" href=""
-                                ><i class="fa fa-cart-plus"></i
-                            ></a>
                             <a
                                 class="btn btn-outline-dark btn-square"
                                 href="/customer/product/<%= product.id %>"
@@ -154,7 +162,9 @@
                         </div>
                     </div>
                     <div class="text-center py-4">
-                        <a class="h6 text-decoration-none text-truncate" href=""
+                        <a
+                            class="h6 text-decoration-none text-truncate"
+                            href="javascript:void(0);"
                             ><%= product.title %></a
                         >
                         <div
@@ -185,3 +195,44 @@
         </div>
     </div>
 </div>
+<%- include('partials/toast') %>
+
+<script>
+    const userId = $(".userData").data("userid");
+    $(".addToCart").on("click", async function () {
+        if (!userId) {
+            window.location.href = "/login";
+        } else {
+            const productId = $(this).data("productid");
+            const quantity = +$("#product-quantity").val();
+            await fetch("/customer/api/cart", {
+                method: "post",
+                headers: {
+                    "Content-type": "application/json",
+                },
+                body: JSON.stringify({
+                    quantity,
+                    productId,
+                }),
+            });
+            const res = await fetch("/customer/api/cart");
+            const { items } = await res.json();
+            $(".cart-badge").html(items);
+            const toastLiveExample = $("#liveToast");
+            const toastBootstrap =
+                bootstrap.Toast.getOrCreateInstance(toastLiveExample);
+            toastBootstrap.show();
+
+            await fetch("/customer/api/product", {
+                method: "put",
+                headers: {
+                    "Content-type": "application/json",
+                },
+                body: JSON.stringify({
+                    quantity: -quantity,
+                    id: productId,
+                }),
+            });
+        }
+    });
+</script>

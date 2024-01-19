@@ -1,6 +1,7 @@
 const { Op } = require("sequelize");
 const Category = require("../../models/Category");
 const Product = require("../../models/Product");
+const CartDetail = require("../../models/CartDetail");
 
 exports.home = async (req, res, next) => {
     try {
@@ -13,16 +14,19 @@ exports.home = async (req, res, next) => {
         };
         const { page = 1, range = "", query = "" } = req.query;
         const limit = 12;
-        
+
         const categories = await Category.findAll();
+        const nCart = await CartDetail.count({
+            where: { userId: req.user?.id || -1 },
+        });
         const { rows: products, count: total } = await Product.findAndCountAll({
             where: {
                 title: {
                     [Op.iLike]: `%${query}%`,
                 },
                 price: {
-                    [Op.between]: hashRange[range] ?? [0, 2147483647]
-                }
+                    [Op.between]: hashRange[range] ?? [0, 2147483647],
+                },
             },
             offset: (page - 1) * limit,
             limit,
@@ -32,19 +36,23 @@ exports.home = async (req, res, next) => {
                 user: req.user,
                 categories,
                 products,
+                nCart,
                 query,
                 range,
                 currPage: +page,
                 totalPage: Math.ceil(total / limit),
+                message: "Thêm vào giỏ hàng thành công",
             });
         } else {
             res.render("customer/home", {
                 user: req.user,
                 categories,
+                nCart,
                 products,
                 range,
                 currPage: +page,
                 totalPage: Math.ceil(total / limit),
+                message: "Thêm vào giỏ hàng thành công",
             });
         }
     } catch (error) {

@@ -16,7 +16,7 @@ exports.registerView = (req, res, next) => {
     }
 };
 
-exports.register = async (req, res, next) => {
+exports.register = async (req, res) => {
     try {
         const { username, password } = req.body;
         const user = await User.findOne({
@@ -33,6 +33,7 @@ exports.register = async (req, res, next) => {
         } else {
             const newUser = User.build({ username, password });
             await newUser.save();
+            console.log(newUser);
             res.status(200).json({ status: "success" });
         }
     } catch (error) {

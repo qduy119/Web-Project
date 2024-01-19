@@ -33,20 +33,51 @@
         return false;
     });
 
+    // $(".related-carousel").owlCarousel({
+    //     loop: true,
+    //     margin: 29,
+    //     nav: false,
+    //     autoplay: true,
+    //     smartSpeed: 1000,
+    //     responsive: {
+    //         0: {
+    //             items: 1,
+    //         },
+    //         576: {
+    //             items: 2,
+    //         },
+    //         768: {
+    //             items: 3,
+    //         },
+    //         992: {
+    //             items: 4,
+    //         },
+    //     },
+    // });
+
     // Product Quantity
-    $(".quantity button").on("click", function () {
-        var button = $(this);
-        var oldValue = button.parent().parent().find("input").val();
-        if (button.hasClass("btn-plus")) {
-            var newVal = parseFloat(oldValue) + 1;
-        } else {
-            if (oldValue > 0) {
-                var newVal = parseFloat(oldValue) - 1;
-            } else {
-                newVal = 0;
-            }
+    $(".btn-minus").on("click", () => {
+        const quantity = $("#product-quantity");
+        if(+quantity.val() > +quantity.attr("min"))
+        {
+            quantity.val(+quantity.val() - 1);
         }
-        button.parent().parent().find("input").val(newVal);
+    });
+    $(".btn-plus").on("click", () => {
+        const quantity = $("#product-quantity");
+        if(+quantity.val() < +quantity.attr("max"))
+        {
+            quantity.val(+quantity.val() + 1);
+        }
+    });
+
+    $("#product-quantity").on("change", function (e) {
+        const quantity = $(this);
+        if (+quantity.val() > +quantity.attr("max")) {
+            quantity.val(quantity.attr("max"));
+        } else if (+quantity.val() < +quantity.attr("min")) {
+            quantity.val(quantity.attr("min"));
+        }
     });
 
     // Search Input
@@ -73,7 +104,7 @@
         }
         if (block === 0) {
             $(".bar").removeClass("hidden");
-            const res = await fetch("/api/register", {
+            const res = await fetch("/customer/api/register", {
                 method: "post",
                 headers: {
                     "Content-Type": "application/json",
