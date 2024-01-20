@@ -1,4 +1,4 @@
-const User = require("../../models/User");
+const { User } = require("../../models");
 
 exports.loginView = (req, res, next) => {
     try {
@@ -33,11 +33,11 @@ exports.register = async (req, res) => {
         } else {
             const newUser = User.build({ username, password });
             await newUser.save();
-            console.log(newUser);
+            
             res.status(200).json({ status: "success" });
         }
     } catch (error) {
-        res.status(500).json({ status: "error", message: "Internal Error" });
+        res.status(500).json({ status: "error", message: error.message });
     }
 };
 

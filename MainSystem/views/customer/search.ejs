@@ -181,7 +181,7 @@
             });
             const res = await fetch("/customer/api/cart");
             const { items } = await res.json();
-            $(".cart-badge").html(items);
+            $(".cart-badge").html(items.length);
 
             const toastLiveExample = $("#liveToast");
                 const toastBootstrap =

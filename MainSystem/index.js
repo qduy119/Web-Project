@@ -7,6 +7,7 @@ const session = require("express-session");
 const store = new session.MemoryStore();
 const cookieParser = require("cookie-parser");
 const flash = require("connect-flash");
+const connect = require("./connection/index");
 
 const app = express();
 
@@ -82,6 +83,10 @@ app.use((err, req, res, next) => {
     err.status = err.status || "Something went wrong";
     res.status(err.statusCode).send(`${err.status}: ${err.message} !`);
 });
+
+(async () => {
+    await connect();
+})();
 
 app.listen(PORT, () => {
     console.log(`Main server listening on ${PORT}`);

@@ -1,6 +1,4 @@
-const Category = require("../../models/Category");
-const Product = require("../../models/Product");
-const CartDetail = require("../../models/CartDetail");
+const { CartDetail, Product, Category } = require("../../models");
 
 exports.category = async (req, res, next) => {
     try {
@@ -22,7 +20,7 @@ exports.category = async (req, res, next) => {
             category,
             nCart,
             categories,
-            message: "Thêm vào giỏ hàng thành công"
+            message: "Thêm vào giỏ hàng thành công",
         });
     } catch (error) {
         next(error);

@@ -33,40 +33,40 @@
         return false;
     });
 
-    // $(".related-carousel").owlCarousel({
-    //     loop: true,
-    //     margin: 29,
-    //     nav: false,
-    //     autoplay: true,
-    //     smartSpeed: 1000,
-    //     responsive: {
-    //         0: {
-    //             items: 1,
-    //         },
-    //         576: {
-    //             items: 2,
-    //         },
-    //         768: {
-    //             items: 3,
-    //         },
-    //         992: {
-    //             items: 4,
-    //         },
-    //     },
-    // });
+    if ($(".related-carousel").length) {
+        $(".related-carousel").owlCarousel({
+            loop: true,
+            margin: 29,
+            nav: false,
+            autoplay: true,
+            smartSpeed: 1000,
+            responsive: {
+                0: {
+                    items: 1,
+                },
+                576: {
+                    items: 2,
+                },
+                768: {
+                    items: 3,
+                },
+                992: {
+                    items: 4,
+                },
+            },
+        });
+    }
 
     // Product Quantity
     $(".btn-minus").on("click", () => {
         const quantity = $("#product-quantity");
-        if(+quantity.val() > +quantity.attr("min"))
-        {
+        if (+quantity.val() > +quantity.attr("min")) {
             quantity.val(+quantity.val() - 1);
         }
     });
     $(".btn-plus").on("click", () => {
         const quantity = $("#product-quantity");
-        if(+quantity.val() < +quantity.attr("max"))
-        {
+        if (+quantity.val() < +quantity.attr("max")) {
             quantity.val(+quantity.val() + 1);
         }
     });

@@ -1,6 +1,4 @@
-const Category = require("../../models/Category");
-const Product = require("../../models/Product");
-const CartDetail = require("../../models/CartDetail");
+const { Category, Product, CartDetail } = require("../../models");
 
 exports.product = async (req, res, next) => {
     try {
@@ -26,7 +24,7 @@ exports.product = async (req, res, next) => {
             categories,
             nCart,
             relatedProducts,
-            message: "Thêm vào giỏ hàng thành công"
+            message: "Thêm vào giỏ hàng thành công",
         });
     } catch (error) {
         next(error);
@@ -36,10 +34,7 @@ exports.product = async (req, res, next) => {
 exports.modifyQuantity = async (req, res) => {
     try {
         const { id, quantity } = req.body;
-        await Product.increment(
-            { stock: quantity },
-            { where: { id } }
-        );
+        await Product.increment({ stock: quantity }, { where: { id } });
 
         res.status(200).json({ status: "success" });
     } catch (error) {

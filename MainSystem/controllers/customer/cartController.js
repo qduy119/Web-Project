@@ -1,14 +1,22 @@
-const Category = require("../../models/Category");
-const CartDetail = require("../../models/CartDetail");
+const { Category, CartDetail } = require("../../models");
 
 exports.cart = async (req, res, next) => {
     try {
         const categories = await Category.findAll();
         const nCart = await CartDetail.count({
-            where: { userId: req.user?.id || -1 },
+            where: { userId: req.user.id },
+        });
+        const cartItems = await CartDetail.findAll({
+            where: { userId: req.user.id },
+            include: "product",
         });
 
-        res.render("customer/cart", { user: req.user, categories, nCart });
+        res.render("customer/cart", {
+            user: req.user,
+            categories,
+            nCart,
+            cartItems,
+        });
     } catch (error) {
         next(error);
     }
@@ -17,7 +25,7 @@ exports.cart = async (req, res, next) => {
 exports.getAllItemInCart = async (req, res) => {
     try {
         const userId = req.user.id;
-        const items = await CartDetail.count({ where: { userId } });
+        const items = await CartDetail.findAll({ where: { userId } });
         res.status(200).json({ items });
     } catch (error) {
         res.status(500).json({ status: "error", message: error.message });
