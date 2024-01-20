@@ -55,6 +55,19 @@ app.use((req, res, next) => {
     next();
 });
 
+app.get('/getPaging', (req, res, next) => {
+    try {
+        const { page, totalPage } = req.query;
+        const html = res.render('partials/paging.ejs', { layout: false, pager: {
+            pages: totalPage, 
+            curPage: page
+        }});
+        res.send(html);
+    } catch (error) {
+        next(error);
+    }
+});
+
 app.use("/customer", require("./routes/customerRoute"));
 app.use("/:area/:controller/:action", require("./routes/route"));
 

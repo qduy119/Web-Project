@@ -50,7 +50,6 @@ class CategoryController {
   async getEntity_GET(req, res, next) {
     try {
       let text = req.query.search;
-      console.log(text)
         if (!text || text == 'null') text = '';
         const count = (await Category.findAll({
           where: {
@@ -88,6 +87,17 @@ class CategoryController {
     } catch (error) {
       next(error);
     }
+  }
+
+  async getCategory_GET(req, res, next) {
+    try {
+        const { page } = req.body;
+          let categories = await Category.findAll({
+            order: [['title', 'ASC']] });
+        res.json({ data: categories });
+    } catch (error) {
+      next(error);
+    } 
   }
 
   async delete_POST(req, res, next) {
