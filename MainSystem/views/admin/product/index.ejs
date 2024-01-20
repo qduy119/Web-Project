@@ -210,7 +210,8 @@
                                             </a>`;
         }
 
-        if (page == <%= pager.pages %>) {
+        const numOfPages = parseInt('<%= pager.pages %>');
+        if (page == numOfPages) {
             const table = document.querySelector('table tbody');
             for (let i = dataLength; i < 5; i++) {
                 table.removeChild(table.children[dataLength]);
@@ -223,7 +224,6 @@
             });
         
         const paginatorHtml = await response.text();
-        console.log(paginatorHtml)
         document.querySelector('#tablePaging').innerHTML = paginatorHtml;
 
     }
