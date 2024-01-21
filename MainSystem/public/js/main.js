@@ -57,14 +57,14 @@
         });
     }
 
-    // Product Quantity
-    $(".btn-minus").on("click", () => {
+    // Product
+    $(".product-minus").on("click", () => {
         const quantity = $("#product-quantity");
         if (+quantity.val() > +quantity.attr("min")) {
             quantity.val(+quantity.val() - 1);
         }
     });
-    $(".btn-plus").on("click", () => {
+    $(".product-plus").on("click", () => {
         const quantity = $("#product-quantity");
         if (+quantity.val() < +quantity.attr("max")) {
             quantity.val(+quantity.val() + 1);

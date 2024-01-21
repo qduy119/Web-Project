@@ -93,7 +93,11 @@
                                     >Số lượng:</strong
                                 >
                             </td>
-                            <td><p><%= product.stock %></p></td>
+                            <td>
+                                <p class="product-stock">
+                                    <%= product.stock %>
+                                </p>
+                            </td>
                         </tr>
                         <tr>
                             <td class="p-2">
@@ -106,7 +110,9 @@
                 <div class="d-flex align-items-center mb-4 pt-2">
                     <div class="input-group quantity mr-3" style="width: 130px">
                         <div class="input-group-btn">
-                            <button class="btn btn-primary btn-minus h-100">
+                            <button
+                                class="btn btn-primary btn-minus h-100 product-minus"
+                            >
                                 <i class="fa fa-minus"></i>
                             </button>
                         </div>
@@ -120,7 +126,9 @@
                             min="1"
                         />
                         <div class="input-group-btn">
-                            <button class="btn btn-primary btn-plus h-100">
+                            <button
+                                class="btn btn-primary btn-plus h-100 product-plus"
+                            >
                                 <i class="fa fa-plus"></i>
                             </button>
                         </div>
@@ -132,6 +140,9 @@
                         <i class="fa fa-cart-plus mr-1"></i> Thêm vào giỏ hàng
                     </button>
                 </div>
+                <p class="text-danger fw-semibold hidden invalid-quantity">
+                    Số lượng không hợp lệ
+                </p>
             </div>
         </div>
     </div>
@@ -204,7 +215,22 @@
             window.location.href = "/login";
         } else {
             const productId = $(this).data("productid");
-            const quantity = +$("#product-quantity").val();
+            const quantityInput = $("#product-quantity");
+            const quantity = +quantityInput.val();
+            if (!Number.isInteger(quantity)) {
+                $(".invalid-quantity").removeClass("hidden");
+                return;
+            }
+            if (!$(".invalid-quantity").hasClass("hidden")) {
+                $(".invalid-quantity").addClass("hidden");
+            }
+            $(".product-stock").html(
+                +quantityInput.attr("max") - +quantityInput.val()
+            );
+            quantityInput.attr(
+                "max",
+                +quantityInput.attr("max") - +quantityInput.val()
+            );
             await fetch("/customer/api/cart", {
                 method: "post",
                 headers: {

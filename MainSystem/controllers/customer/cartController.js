@@ -16,13 +16,14 @@ exports.cart = async (req, res, next) => {
             categories,
             nCart,
             cartItems,
+            message: "Xóa khỏi giỏ hàng thành công",
         });
     } catch (error) {
         next(error);
     }
 };
 
-exports.getAllItemInCart = async (req, res) => {
+exports.getAll = async (req, res) => {
     try {
         const userId = req.user.id;
         const items = await CartDetail.findAll({ where: { userId } });
@@ -68,7 +69,7 @@ exports.modifyQuantity = async (req, res) => {
 
 exports.deleteFromCart = async (req, res) => {
     try {
-        const { id } = req.body;
+        const { id } = req.params;
         await CartDetail.destroy({ where: { id } });
         res.status(200).json({ status: "success" });
     } catch (error) {
