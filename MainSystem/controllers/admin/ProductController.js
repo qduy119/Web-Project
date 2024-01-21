@@ -122,7 +122,9 @@ class ProductController {
     try {
       const { categoryId, title, description, brand, price, discountPercent, stock } =
         req.body;
-      const image = req.file;
+      const thumbnail = req.file;
+      const images = req.files;
+      console.log(images)
       const maxId = await Product.max("id");
       const value = schema.validate({
         id: maxId + 1,
@@ -136,7 +138,7 @@ class ProductController {
       });
 
       if (value.error) {
-        if (image) cloudinary.uploader.destroy(image.filename);
+        if (thumbnail) cloudinary.uploader.destroy(thumbnail.filename);
         BaseController.View(req, res, { errors: value.error.details });
         return;
       }
@@ -150,7 +152,7 @@ class ProductController {
         price: price,
         discountPercent: discountPercent,
         stock: stock,
-        thumbnail: image?.path,
+        thumbnail: thumbnail?.path,
       });
 
       res.redirect("/admin/product/index");

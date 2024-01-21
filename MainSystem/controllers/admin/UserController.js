@@ -38,7 +38,7 @@ class UserController {
         if (!text || text == 'null') text = '';
         const count = (await User.findAll({
           where: {
-            title: {
+            username: {
               [Op.substring]: text    
             }
           }
@@ -46,7 +46,7 @@ class UserController {
         const pager = { pageSize: pageSize, pages: Math.ceil(count / pageSize), curPage: 1 }
         const users = await User.findAll({ 
           where: {
-            title: {
+            username: {
               [Op.substring]: text    
             }
           },
@@ -65,11 +65,10 @@ class UserController {
   async getEntity_GET(req, res, next) {
     try {
       let text = req.query.search;
-      console.log(text)
         if (!text || text == 'null') text = '';
         const count = (await User.findAll({
           where: {
-            title: {
+            username: {
               [Op.substring]: text    
             }
           }
@@ -80,7 +79,7 @@ class UserController {
         if (page == numOfPages) {
             users = await User.findAll({ 
             where: {
-              title: {
+              username: {
                 [Op.substring]: text    
               }
             },
@@ -91,7 +90,7 @@ class UserController {
         else {
           users = await User.findAll({
             where: {
-              title: {
+              username: {
                 [Op.substring]: text    
               }
             }, 
@@ -118,7 +117,6 @@ class UserController {
 
   async create_GET(req, res, next) {
     try {
-        
         BaseController.View(req, res, { errors: null });
     } catch (error) {
       next(error);
@@ -127,13 +125,21 @@ class UserController {
 
   async create_POST(req, res, next) {
     try {
-        const { title, description } = req.body;
-        const image = req.file;
+        const { username, password, email, role, gender, dob } = req.body;
+        const avatar = req.file;
         const maxId = await User.max('id');
-        const value = schema.validate({id: maxId + 1, title: title, description: description });
+        const value = schema.validate({
+          id: maxId + 1, 
+          username: username, 
+          password: password,
+          email: email,
+          role: role,
+          gender: gender,
+          dob: dob
+         });
         
         if (value.error) {
-          if (image) cloudinary.uploader.destroy(image.filename);
+          if (avatar) cloudinary.uploader.destroy(avatar.filename);
           BaseController.View(req, res, { errors: value.error.details });
           return;
         }
@@ -141,9 +147,13 @@ class UserController {
         
         const user = await User.create({
           id: maxId + 1, 
-          title: title, 
-          description: description, 
-          thumbnail: image?.path
+          username: username, 
+          password: password,
+          email: email,
+          role: role,
+          gender: gender,
+          dob: dob,
+          avatar: avatar?.path
         });
         
         res.redirect('/admin/user/index');
@@ -155,7 +165,7 @@ class UserController {
   async edit_GET(req, res, next) {
     try {
       const { id } = req.query;
-      const category = await User.findOne({ where: { id: id } });
+      const user = await User.findOne({ where: { id: id } });
       BaseController.View(req, res, { entity: user, errors: null });
     } catch (error) {
       next(error);
@@ -164,19 +174,29 @@ class UserController {
 
   async edit_POST(req, res, next) {
     try {
-        const { id, title, description } = req.body;
-        const image = req.file;
-        console.log(image)
-        const value = schema.validate({id: id, title: title, description: description });
+      const { id, username, email, role, gender, dob } = req.body;
+        const avatar = req.file;
+        const value = schema.validate({
+          id: id, 
+          username: username, 
+          email: email,
+          role: role,
+          gender: gender,
+          dob: dob
+         });
 
         
         if (value.error) {
-          if (image) cloudinary.uploader.destroy(image.filename);
+          if (avatar) cloudinary.uploader.destroy(avatar.filename);
           BaseController.View(req, res, { 
             entity: { 
               id: id, 
-              title: title, 
-              description: description
+              username: username, 
+              email: email,
+              role: role,
+              gender: gender,
+              dob: dob,
+              avatar: avatar?.path
             }, 
             errors: value.error.details 
           });
@@ -185,9 +205,12 @@ class UserController {
         
         
         await User.update({
-          title: title,
-          description: description,
-          thumbnail: image?.path
+              username: username, 
+              email: email,
+              role: role,
+              gender: gender,
+              dob: dob,
+              avatar: avatar?.path
         }, { where: { id: id } });
 
         

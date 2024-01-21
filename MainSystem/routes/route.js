@@ -1,8 +1,8 @@
 // routes.js
 const express = require('express');
 const router = express.Router();
-const cloudUploader = require('../utils/cloudinary');
-
+const singleUploader = require('../utils/cloudinary');
+const multiUploader = require('../utils/cloudinary');
 
 router.get('/', (req, res, next) => {
     try {
@@ -29,8 +29,7 @@ router.get('/', (req, res, next) => {
     
 });
 
-router.post('/', cloudUploader.single('upload'), (req, res, next) => {
-
+router.post('/', singleUploader.single('upload'), (req, res, next) => {
     try {
         if (req.originalUrl.split('/').filter(Boolean).length == 3) {
             let index = req.originalUrl.indexOf('?');
