@@ -41,4 +41,5 @@ module.exports = (sequelize, DataTypes) => {
         }
     );
     return Order;
+
 };

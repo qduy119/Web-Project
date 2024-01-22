@@ -47,4 +47,6 @@ module.exports = (sequelize, DataTypes) => {
         }
     );
     return CartDetail;
+
 };
+

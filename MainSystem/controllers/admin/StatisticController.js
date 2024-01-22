@@ -1,8 +1,10 @@
 const BaseController = require('./BaseController');
+const Order = require('../../models/Category');
 
-class HomeController {
+class StatisticController {
 
-  index(req, res, next) {
+  index_GET(req, res, next) {
+
     BaseController.View(req, res, {name: 'Cuong'});
     try {
       
@@ -12,4 +14,4 @@ class HomeController {
   }
 }
 
-module.exports = HomeController;
+module.exports = StatisticController;

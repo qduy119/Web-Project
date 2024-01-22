@@ -1,0 +1,88 @@
+<div class="isolate bg-white md:w-8/12 w-10/12 mx-auto">
+  <div class="mx-auto max-w-2xl text-center">
+    <h2 class="md:text-3xl text-xl font-bold text-gray-900 sm:text-4xl">
+      Chỉnh sửa danh mục
+    </h2>
+  </div>
+  <form action="/admin/category/edit" method="POST" enctype="multipart/form-data" class="mt-4 w-full">
+    <input type="hidden" name="id" value="<%= entity.id %>"/>
+    <div class="">
+      <% if (errors) { %>
+        <div class="">
+
+          <% for (let i=0; i < errors.length; i++) { %>
+            <div class="text-red-700 font-bold">
+              <%= errors[i].message %>
+            </div>
+            <% }%>
+        </div>
+        <% } %>
+        <div class="relative z-0 w-full mb-5 group">
+          <input type="text" name="title" id="title" value="<%= entity.title %>" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+          <label for="title" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+            Tên danh mục
+          </label>
+      </div>
+      <div class="relative z-0 w-full mb-5 group">
+        <input type="text" name="description" id="description" value="<%= entity.description %>" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+        <label for="description" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+          Mô tả danh mục
+        </label>
+    </div>
+
+    <div class="relative h-full flex flex-col bg-white shadow-xl rounded-md my-6" >
+      <h1 class="block mx-auto my-5 text-xl font-medium text-gray-900 dark:text-white">Tải lên thumbnail</h1>
+    <div class="flex items-center justify-center space-x-6 p-3">
+      
+      <div class="shrink-0">
+        <img id='preview_img' class="h-16 w-16 md:h-40 md:w-40 object-cover rounded-full" src="/images/preview_image.jpg" alt="preview image" />
+      </div>
+      <label for="upload" class="max-w-sm px-3 md:px-10 py-1 mb-4 bg-gray-100 border-dashed border-2 border-gray-400 rounded-lg items-center mx-auto text-center cursor-pointer">
+        <span>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-gray-700 mx-auto mb-1">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+          </svg>
+          <h5 class="mb-2 text-sm md:text-base font-bold tracking-tight text-gray-700">Upload thumbnail</h5>
+        </span>
+        <input type="file" id="upload" name="upload" onchange="loadFile(event)" class="hidden block w-full text-sm text-slate-500
+          file:mr-4 file:py-2 file:px-4
+          file:rounded-full file:border-0
+          file:text-sm file:font-semibold
+          file:bg-violet-50 file:text-violet-700
+          hover:file:bg-violet-100" />
+      </label>
+    </div>
+  </div>
+
+    </div>
+    <div class="mt-10 grid md:grid-cols-2">
+      <button type="submit"
+        class="block text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 rounded-lg font-bold text-sm px-5 py-2.5 text-center me-2 mb-2">
+        Lưu thay đổi
+      </button>
+      <a href="/admin/category/index"
+        class="block text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 rounded-lg font-bold text-sm px-5 py-2.5 text-center me-2 mb-2">
+        Trở về danh sách danh mục
+      </a>
+    </div>
+  </form>
+</div>
+
+
+<script>
+  var loadFile = function(event) {
+            
+            var input = event.target;
+            var file = input.files[0];
+            var type = file.type;
+
+           var output = document.getElementById('preview_img');
+
+
+            output.src = URL.createObjectURL(event.target.files[0]);
+            output.onload = function() {
+                URL.revokeObjectURL(output.src) // free memory
+            }
+        };
+
+</script>

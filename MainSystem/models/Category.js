@@ -36,4 +36,6 @@ module.exports = (sequelize, DataTypes) => {
         }
     );
     return Category;
+
 };
+
