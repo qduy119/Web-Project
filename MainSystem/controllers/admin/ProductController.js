@@ -1,5 +1,5 @@
 const BaseController = require("./BaseController");
-const Product = require("../../models/Product");
+const { Product } = require("../../models");
 const pageSize = 5;
 const cloudinary = require("cloudinary").v2;
 const Joi = require("joi");
@@ -46,7 +46,7 @@ class ProductController {
         order: [["id", "ASC"]],
       });
       
-      BaseController.View(req, res, { list: products, pager: pager });
+      BaseController.View(req, res, { list: products, pager: pager, text: text });
     } catch (error) {
       next(error);
     }

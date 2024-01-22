@@ -1,5 +1,5 @@
 const BaseController = require('./BaseController');
-const User = require('../../models/User');
+const { User } = require('../../models');
 const pageSize = 5;
 const cloudinary = require('cloudinary').v2;
 const Joi = require('joi');
@@ -55,7 +55,7 @@ class UserController {
           order: [['id', 'ASC']] 
         });
 
-        BaseController.View(req, res, { list: users, pager: pager });
+        BaseController.View(req, res, { list: users, pager: pager, text: text });
     } catch (error) {
       next(error);
     }
