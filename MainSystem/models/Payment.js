@@ -1,21 +1,17 @@
 "use strict";
-const bcrypt = require("bcrypt");
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-    class User extends Model {
+    class Payment extends Model {
         /**
          * Helper method for defining associations.
          * This method is not a part of Sequelize lifecycle.
          * The `models/index` file will call this method automatically.
          */
-        async correctPassword(userPassword) {
-            return await bcrypt.compare(userPassword, this.password);
-        }
         static associate(models) {
             // define association here
         }
     }
-    User.init(
+    Payment.init(
         {
             id: {
                 type: DataTypes.INTEGER,
@@ -23,23 +19,29 @@ module.exports = (sequelize, DataTypes) => {
                 primaryKey: true,
                 autoIncrement: true,
             },
-            email: DataTypes.TEXT,
-            password: DataTypes.TEXT,
-            role: DataTypes.TEXT,
-            username: DataTypes.TEXT,
-            avatar: DataTypes.TEXT,
-            gender: DataTypes.TEXT,
-            dob: DataTypes.DATEONLY,
+            userId: {
+                type: DataTypes.INTEGER,
+                references: {
+                    model: "Users",
+                    key: "id",
+                },
+            },
+            orderId: {
+                type: DataTypes.INTEGER,
+                references: {
+                    model: "Orders",
+                    key: "id",
+                },
+            },
+            paymentDate: DataTypes.DATE,
+            amount: DataTypes.FLOAT,
+            status: DataTypes.TEXT,
         },
         {
             sequelize,
-            modelName: "User",
+            modelName: "Payment",
             timestamps: false,
         }
     );
-    User.beforeSave(async (user) => {
-        const salt = await bcrypt.genSalt(16);
-        user.password = await bcrypt.hash(user.password, salt);
-    });
-    return User;
+    return Payment;
 };

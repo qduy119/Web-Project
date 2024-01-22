@@ -1,7 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-    class Product extends Model {
+    class OrderDetail extends Model {
         /**
          * Helper method for defining associations.
          * This method is not a part of Sequelize lifecycle.
@@ -9,15 +9,18 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
-            Product.hasMany(models.CartDetail, {
-                foreignKey: "productId",
+            OrderDetail.belongsTo(models.Order, {
+                foreignKey: "orderId",
+                targetKey: "id",
             });
-            Product.hasMany(models.OrderDetail, {
+            OrderDetail.belongsTo(models.Product, {
                 foreignKey: "productId",
+                targetKey: "id",
+                as: "product",
             });
         }
     }
-    Product.init(
+    OrderDetail.init(
         {
             id: {
                 type: DataTypes.INTEGER,
@@ -25,27 +28,27 @@ module.exports = (sequelize, DataTypes) => {
                 primaryKey: true,
                 autoIncrement: true,
             },
-            categoryId: {
+            orderId: {
                 type: DataTypes.INTEGER,
                 references: {
-                    model: "Categories",
+                    model: "Orders",
                     key: "id",
                 },
             },
-            title: DataTypes.TEXT,
-            description: DataTypes.TEXT,
-            thumbnail: DataTypes.TEXT,
-            images: DataTypes.JSON,
-            discountPercentage: DataTypes.FLOAT,
-            price: DataTypes.FLOAT,
-            brand: DataTypes.TEXT,
-            stock: DataTypes.INTEGER,
+            productId: {
+                type: DataTypes.INTEGER,
+                references: {
+                    model: "Products",
+                    key: "id",
+                },
+            },
+            quantity: DataTypes.INTEGER,
         },
         {
             sequelize,
-            modelName: "Product",
+            modelName: "OrderDetail",
             timestamps: false,
         }
     );
-    return Product;
+    return OrderDetail;
 };
