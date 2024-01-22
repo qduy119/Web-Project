@@ -85,7 +85,7 @@ async function createOrders() {
         create table "Orders" (
             id serial not null,
             "userId" integer not null,
-            "orderDate" timestamp not null,
+            "orderDate" timestamptz not null,
             "totalPrice" real not null,
             status text not null,
             foreign key ("userId") references "Users" (id),

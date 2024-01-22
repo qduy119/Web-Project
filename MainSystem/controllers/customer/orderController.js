@@ -1,13 +1,43 @@
-const { CartDetail, Category, Order } = require("../../models");
+const {
+    CartDetail,
+    Category,
+    Order,
+    OrderDetail,
+    Product,
+} = require("../../models");
 
 exports.order = async (req, res, next) => {
     try {
         const categories = await Category.findAll();
+        const orders = await Order.findAll({
+            where: {
+                userId: req.user.id,
+            },
+            include: [
+                {
+                    model: OrderDetail,
+                    as: "details",
+                    include: [
+                        {
+                            model: Product,
+                            as: "product",
+                        },
+                    ],
+                },
+            ],
+            order: [["orderDate", "desc"]],
+        });
+
         const nCart = await CartDetail.count({
             where: { userId: req.user.id },
         });
 
-        res.render("customer/order", { user: req.user, nCart, categories });
+        res.render("customer/order", {
+            user: req.user,
+            nCart,
+            categories,
+            orders,
+        });
     } catch (error) {
         next(error);
     }
