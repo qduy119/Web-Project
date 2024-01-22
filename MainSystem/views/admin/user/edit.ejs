@@ -1,0 +1,120 @@
+
+<div class="isolate bg-white md:w-8/12 w-10/12 mx-auto">
+  <div class="mx-auto max-w-2xl text-center">
+    <h2 class="md:text-3xl text-xl font-bold text-gray-900 sm:text-4xl">
+      Chỉnh sửa thông tin người dùng
+    </h2>
+  </div>
+  <form action="/admin/user/edit" method="POST" enctype="multipart/form-data" class="mt-4 w-full">
+    <div class="">
+      <% if (errors) { %>
+        <div class="">
+
+          <% for (let i=0; i < errors.length; i++) { %>
+            <div class="text-red-700 font-bold">
+              <%= errors[i].message %>
+            </div>
+            <% }%>
+        </div>
+        <% } %>
+
+        <input type="hidden" name="id" value="<%= entity.id %>" />
+        <div class="relative z-0 w-full mb-5 group">
+          <input type="text" name="username" id="username" value="<%= entity.username %>" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+          <label for="username" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+            Username
+          </label>
+      </div>
+
+      <div class="relative z-0 w-full mb-5 group">
+        <input type="email" name="email" id="email" value="<%= entity.email %>" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+        <label for="email" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+          Email
+        </label>
+    </div>
+
+    
+<label for="role" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Chọn role</label>
+<select id="role" name="role" class="block mb-6 py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer">
+    <option value="customer" <% if (entity.role == 'customer') { %> selected <% } %> >Khách hàng</option>
+    <option value="admin" <% if (entity.role == 'admin') { %> selected <% } %>>Quản trị viên</option>
+</select>
+
+<label for="gender" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Giới tính</label>
+<select id="gender" name="gender" class="block mb-6 py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer">
+    <option value="nam" <% if (entity.gender == 'nam') { %> selected <% } %> >Nam</option>
+    <option value="nu" <% if (entity.gender == 'nu') { %> selected <% } %> >Nữ</option>
+</select>
+
+<% function formatDate(inputDate) { %>
+  <% const parts = inputDate.split("-"); %>
+  <% const formattedDate = `${parts[2]}-${parts[1]}-${parts[0]}`; %>
+  <% return formattedDate; %>
+<% } %>
+
+<div class="relative max-w-sm">
+  <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+     <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+        <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
+      </svg>
+  </div>
+  <input name="dob" datepicker datepicker-format="mm/dd/yyyy" datepicker-autohide type="text" value="<%= formatDate(entity.dob) %>" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Chọn ngày sinh">
+</div>
+
+
+    <div class="relative h-full flex flex-col bg-white shadow-xl rounded-md my-6" >
+      <h1 class="block mx-auto my-5 text-xl font-medium text-gray-900 dark:text-white">Tải lên avatar</h1>
+    <div class="flex items-center justify-center space-x-6 p-3">
+      
+      <div class="shrink-0">
+        <img id='preview_img' class="h-16 w-16 md:h-40 md:w-40 object-cover rounded-full" src="/images/preview_image.jpg" alt="preview image" />
+      </div>
+      <label for="upload" class="max-w-sm px-3 md:px-10 py-1 mb-4 bg-gray-100 border-dashed border-2 border-gray-400 rounded-lg items-center mx-auto text-center cursor-pointer">
+        <span>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-gray-700 mx-auto mb-1">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+          </svg>
+          <h5 class="mb-2 text-sm md:text-base font-bold tracking-tight text-gray-700">Upload avatar</h5>
+        </span>
+        <input type="file" id="upload" name="upload" onchange="loadFile(event)" class="hidden block w-full text-sm text-slate-500
+          file:mr-4 file:py-2 file:px-4
+          file:rounded-full file:border-0
+          file:text-sm file:font-semibold
+          file:bg-violet-50 file:text-violet-700
+          hover:file:bg-violet-100" />
+      </label>
+    </div>
+  </div>
+
+    </div>
+    <div class="mt-10 grid md:grid-cols-2">
+      <button type="submit"
+        class="block text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 rounded-lg font-bold text-sm px-5 py-2.5 text-center me-2 mb-2">
+        Lưu thay đổi
+      </button>
+      <a href="/admin/user/index"
+        class="block text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 rounded-lg font-bold text-sm px-5 py-2.5 text-center me-2 mb-2">
+        Trở về danh sách người dùng
+      </a>
+    </div>
+  </form>
+</div>
+
+
+<script>
+  var loadFile = function(event) {
+            
+            var input = event.target;
+            var file = input.files[0];
+            var type = file.type;
+
+           var output = document.getElementById('preview_img');
+
+
+            output.src = URL.createObjectURL(event.target.files[0]);
+            output.onload = function() {
+                URL.revokeObjectURL(output.src) // free memory
+            }
+        };
+
+</script>

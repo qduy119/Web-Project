@@ -20,7 +20,7 @@ class CategoryController {
   async index_GET(req, res, next) {
     try {
         let text = req.query.search;
-        if (!text) text = '';
+        if (!text || text == 'null') text = '';
         const count = (await Category.findAll({
           where: {
             title: {
@@ -39,6 +39,7 @@ class CategoryController {
           offset: 0, 
           order: [['id', 'ASC']] 
         });
+
         BaseController.View(req, res, { list: categories, pager: pager });
     } catch (error) {
       next(error);
@@ -49,7 +50,7 @@ class CategoryController {
   async getEntity_GET(req, res, next) {
     try {
       let text = req.query.search;
-        if (!text) text = '';
+        if (!text || text == 'null') text = '';
         const count = (await Category.findAll({
           where: {
             title: {
@@ -83,6 +84,32 @@ class CategoryController {
             order: [['id', 'ASC']] });
         }
         res.json({ data: categories });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getCategory_GET(req, res, next) {
+    try {
+        const { page } = req.body;
+          let categories = await Category.findAll({
+            order: [['title', 'ASC']] });
+        res.json({ data: categories });
+    } catch (error) {
+      next(error);
+    } 
+  }
+
+  async getCategoryById_GET(req, res, next) {
+    try {
+      const { id } = req.query;
+      const category = await Category.findAll({
+        where: {
+          id: id
+        }
+      });
+
+      res.json({ data: category });
     } catch (error) {
       next(error);
     }
@@ -139,7 +166,6 @@ class CategoryController {
     try {
       const { id } = req.query;
       const category = await Category.findOne({ where: { id: id } });
-      console.log(category)
       BaseController.View(req, res, { entity: category, errors: null });
     } catch (error) {
       next(error);
@@ -150,7 +176,7 @@ class CategoryController {
     try {
         const { id, title, description } = req.body;
         const image = req.file;
-        
+        console.log(image)
         const value = schema.validate({id: id, title: title, description: description });
 
         
