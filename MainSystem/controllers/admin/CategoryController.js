@@ -100,6 +100,21 @@ class CategoryController {
     } 
   }
 
+  async getCategoryById_GET(req, res, next) {
+    try {
+      const { id } = req.query;
+      const category = await Category.findAll({
+        where: {
+          id: id
+        }
+      });
+
+      res.json({ data: category });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async delete_POST(req, res, next) {
     try {
         const { id } = req.body;

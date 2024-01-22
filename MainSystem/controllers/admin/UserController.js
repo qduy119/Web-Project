@@ -104,6 +104,21 @@ class UserController {
     }
   }
 
+  async getUserById_GET(req, res, next) {
+    try {
+      const { id } = req.query;
+      const user = await User.findAll({
+        where: {
+          id: id
+        }
+      });
+
+      res.json({ data: user });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async delete_POST(req, res, next) {
     try {
         const { id } = req.body;
@@ -178,6 +193,7 @@ class UserController {
         const avatar = req.file;
         const value = schema.validate({
           id: id, 
+          password: 'xyz',
           username: username, 
           email: email,
           role: role,

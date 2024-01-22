@@ -97,6 +97,21 @@ class ProductController {
     }
   }
 
+  async getProductById_GET(req, res, next) {
+    try {
+      const { id } = req.query;
+      const product = await Product.findAll({
+        where: {
+          id: id
+        }
+      });
+
+      res.json({ data: product });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async delete_POST(req, res, next) {
     try {
       const { id } = req.body;
