@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="container-fluid mt-body">
     <div class="row px-xl-5">
         <div class="col-12">
             <nav class="breadcrumb bg-light mb-30">
@@ -7,9 +7,11 @@
             </nav>
         </div>
     </div>
-    <div class="row px-xl-5">
+    <div class="row px-xl-5 userData" data-userid="<%= user ? user.id : '' %>">
         <% products.forEach(product => { %>
-        <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
+            <div
+            class="col-lg-3 col-md-4 col-sm-6 pb-1"
+        >
             <div class="product-item bg-light mb-4">
                 <div class="product-img position-relative overflow-hidden">
                     <img
@@ -18,7 +20,11 @@
                         alt=""
                     />
                     <div class="product-action">
-                        <a class="btn btn-outline-dark btn-square" href=""
+                        <a
+                            class="btn btn-outline-dark btn-square addToCart"
+                            href="javascript:void(0);"
+                            data-productid="<%= product.id %>"
+                            data-productstock="<%= product.stock %>"
                             ><i class="fa fa-cart-plus"></i
                         ></a>
                         <a
@@ -29,7 +35,9 @@
                     </div>
                 </div>
                 <div class="text-center py-4">
-                    <a class="h6 text-decoration-none text-truncate" href=""
+                    <a
+                        class="h6 text-decoration-none text-truncate"
+                        href="javascript:void(0);"
                         ><%= product.title %></a
                     >
                     <div
@@ -37,7 +45,7 @@
                     >
                         <h5>
                             $<%= (product.price * 0.01 * (100 -
-                            product.discountPercentage)).toFixed(2)%>
+                            product.discountPercentage)).toFixed(2) %>
                         </h5>
                         <h6 class="text-muted ml-2">
                             <del>$<%= product.price %></del>
@@ -59,3 +67,44 @@
         <% }) %>
     </div>
 </div>
+<%- include('partials/toast') %>
+
+<script>
+    const userId = $(".userData").data("userid");
+    $(".addToCart").on("click", async function () {
+        if (!userId) {
+            window.location.href = "/login";
+        } else {
+            const productId = $(this).data("productid");
+            await fetch("/customer/api/cart", {
+                method: "post",
+                headers: {
+                    "Content-type": "application/json",
+                },
+                body: JSON.stringify({
+                    quantity: 1,
+                    productId,
+                }),
+            });
+            const res = await fetch("/customer/api/cart");
+            const { items } = await res.json();
+            $(".cart-badge").html(items.length);
+
+            const toastLiveExample = $("#liveToast");
+                const toastBootstrap =
+                    bootstrap.Toast.getOrCreateInstance(toastLiveExample);
+                toastBootstrap.show();
+
+            await fetch("/customer/api/product", {
+                method: "put",
+                headers: {
+                    "Content-type": "application/json",
+                },
+                body: JSON.stringify({
+                    quantity: -1,
+                    id: productId,
+                }),
+            });
+        }
+    });
+</script>

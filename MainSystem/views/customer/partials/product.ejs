@@ -1,11 +1,57 @@
 <div class="row">
     <div class="container-fluid pt-5 pb-3">
-        <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4">
+        <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-2">
             <span class="bg-secondary pr-3">Danh sách sản phẩm</span>
         </h2>
-        <div class="row px-xl-5">
+        <div class="d-flex px-xl-5 justify-content-end mb-4">
+            <div class="dropdown">
+                <button
+                    class="btn btn-outline-success dropdown-toggle"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                >
+                    Lọc sản phẩm
+                </button>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a class="dropdown-item" href="/customer/homepage"
+                            >Không</a
+                        >
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="?range=under_50"
+                            >Dưới 50$</a
+                        >
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="?range=50_100"
+                            >Từ 50$ đến 100$</a
+                        >
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="?range=100_500"
+                            >Từ 100$ đến 500$</a
+                        >
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="?range=500_1000"
+                            >Từ 500$ đến 1000$</a
+                        >
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="?range=above_1000"
+                            >Trên 1000$</a
+                        >
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="row px-xl-5 userData" data-userid="<%= user ? user.id : '' %>">
             <% products.forEach(product => { %>
-            <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
+            <div
+                class="col-lg-3 col-md-4 col-sm-6 pb-1"
+            >
                 <div class="product-item bg-light mb-4">
                     <div class="product-img position-relative overflow-hidden">
                         <img
@@ -14,7 +60,10 @@
                             alt=""
                         />
                         <div class="product-action">
-                            <a class="btn btn-outline-dark btn-square" href=""
+                            <a
+                                class="btn btn-outline-dark btn-square addToCart"
+                                href="javascript:void(0);"
+                                data-productid="<%= product.id %>"
                                 ><i class="fa fa-cart-plus"></i
                             ></a>
                             <a
@@ -25,7 +74,9 @@
                         </div>
                     </div>
                     <div class="text-center py-4">
-                        <a class="h6 text-decoration-none text-truncate" href=""
+                        <a
+                            class="h6 text-decoration-none text-truncate"
+                            href="javascript:void(0);"
                             ><%= product.title %></a
                         >
                         <div
@@ -56,3 +107,44 @@
         </div>
     </div>
 </div>
+<%- include('toast') %>
+
+<script>
+    const userId = $(".userData").data("userid");
+    $(".addToCart").on("click", async function () {
+        if (!userId) {
+            window.location.href = "/login";
+        } else {
+            const productId = $(this).data("productid");
+            await fetch("/customer/api/cart", {
+                method: "post",
+                headers: {
+                    "Content-type": "application/json",
+                },
+                body: JSON.stringify({
+                    quantity: 1,
+                    productId,
+                }),
+            });
+            const res = await fetch("/customer/api/cart");
+            const { items } = await res.json();
+            $(".cart-badge").html(items.length);
+
+            const toastLiveExample = $("#liveToast");
+                const toastBootstrap =
+                    bootstrap.Toast.getOrCreateInstance(toastLiveExample);
+                toastBootstrap.show();
+
+            await fetch("/customer/api/product", {
+                method: "put",
+                headers: {
+                    "Content-type": "application/json",
+                },
+                body: JSON.stringify({
+                    quantity: -1,
+                    id: productId,
+                }),
+            });
+        }
+    });
+</script>

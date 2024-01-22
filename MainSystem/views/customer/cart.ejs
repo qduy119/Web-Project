@@ -1,8 +1,10 @@
-<div class="container-fluid">
+<div class="container-fluid mt-body">
     <div class="row px-xl-5">
         <div class="col-12">
             <nav class="breadcrumb bg-light mb-30">
-                <a class="breadcrumb-item text-dark" href="/customer/homepage">Home</a>
+                <a class="breadcrumb-item text-dark" href="/customer/homepage"
+                    >Home</a
+                >
                 <span class="breadcrumb-item active">My Cart</span>
             </nav>
         </div>
@@ -17,6 +19,7 @@
             >
                 <thead class="thead-dark">
                     <tr>
+                        <th>#</th>
                         <th>Products</th>
                         <th>Price</th>
                         <th>Quantity</th>
@@ -25,24 +28,37 @@
                     </tr>
                 </thead>
                 <tbody class="align-middle">
-                    <tr>
+                    <% cartItems.forEach(item => { %>
+                    <tr
+                        class="cart-item"
+                        data-item="<%= JSON.stringify(item) %>"
+                    >
                         <td class="align-middle">
-                            <img
-                                src="img/product-5.jpg"
-                                alt=""
-                                style="width: 50px"
-                            />
-                            Product Name
+                            <div class="form-check">
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    name="cart-select"
+                                />
+                            </div>
                         </td>
-                        <td class="align-middle">$150</td>
+                        <td class="d-flex gap-3 align-items-center">
+                            <img
+                                src="<%= item.product.thumbnail %>"
+                                alt="Thumbnail"
+                                style="width: 70px; height: 70px"
+                            />
+                            <%= item.product.title %>
+                        </td>
+                        <td class="align-middle"><%= item.product.price %></td>
                         <td class="align-middle">
                             <div
-                                class="input-group quantity mx-auto"
+                                class="input-group mx-auto"
                                 style="width: 100px"
                             >
                                 <div class="input-group-btn">
                                     <button
-                                        class="btn btn-sm btn-primary btn-minus h-100"
+                                        class="btn btn-sm btn-primary btn-minus h-100 cart-minus"
                                     >
                                         <i class="fa fa-minus"></i>
                                     </button>
@@ -50,54 +66,222 @@
                                 <input
                                     type="text"
                                     class="form-control form-control-sm bg-secondary border-0 text-center"
-                                    value="1"
+                                    name="cart-quantity"
+                                    value="<%= item.quantity %>"
+                                    min="1"
+                                    max="<%= item.product.stock %>"
+                                    disabled
                                 />
                                 <div class="input-group-btn">
                                     <button
-                                        class="btn btn-sm btn-primary btn-plus h-100"
+                                        class="btn btn-sm btn-primary btn-plus h-100 cart-plus"
                                     >
                                         <i class="fa fa-plus"></i>
                                     </button>
                                 </div>
                             </div>
                         </td>
-                        <td class="align-middle">$150</td>
+                        <td class="align-middle cart-total">
+                            <%= (item.quantity * item.product.price).toFixed(2)
+                            %>
+                        </td>
                         <td class="align-middle">
-                            <button class="btn btn-sm btn-danger">
+                            <button class="btn btn-sm btn-danger cart-delete">
                                 <i class="fa fa-times"></i>
                             </button>
                         </td>
                     </tr>
+                    <% }) %>
                 </tbody>
             </table>
         </div>
         <div class="col-lg-4">
             <h5 class="section-title position-relative text-uppercase mb-3">
-                <span class="bg-secondary pr-3">Cart Summary</span>
+                <span class="bg-secondary pr-3">Tóm Tắt Giỏ Hàng</span>
             </h5>
             <div class="bg-light p-30 mb-5">
                 <div class="border-bottom pb-2">
                     <div class="d-flex justify-content-between mb-3">
-                        <h6>Subtotal</h6>
-                        <h6>$150</h6>
+                        <h6>Tạm tính</h6>
+                        <h6>$<span class="subtotal">0</span></h6>
                     </div>
                     <div class="d-flex justify-content-between">
                         <h6 class="font-weight-medium">Shipping</h6>
-                        <h6 class="font-weight-medium">$10</h6>
+                        <h6 class="font-weight-medium">
+                            $<span class="shipping">0</span>
+                        </h6>
                     </div>
                 </div>
                 <div class="pt-2">
                     <div class="d-flex justify-content-between mt-2">
-                        <h5>Total</h5>
-                        <h5>$160</h5>
+                        <h5>Tổng tiền</h5>
+                        <h5>$<span class="total">0</span></h5>
                     </div>
                     <button
-                        class="btn btn-block btn-primary font-weight-bold my-3 py-3"
+                        class="btn btn-block btn-primary font-weight-bold my-3 py-3 cart-checkout"
                     >
-                        <a href="/customer/checkout">Proceed To Checkout</a>
+                        CHECKOUT
                     </button>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<%- include('partials/toast') %>
+
+<script>
+    $(".cart-minus").on("click", async function () {
+        const container = $(this).closest(".cart-item");
+        const itemQuantity = container.find('input[name="cart-quantity"]');
+        const selectInput = container.find('input[name="cart-select"]');
+        if (selectInput.prop("checked")) return;
+        const item = container.data("item");
+
+        if (+itemQuantity.val() > +itemQuantity.attr("min")) {
+            itemQuantity.val(+itemQuantity.val() - 1);
+            await fetch("/customer/api/cart", {
+                method: "put",
+                headers: {
+                    "Content-type": "application/json",
+                },
+                body: JSON.stringify({
+                    quantity: -1,
+                    id: item.id,
+                }),
+            });
+            container
+                .find(".cart-total")
+                .html((+itemQuantity.val() * item.product.price).toFixed(2));
+            itemQuantity.attr("max", +itemQuantity.attr("max") + 1);
+
+            await fetch("/customer/api/product", {
+                method: "put",
+                headers: {
+                    "Content-type": "application/json",
+                },
+                body: JSON.stringify({
+                    quantity: 1,
+                    id: item.product.id,
+                }),
+            });
+        }
+    });
+
+    $(".cart-plus").on("click", async function () {
+        const container = $(this).closest(".cart-item");
+        const itemQuantity = container.find('input[name="cart-quantity"]');
+        const selectInput = container.find('input[name="cart-select"]');
+        if (selectInput.prop("checked")) return;
+        const item = container.data("item");
+
+        if (+itemQuantity.val() < +itemQuantity.attr("max")) {
+            itemQuantity.val(+itemQuantity.val() + 1);
+            await fetch("/customer/api/cart", {
+                method: "put",
+                headers: {
+                    "Content-type": "application/json",
+                },
+                body: JSON.stringify({
+                    quantity: 1,
+                    id: item.id,
+                }),
+            });
+            container
+                .find(".cart-total")
+                .html((+itemQuantity.val() * item.product.price).toFixed(2));
+            itemQuantity.attr("max", +itemQuantity.attr("max") - 1);
+
+            await fetch("/customer/api/product", {
+                method: "put",
+                headers: {
+                    "Content-type": "application/json",
+                },
+                body: JSON.stringify({
+                    quantity: -1,
+                    id: item.product.id,
+                }),
+            });
+        }
+    });
+
+    $(".cart-delete").on("click", async function () {
+        const container = $(this).closest(".cart-item");
+        const item = container.data("item");
+        const selectInput = container.find('input[name="cart-select"]');
+
+        await fetch(`/customer/api/cart/${item.id}`, {
+            method: "delete",
+        });
+        if (selectInput.prop("checked")) {
+            const itemSelectedTotal = item.quantity * item.product.price;
+            const subtotal = +$(".subtotal").html() - itemSelectedTotal;
+            $(".subtotal").html(subtotal);
+            const shipping = +$(".shipping").html();
+            $(".total").html(subtotal + shipping);
+        }
+        const toastLiveExample = $("#liveToast");
+        const toastBootstrap =
+            bootstrap.Toast.getOrCreateInstance(toastLiveExample);
+        toastBootstrap.show();
+        const res = await fetch("/customer/api/cart");
+        const { items } = await res.json();
+        $(".cart-badge").html(items.length);
+
+        await fetch("/customer/api/product", {
+            method: "put",
+            headers: {
+                "Content-type": "application/json",
+            },
+            body: JSON.stringify({
+                quantity: item.quantity,
+                id: item.product.id,
+            }),
+        });
+
+        container.remove();
+    });
+
+    $('input[name="cart-select"]').on("change", async function () {
+        const container = $(this).closest(".cart-item");
+        const item = container.data("item");
+        const selectInput = container.find('input[name="cart-quantity"]');
+        const itemSelectedTotal = +selectInput.val() * item.product.price;
+        let subtotal = 0;
+        if ($(this).prop("checked")) {
+            subtotal = +$(".subtotal").html() + itemSelectedTotal;
+        } else {
+            subtotal = +$(".subtotal").html() - itemSelectedTotal;
+        }
+        $(".subtotal").html(subtotal);
+        const shipping = +$(".shipping").html();
+        $(".total").html(subtotal + shipping);
+    });
+
+    $(".cart-checkout").on("click", async () => {
+        const selectedItems = $(".cart-item input:checked")
+            .map(function () {
+                const container = $(this).closest(".cart-item");
+                const item = container.data("item");
+                const selectInput = container.find(
+                    'input[name="cart-quantity"]'
+                );
+                item.quantity = +selectInput.val();
+                return item;
+            })
+            .get();
+
+        if (selectedItems.length > 0) {
+            await fetch("/customer/api/checkout", {
+                method: "post",
+                headers: {
+                    "Content-type": "application/json",
+                },
+                body: JSON.stringify({
+                    selectedItems,
+                }),
+            });
+            window.location.href = "/customer/checkout";
+        }
+    });
+</script>

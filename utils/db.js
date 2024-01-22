@@ -5,18 +5,18 @@ const pgp = require("pg-promise")({
 });
 
 const connection = {
-      host: process.env.DB_HOST,
-      port: process.env.DB_PORT,
-      database: process.env.DB_DATABASE,
-      user: process.env.DB_USER,
-      password: process.env.DB_PASSWORD,
-      max: 30,
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    database: process.env.DB_DATABASE,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    max: 30,
 };
 
 let db = pgp(connection);
 
 async function createCategories() {
-      const query = `
+    const query = `
             create table "Categories" (
                   id serial not null,
                   title text,
@@ -25,11 +25,11 @@ async function createCategories() {
                   primary key (id)
             )
       `;
-      await db.none(query);
+    await db.none(query);
 }
 
 async function createProducts() {
-      const query = `
+    const query = `
             create table "Products" (
                   id serial not null,
                   "categoryId" integer not null,
@@ -45,17 +45,17 @@ async function createProducts() {
                   primary key (id)
             )
       `;
-      await db.none(query);
+    await db.none(query);
 }
 
 async function createUsers() {
-      const query = `
+    const query = `
             create table "Users" (
                   id serial not null,
-                  email text not null,
-                  password text  UNIQUE,
-                  role text default 'user'::text,
                   username text not null,
+                  password text  UNIQUE,
+                  email text,
+                  role text default 'customer'::text,
                   avatar text default 'https://res.cloudinary.com/dlzyiprib/image/upload/v1700326876/e-commerces/user/download_ae0aln.png'::text,
                   gender text,
                   dob date,
@@ -66,7 +66,7 @@ async function createUsers() {
 }
 
 async function createCartDetails() {
-      const query = `
+    const query = `
             create table "CartDetails" (
                   id serial not null,
                   "userId" integer not null,
@@ -77,7 +77,7 @@ async function createCartDetails() {
                   primary key (id)
             )
       `;
-      await db.none(query);
+    await db.none(query);
 }
 
 async function createOrders() {
@@ -85,8 +85,8 @@ async function createOrders() {
         create table "Orders" (
             id serial not null,
             "userId" integer not null,
-            date date not null,
-            total real not null,
+            "orderDate" timestamptz not null,
+            "totalPrice" real not null,
             status text not null,
             foreign key ("userId") references "Users" (id),
             primary key (id)
@@ -116,8 +116,7 @@ async function createPayments() {
             id serial not null,
             "orderId" integer not null,
             "userId" integer not null,
-            date date not null,
-            method text not null,
+            "paymentDate" date not null,
             amount real not null,
             status text not null,
             foreign key ("orderId") references "Orders" (id),
@@ -128,35 +127,20 @@ async function createPayments() {
     await db.none(query);
 }
 
-async function createReviews() {
-    const query = `
-        create table "Reviews" (
-            id serial not null,
-            "userId" integer not null,
-            content text,
-            rate integer,
-            date date,
-            foreign key ("userId") references "Users" (id),
-            primary key (id)
-        )
-    `;
-    await db.none(query);
-}
-
 const createPaymentAccount = async () => {
-      const query = `
+    const query = `
             create table "paymentAccount" (
                   id serial not null,
                   "creditBalance" real not null default 100000.0,
                   primary key (id),
                   foreign key (id) references "Users" (id)
             )
-      `
-      await db.none(query);
-}
+      `;
+    await db.none(query);
+};
 
 const createHistoryTransfer = async () => {
-      await db.none(`
+    await db.none(`
             create table "historyTransfer" (
                   id serial not null,
                   "dateTransfer" date not null,
@@ -167,8 +151,8 @@ const createHistoryTransfer = async () => {
                   foreign key ("userID") references "Users" (id),
                   primary key (id)
             )
-      `)
-}
+      `);
+};
 
 async function createTable() {
     await createCategories();
@@ -178,7 +162,6 @@ async function createTable() {
     await createOrders();
     await createOrderDetails();
     await createPayments();
-    await createReviews();
     await createPaymentAccount();
     await createHistoryTransfer();
 }
@@ -191,57 +174,54 @@ async function importData() {
 }
 
 async function isDBExist() {
-      try {
-            const isExist = await db.any(
-                  `select * from pg_database where datname = $1`,
-                  [process.env.DB_DATABASE]
-            );
-            return isExist.length > 0;
-      } catch (err) {
-            console.log(err.message);
-      }
+    try {
+        const isExist = await db.any(
+            `select * from pg_database where datname = $1`,
+            [process.env.DB_DATABASE]
+        );
+        return isExist.length > 0;
+    } catch (err) {
+        console.log(err.message);
+    }
 }
 
 async function insertBulk(tableName, entity) {
-      try {
-            let keys = [];
-            if (entity.length > 0) {
-                  keys = Object.keys(entity[0]);
-            }
-            const query = pgp.helpers.insert(entity, keys, tableName);
-            const data = await db.many(query + " RETURNING *");
-            return data;
-      } catch (err) {
-            console.log(err);
-      }
+    try {
+        let keys = [];
+        if (entity.length > 0) {
+            keys = Object.keys(entity[0]);
+        }
+        const query = pgp.helpers.insert(entity, keys, tableName);
+        const data = await db.many(query + " RETURNING *");
+        return data;
+    } catch (err) {
+        console.log(err);
+    }
 }
 
 async function connectDB() {
-      try {
-            const result = await db.one("SELECT NOW()");
-            console.log("Connected to the database:", result.now);
-            // await db.none(str)
-      } catch (error){
-            delete connection.database;
-            db = pgp(connection)
-            await  db.none(`create database "${process.env.DB_DATABASE}"`)
-            connection.database = process.env.DB_DATABASE;
-            db = pgp(connection);
-            
-            const result = await db.one("SELECT NOW()");
-            console.error("Connected to the database : ", result.now);
-            //neu nhu db moi tao ta insert data
-            await createTable();
-            await importData();
-      }
+    try {
+        const result = await db.one("SELECT NOW()");
+        console.log("Connected to the database:", result.now);
+        // await db.none(str)
+    } catch (error) {
+        delete connection.database;
+        db = pgp(connection);
+        await db.none(`create database "${process.env.DB_DATABASE}"`);
+        connection.database = process.env.DB_DATABASE;
+        db = pgp(connection);
+
+        const result = await db.one("SELECT NOW()");
+        console.error("Connected to the database : ", result.now);
+        //neu nhu db moi tao ta insert data
+        await createTable();
+        await importData();
+    }
 }
 
 connectDB();
 
 module.exports = db;
-
-
-
 
 /**
        try {

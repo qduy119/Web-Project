@@ -1,14 +1,19 @@
-<div class="container-fluid">
+<div class="container-fluid mt-body">
     <div class="row px-xl-5">
         <div class="col-12">
             <nav class="breadcrumb bg-light mb-30">
-                <a class="breadcrumb-item text-dark" href="/customer/homepage">Home</a>
+                <a class="breadcrumb-item text-dark" href="/customer/homepage"
+                    >Home</a
+                >
                 <span class="breadcrumb-item active"><%= product.title %></span>
             </nav>
         </div>
     </div>
     <div class="row px-xl-5">
-        <div class="col-lg-5 mb-30">
+        <div
+            class="col-lg-5 mb-30 userData"
+            data-userid="<%= user ? user.id : '' %>"
+        >
             <div
                 id="product-carousel"
                 class="carousel slide"
@@ -88,7 +93,11 @@
                                     >Số lượng:</strong
                                 >
                             </td>
-                            <td><p><%= product.stock %></p></td>
+                            <td>
+                                <p class="product-stock">
+                                    <%= product.stock %>
+                                </p>
+                            </td>
                         </tr>
                         <tr>
                             <td class="p-2">
@@ -101,7 +110,9 @@
                 <div class="d-flex align-items-center mb-4 pt-2">
                     <div class="input-group quantity mr-3" style="width: 130px">
                         <div class="input-group-btn">
-                            <button class="btn btn-primary btn-minus h-100">
+                            <button
+                                class="btn btn-primary btn-minus h-100 product-minus"
+                            >
                                 <i class="fa fa-minus"></i>
                             </button>
                         </div>
@@ -109,18 +120,29 @@
                             type="text"
                             class="form-control bg-secondary border-0 text-center"
                             value="1"
+                            id="product-quantity"
+                            name="product-quantity"
                             max="<%= product.stock %>"
+                            min="1"
                         />
                         <div class="input-group-btn">
-                            <button class="btn btn-primary btn-plus h-100">
+                            <button
+                                class="btn btn-primary btn-plus h-100 product-plus"
+                            >
                                 <i class="fa fa-plus"></i>
                             </button>
                         </div>
                     </div>
-                    <button class="btn btn-primary px-3">
+                    <button
+                        class="btn btn-primary px-3 addToCart"
+                        data-productid="<%= product.id %>"
+                    >
                         <i class="fa fa-cart-plus mr-1"></i> Thêm vào giỏ hàng
                     </button>
                 </div>
+                <p class="text-danger fw-semibold hidden invalid-quantity">
+                    Số lượng không hợp lệ
+                </p>
             </div>
         </div>
     </div>
@@ -143,9 +165,6 @@
                             alt=""
                         />
                         <div class="product-action">
-                            <a class="btn btn-outline-dark btn-square" href=""
-                                ><i class="fa fa-cart-plus"></i
-                            ></a>
                             <a
                                 class="btn btn-outline-dark btn-square"
                                 href="/customer/product/<%= product.id %>"
@@ -154,7 +173,9 @@
                         </div>
                     </div>
                     <div class="text-center py-4">
-                        <a class="h6 text-decoration-none text-truncate" href=""
+                        <a
+                            class="h6 text-decoration-none text-truncate"
+                            href="javascript:void(0);"
                             ><%= product.title %></a
                         >
                         <div
@@ -185,3 +206,59 @@
         </div>
     </div>
 </div>
+<%- include('partials/toast') %>
+
+<script>
+    const userId = $(".userData").data("userid");
+    $(".addToCart").on("click", async function () {
+        if (!userId) {
+            window.location.href = "/login";
+        } else {
+            const productId = $(this).data("productid");
+            const quantityInput = $("#product-quantity");
+            const quantity = +quantityInput.val();
+            if (!Number.isInteger(quantity)) {
+                $(".invalid-quantity").removeClass("hidden");
+                return;
+            }
+            if (!$(".invalid-quantity").hasClass("hidden")) {
+                $(".invalid-quantity").addClass("hidden");
+            }
+            $(".product-stock").html(
+                +quantityInput.attr("max") - +quantityInput.val()
+            );
+            quantityInput.attr(
+                "max",
+                +quantityInput.attr("max") - +quantityInput.val()
+            );
+            await fetch("/customer/api/cart", {
+                method: "post",
+                headers: {
+                    "Content-type": "application/json",
+                },
+                body: JSON.stringify({
+                    quantity,
+                    productId,
+                }),
+            });
+            const res = await fetch("/customer/api/cart");
+            const { items } = await res.json();
+            $(".cart-badge").html(items.length);
+            const toastLiveExample = $("#liveToast");
+            const toastBootstrap =
+                bootstrap.Toast.getOrCreateInstance(toastLiveExample);
+            toastBootstrap.show();
+
+            await fetch("/customer/api/product", {
+                method: "put",
+                headers: {
+                    "Content-type": "application/json",
+                },
+                body: JSON.stringify({
+                    quantity: -quantity,
+                    id: productId,
+                }),
+            });
+        }
+    });
+</script>

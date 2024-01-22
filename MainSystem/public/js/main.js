@@ -33,68 +33,97 @@
         return false;
     });
 
-    // Vendor carousel
-    $(".vendor-carousel").owlCarousel({
-        loop: true,
-        margin: 29,
-        nav: false,
-        autoplay: true,
-        smartSpeed: 1000,
-        responsive: {
-            0: {
-                items: 2,
+    if ($(".related-carousel").length) {
+        $(".related-carousel").owlCarousel({
+            loop: true,
+            margin: 29,
+            nav: false,
+            autoplay: true,
+            smartSpeed: 1000,
+            responsive: {
+                0: {
+                    items: 1,
+                },
+                576: {
+                    items: 2,
+                },
+                768: {
+                    items: 3,
+                },
+                992: {
+                    items: 4,
+                },
             },
-            576: {
-                items: 3,
-            },
-            768: {
-                items: 4,
-            },
-            992: {
-                items: 5,
-            },
-            1200: {
-                items: 6,
-            },
-        },
+        });
+    }
+
+    // Product
+    $(".product-minus").on("click", () => {
+        const quantity = $("#product-quantity");
+        if (+quantity.val() > +quantity.attr("min")) {
+            quantity.val(+quantity.val() - 1);
+        }
+    });
+    $(".product-plus").on("click", () => {
+        const quantity = $("#product-quantity");
+        if (+quantity.val() < +quantity.attr("max")) {
+            quantity.val(+quantity.val() + 1);
+        }
     });
 
-    // Related carousel
-    $(".related-carousel").owlCarousel({
-        loop: true,
-        margin: 29,
-        nav: false,
-        autoplay: true,
-        smartSpeed: 1000,
-        responsive: {
-            0: {
-                items: 1,
-            },
-            576: {
-                items: 2,
-            },
-            768: {
-                items: 3,
-            },
-            992: {
-                items: 4,
-            },
-        },
+    $("#product-quantity").on("change", function (e) {
+        const quantity = $(this);
+        if (+quantity.val() > +quantity.attr("max")) {
+            quantity.val(quantity.attr("max"));
+        } else if (+quantity.val() < +quantity.attr("min")) {
+            quantity.val(quantity.attr("min"));
+        }
     });
 
-    // Product Quantity
-    $(".quantity button").on("click", function () {
-        var button = $(this);
-        var oldValue = button.parent().parent().find("input").val();
-        if (button.hasClass("btn-plus")) {
-            var newVal = parseFloat(oldValue) + 1;
-        } else {
-            if (oldValue > 0) {
-                var newVal = parseFloat(oldValue) - 1;
+    // Search Input
+    $(".form-search").on("submit", (e) => {
+        if (!$(".search-input").val().trim()) {
+            e.preventDefault();
+        }
+    });
+    $(".form-lg-search").on("submit", (e) => {
+        if (!$(".search-lg-input").val().trim()) {
+            e.preventDefault();
+        }
+    });
+    $(".register-form").on("submit", async (e) => {
+        e.preventDefault();
+        const username = $("#username").val();
+        const password = $("#password").val();
+        const confirmPassword = $("#confirm-password").val();
+        let block = 0;
+
+        if (password !== confirmPassword) {
+            $(".error-register").html("Mật khẩu xác nhận không chính xác");
+            block = 1;
+        }
+        if (block === 0) {
+            $(".bar").removeClass("hidden");
+            const res = await fetch("/customer/api/register", {
+                method: "post",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ username, password }),
+            });
+            const { status, message } = await res.json();
+            $(".bar").addClass("hidden");
+            if (status === "success") {
+                const toastLiveExample = $("#liveToast");
+                const toastBootstrap =
+                    bootstrap.Toast.getOrCreateInstance(toastLiveExample);
+                toastBootstrap.show();
+                setTimeout(() => {
+                    window.location.href = "/login";
+                }, 1000);
             } else {
-                newVal = 0;
+                $(".error-register").html(message);
             }
         }
-        button.parent().parent().find("input").val(newVal);
     });
 })(jQuery);

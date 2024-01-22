@@ -7,11 +7,11 @@
         </a>
     </div>
     <div class="col-lg-4 col-6 text-left my-auto d-none d-lg-block">
-        <form action="/customer/search" class="mb-0">
+        <form action="/customer/homepage" class="form-search mb-0">
             <div class="input-group">
                 <input
                     type="text"
-                    class="form-control"
+                    class="form-control search-input"
                     name="query"
                     placeholder="Tìm kiếm sản phẩm ..."
                 />
@@ -24,38 +24,48 @@
         </form>
     </div>
     <div class="col-lg-4 col-6 d-none d-lg-block">
-        <p class="text-end">
-            <a
-                class="link-warning link-offset-2 link-underline-opacity-0 link-underline-opacity-100-hover hover"
-                href="/login"
-            >LOGIN</a>
-        </p>
-        <p class="text-end">
-            <a
-                class="link-warning link-offset-2 link-underline-opacity-0 link-underline-opacity-100-hover hover"
-                href="/signup"
-            >SIGN UP</a>
-        </p>
+        <% if (user) { %>
+            <div class="d-flex align-items-center justify-content-end">
+                <%- include('userbar') %>
+            </div>
+          <% } else { %>
+            <p class="text-end">
+                <a
+                    class="link-warning link-offset-2 link-underline-opacity-0 link-underline-opacity-100-hover hover"
+                    href="/login"
+                >LOGIN</a>
+            </p>
+            <p class="text-end">
+                <a
+                    class="link-warning link-offset-2 link-underline-opacity-0 link-underline-opacity-100-hover hover"
+                    href="/register"
+                >REGISTER</a>
+            </p>
+          <% } %>
     </div>
-    <div class="d-flex d-lg-none justify-content-center">
-        <p class="text-center">
-            <a
-                class="link-warning link-offset-2 link-underline-opacity-0 link-underline-opacity-100-hover hover pe-2"
-                href="/login"
-            >LOGIN</a>
-            <a
-                class="link-warning link-offset-2 link-underline-opacity-0 link-underline-opacity-100-hover hover"
-                href="/signup"
-            >SIGN UP</a>
-        </p>
-        <div class="py-0 ml-4">
+    <div class="d-flex d-lg-none justify-content-center align-items-center">
+        <div class="py-0 mr-3">
             <a href="/customer/cart" class="p-0 ml-2">
                 <i class="fas fa-shopping-cart text-primary"></i>
                 <span
-                    class="badge text-dark border border-dark rounded-circle"
+                    class="badge text-dark border border-dark rounded-circle cart-badge"
                     style="padding-bottom: 2px;"
-                >0</span>
+                ><%= nCart %></span>
             </a>
         </div>
+        <% if (user) { %>
+            <%- include('userbar') %>
+          <% } else { %>
+            <p class="text-center">
+                <a
+                    class="link-warning link-offset-2 link-underline-opacity-0 link-underline-opacity-100-hover hover pe-2"
+                    href="/login"
+                >LOGIN</a>
+                <a
+                    class="link-warning link-offset-2 link-underline-opacity-0 link-underline-opacity-100-hover hover"
+                    href="/register"
+                >REGISTER</a>
+            </p>
+          <% } %>
     </div>
 </div>

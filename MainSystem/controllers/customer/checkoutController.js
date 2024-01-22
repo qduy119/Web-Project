@@ -1,9 +1,20 @@
-const Category = require("../../models/Category");
+const { CartDetail, Category } = require("../../models");
 
-exports.checkout = async (req, res) => {
+exports.getSelectedItem = async (req, res, next) => {
+    const { selectedItems } = req.body;
+    req.session.selectedItems = selectedItems;
+    next();
+};
+
+exports.checkout = async (req, res, next) => {
     try {
+        const items = req.session.selectedItems;
         const categories = await Category.findAll();
-        res.render("customer/checkout", { categories });
+        const nCart = await CartDetail.count({
+            where: { userId: req.user.id },
+        });
+
+        res.render("customer/checkout", { user: req.user, nCart, categories, items });
     } catch (error) {
         next(error);
     }

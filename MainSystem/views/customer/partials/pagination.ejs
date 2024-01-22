@@ -1,0 +1,39 @@
+<div class="row">
+    <div class="container-fluid py-3">
+        <div class="d-flex justify-content-center align-items-center">
+            <nav aria-label="Pagination">
+                <ul class="pagination">
+                    <li class="page-item">
+                        <a
+                            class="page-link"
+                            href="<%= currPage === 1 ? `javascript:void(0);` : range ? `?range=${range}&page=${currPage-1}` : `?page=${currPage-1}` %>"
+                            aria-label="Previous"
+                        >
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <% for (let page = 1; page <= totalPage; page++) { %>
+                    <li
+                        class="page-item <%= page === currPage ? 'active' : '' %>"
+                    >
+                        <a
+                            class="page-link"
+                            href="<%= range ? `?range=${range}&page=${page}` : `?page=${page}` %>"
+                            ><%= page %></a
+                        >
+                    </li>
+                    <% } %>
+                    <li class="page-item">
+                        <a
+                            class="page-link"
+                            href="<%= currPage === totalPage ? `javascript:void(0);` : range ? `?range=${range}&page=${currPage+1}` : `?page=${currPage+1}` %>"
+                            aria-label="Next"
+                        >
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>

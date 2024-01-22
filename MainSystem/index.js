@@ -4,7 +4,10 @@ const expressLayouts = require("express-ejs-layouts");
 const path = require("path");
 const morgan = require("morgan");
 const session = require("express-session");
+const store = new session.MemoryStore();
 const cookieParser = require("cookie-parser");
+const flash = require("connect-flash");
+const connect = require("./connection/index");
 
 const app = express();
 
@@ -20,15 +23,19 @@ app.use(
             maxAge: +process.env.SESSION_EXPIRATION,
         },
         resave: false,
+        store,
     })
 );
 
+require("./utils/passport")(app);
+
 app.use(morgan("dev"));
+app.use(flash());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static("www"));
-// app.use(/^\/customer(\/(home|category|cart|order|product|payment|checkout|search))?/i, express.static("public"));
+app.use(express.static("public"));
 app.use(/^\/customer(\/(\w+))?/i, express.static("public"));
 
 // Đặt đường dẫn thư mục views và sử dụng EJS làm view engine
@@ -40,7 +47,12 @@ app.use(expressLayouts);
 
 // Middleware để xác định layout dựa trên tuyến đường
 app.use((req, res, next) => {
-    if (req.originalUrl.split("/").filter(Boolean)[0] === "customer") {
+    if (
+        req.originalUrl.startsWith("/login") ||
+        req.originalUrl.startsWith("/register")
+    ) {
+        app.set("layout", "layouts/authLayout");
+    } else if (req.originalUrl.split("/").filter(Boolean)[0] === "customer") {
         app.set("layout", "layouts/customerLayout");
     } else {
         const [area] = req.originalUrl.split("/").filter(Boolean)[0];
@@ -54,6 +66,9 @@ app.use((req, res, next) => {
     }
     next();
 });
+
+
+app.use("/", require("./routes/authRoute"));
 
 app.get('/getPaging', (req, res, next) => {
     try {
@@ -83,6 +98,10 @@ app.use((err, req, res, next) => {
     err.status = err.status || "Something went wrong";
     res.status(err.statusCode).send(`${err.status}: ${err.message} !`);
 });
+
+(async () => {
+    await connect();
+})();
 
 app.listen(PORT, () => {
     console.log(`Main server listening on ${PORT}`);

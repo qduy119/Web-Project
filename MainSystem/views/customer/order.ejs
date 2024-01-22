@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="container-fluid mt-body">
     <div class="row px-xl-5">
         <div class="col-12">
             <nav class="breadcrumb bg-light mb-30">
@@ -8,6 +8,92 @@
         </div>
     </div>
 </div>
-<div>
-    This is Order Page
+
+<div class="container-fluid">
+    <div class="row px-xl-5">
+        <div class="table-responsive mb-5">
+            <table
+                class="table table-light table-borderless table-hover text-center mb-0"
+            >
+                <thead class="thead-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Ngày tạo đơn</th>
+                        <th>Tổng tiền</th>
+                        <th>Trạng thái</th>
+                        <th>Khác</th>
+                    </tr>
+                </thead>
+                <tbody class="align-middle">
+                    <% orders.forEach(order => { %>
+                        <tr>
+                            <td class="align-middle">
+                                <p><%= order.id %></p>
+                            </td>
+                            <td class="align-middle">
+                                <p><%= new Date(order.orderDate).toLocaleString() %></p>
+                            </td>
+                            <td class="align-middle">
+                                <p>$<%= order.totalPrice %></p>
+                            </td>
+                            <td class="align-middle">
+                                <p><%= order.status %></p>
+                            </td>
+                            <td class="align-middle d-flex justify-content-center">
+                                <button type="button" class="btn btn-outline-dark btn-square"
+                                    data-bs-toggle="modal" data-bs-target="#detailModal-<%= order.id %>"
+                                >
+                                    <i class="fa fa-eye"></i>
+                                </button>
+                                <div class="modal fade" id="detailModal-<%= order.id %>" tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+                                      <div class="modal-content">
+                                        <div class="modal-header">
+                                          <h1 class="modal-title fs-5">Chi tiết đơn hàng</h1>
+                                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="table-responsive">
+                                                <table class="table table-borderless text-center mb-0">
+                                                    <thead>
+                                                        <tr class="border-0">
+                                                            <th>Thumbnail</th>
+                                                            <th>Tên sản phẩm</th>
+                                                            <th>Số lượng</th>
+                                                            <th>Tổng tiền</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <% order.details.forEach(item => { %>
+                                                            <tr class="border-0">
+                                                                <td class="align-middle">
+                                                                    <img
+                                                                        src="<%= item.product.thumbnail %>"
+                                                                        style="width: 60px; height: 60px"
+                                                                        class="border-primary border border-2 rounded-1"
+                                                                        alt="Thumbnail"
+                                                                    />
+                                                                </td>
+                                                                <td class="align-middle"><%= item.product.title %></td>
+                                                                <td class="align-middle"><%= item.quantity %></td>
+                                                                <td class="align-middle">$<%= (item.quantity * item.product.price).toFixed(2)%></td>
+                                                            </tr>
+                                                        <% }) %>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>

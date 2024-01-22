@@ -1,9 +1,13 @@
-const Category = require("../../models/Category");
+const { CartDetail, Category } = require("../../models");
 
-exports.payment = async (req, res) => {
+exports.payment = async (req, res, next) => {
     try {
         const categories = await Category.findAll();
-        res.render("customer/payment", { categories });
+        const nCart = await CartDetail.count({
+            where: { userId: req.user.id },
+        });
+        
+        res.render("customer/payment", { categories, nCart, user: req.user });
     } catch (error) {
         next(error);
     }

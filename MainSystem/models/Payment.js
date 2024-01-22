@@ -44,4 +44,6 @@ module.exports = (sequelize, DataTypes) => {
         }
     );
     return Payment;
+
 };
+

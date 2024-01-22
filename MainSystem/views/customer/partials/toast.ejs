@@ -7,10 +7,10 @@
         aria-atomic="true"
     >
         <div class="toast-header">
-            <strong class="me-auto"><span
-                    class="bi bi-check"
-                ></span>Notifications</strong>
-            <small>just now</small>
+            <strong class="me-auto"
+                ><span class="bi bi-check"></span>Thông báo</strong
+            >
+            <small>vừa xong</small>
             <button
                 type="button"
                 class="btn-close"
@@ -18,8 +18,6 @@
                 aria-label="Close"
             ></button>
         </div>
-        <div class="toast-body text-success fw-semibold">
-            {{message}}
-        </div>
+        <div class="toast-body text-success fw-semibold"><%= message %></div>
     </div>
 </div>

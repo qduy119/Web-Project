@@ -1,0 +1,80 @@
+<main
+    class="img-cover js-fullheight main-login min-h-screen"
+    style="background-image: url(img/bg.jpg)"
+>
+    <section class="ftco-section">
+        <div class="container">
+            <div class="row justify-content-center mb-4">
+                <div class="col-md-6 text-center">
+                    <h2 class="heading-section text-uppercase">Đăng nhập</h2>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-md-6 col-lg-4">
+                    <div class="login-wrap p-0">
+                        <form
+                            action="/login"
+                            method="post"
+                            class="login-form"
+                        >
+                            <div class="form-group">
+                                <input
+                                    type="text"
+                                    name="username"
+                                    id="username"
+                                    class="form-control custom-form-input"
+                                    placeholder="Username"
+                                    required
+                                />
+                            </div>
+                            <div class="form-group">
+                                <input
+                                    id="password"
+                                    name="password"
+                                    type="password"
+                                    class="form-control custom-form-input"
+                                    placeholder="Password"
+                                    required
+                                />
+                            </div>
+                            <div class="form-group">
+                                <button
+                                    type="submit"
+                                    class="form-control btn btn-primary custom-form-btn"
+                                >
+                                    Đăng Nhập
+                                </button>
+                            </div>
+                        </form>
+                        <div class="my-3">
+                            <% if (message) { %>
+                                <p class="ms-2 error-login text-warning fw-semibold"><%= message.error %></p>
+                            <% } %>
+                        </div>
+                        <p class="w-100 text-center">
+                            &mdash; Hoặc Đăng Nhập Với &mdash;
+                        </p>
+                        <div class="d-flex justify-content-center gap-3 my-4">
+                            <a
+                                href="#"
+                                class="login100-social-item bg1 link-underline link-underline-opacity-0"
+                            >
+                                <i class="fa fa-facebook"></i>
+                            </a>
+                            <a
+                                href="#"
+                                class="login100-social-item bg2 link-underline link-underline-opacity-0"
+                            >
+                                <i class="fa fa-google"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column align-items-center">
+                        <span class="text-white"> Chưa Có Tài Khoản? </span>
+                        <a href="/register"> Đăng Ký </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
