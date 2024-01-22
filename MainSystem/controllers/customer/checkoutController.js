@@ -3,7 +3,7 @@ const { CartDetail, Category } = require("../../models");
 exports.getSelectedItem = async (req, res, next) => {
     const { selectedItems } = req.body;
     req.session.selectedItems = selectedItems;
-    next();
+    res.status(200).json({});
 };
 
 exports.checkout = async (req, res, next) => {

@@ -4,7 +4,7 @@ exports.product = async (req, res, next) => {
     try {
         const { id } = req.params;
         const nCart = await CartDetail.count({
-            where: { userId: req.user?.id || -1 },
+            where: { userId: req.user?.id || "" },
         });
 
         const product = await Product.findByPk(id);

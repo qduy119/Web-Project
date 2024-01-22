@@ -1,3 +1,4 @@
+const { v4: uuidv4 } = require("uuid");
 const { User } = require("../../models");
 
 exports.loginView = (req, res, next) => {
@@ -31,8 +32,8 @@ exports.register = async (req, res) => {
                 message: "User đã tồn tại",
             });
         } else {
-            const newUser = User.build({ username, password });
-            await newUser.save();
+            const id = uuidv4();
+            await User.create({id, username, password });
             
             res.status(200).json({ status: "success" });
         }

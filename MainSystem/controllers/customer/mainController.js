@@ -15,7 +15,7 @@ exports.home = async (req, res, next) => {
 
         const categories = await Category.findAll();
         const nCart = await CartDetail.count({
-            where: { userId: req.user?.id || -1 },
+            where: { userId: req.user?.id || "" },
         });
         const { rows: products, count: total } = await Product.findAndCountAll({
             where: {

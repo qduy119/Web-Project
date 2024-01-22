@@ -67,16 +67,23 @@ app.use((req, res, next) => {
     next();
 });
 
+app.use((req, res, next) => {
+    console.log(req.user);
+    next();
+});
 
 app.use("/", require("./routes/authRoute"));
 
-app.get('/getPaging', (req, res, next) => {
+app.get("/getPaging", (req, res, next) => {
     try {
         const { page, totalPage } = req.query;
-        const html = res.render('partials/paging.ejs', { layout: false, pager: {
-            pages: totalPage, 
-            curPage: page
-        }});
+        const html = res.render("partials/paging.ejs", {
+            layout: false,
+            pager: {
+                pages: totalPage,
+                curPage: page,
+            },
+        });
         res.send(html);
     } catch (error) {
         next(error);

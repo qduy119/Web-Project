@@ -12,11 +12,7 @@
             <div class="row justify-content-center">
                 <div class="col-md-6 col-lg-4">
                     <div class="login-wrap p-0">
-                        <form
-                            action="/login"
-                            method="post"
-                            class="login-form"
-                        >
+                        <form action="/login" method="post" class="login-form">
                             <div class="form-group">
                                 <input
                                     type="text"
@@ -48,7 +44,11 @@
                         </form>
                         <div class="my-3">
                             <% if (message) { %>
-                                <p class="ms-2 error-login text-warning fw-semibold"><%= message.error %></p>
+                            <p
+                                class="ms-2 error-login text-warning fw-semibold"
+                            >
+                                <%= message.error %>
+                            </p>
                             <% } %>
                         </div>
                         <p class="w-100 text-center">
@@ -56,13 +56,13 @@
                         </p>
                         <div class="d-flex justify-content-center gap-3 my-4">
                             <a
-                                href="#"
+                                href="/auth/facebook"
                                 class="login100-social-item bg1 link-underline link-underline-opacity-0"
                             >
                                 <i class="fa fa-facebook"></i>
                             </a>
                             <a
-                                href="#"
+                                href="/auth/google"
                                 class="login100-social-item bg2 link-underline link-underline-opacity-0"
                             >
                                 <i class="fa fa-google"></i>
