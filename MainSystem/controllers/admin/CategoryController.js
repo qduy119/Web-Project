@@ -83,7 +83,7 @@ class CategoryController {
             offset: (page - 1) * pageSize, 
             order: [['id', 'ASC']] });
         }
-        res.json({ data: categories });
+        return res.json({ data: categories });
     } catch (error) {
       next(error);
     }
@@ -109,7 +109,7 @@ class CategoryController {
         }
       });
 
-      res.json({ data: category });
+      return res.json({ data: category });
     } catch (error) {
       next(error);
     }
@@ -121,6 +121,7 @@ class CategoryController {
         await Category.destroy({ where: {
           id: id
         }});
+        return;
     } catch (error) {
       next(error);
     }
@@ -156,7 +157,7 @@ class CategoryController {
           thumbnail: image?.path
         });
         
-        res.redirect('/admin/category/index');
+        return res.redirect('/admin/category/index');
     } catch (error) {
       next(error);
     }
@@ -201,7 +202,7 @@ class CategoryController {
         }, { where: { id: id } });
 
         
-        res.redirect('/admin/category/index');
+        return res.redirect('/admin/category/index');
     } catch (error) {
       next(error);
     }

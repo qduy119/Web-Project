@@ -219,9 +219,11 @@ async function connectDB() {
     }
 }
 
-connectDB();
 
-module.exports = db;
+
+module.exports = {
+    connectDB
+}
 
 /**
        try {
