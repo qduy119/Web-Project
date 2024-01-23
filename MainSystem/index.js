@@ -18,7 +18,6 @@ app.use(
         secret: process.env.SESSION_SECRET,
         saveUninitialized: true,
         cookie: {
-            sameSite: true,
             httpOnly: true,
             maxAge: +process.env.SESSION_EXPIRATION,
         },
@@ -67,10 +66,6 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use((req, res, next) => {
-    console.log(req.user);
-    next();
-});
 
 app.use("/", require("./routes/authRoute"));
 

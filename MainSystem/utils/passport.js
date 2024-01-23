@@ -1,6 +1,9 @@
 const LocalStrategy = require("passport-local").Strategy;
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const FacebookStrategy = require("passport-facebook").Strategy;
+const JwtStrategy = require("passport-jwt").Strategy;
+const ExtractStrategy = require("passport-jwt").ExtractJwt;
+const { ExtractJwt } = require("passport-jwt");
 const passport = require("passport");
 const { User } = require("../models");
 
@@ -24,6 +27,7 @@ passport.deserializeUser(async function (id, done) {
 module.exports = (app) => {
     app.use(passport.initialize());
     app.use(passport.session());
+    app.use(passport.authenticate("session"));
 
     passport.use(
         new LocalStrategy(async function (username, password, done) {
