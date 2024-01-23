@@ -18,7 +18,6 @@ app.use(
         secret: process.env.SESSION_SECRET,
         saveUninitialized: true,
         cookie: {
-            sameSite: true,
             httpOnly: true,
             maxAge: +process.env.SESSION_EXPIRATION,
         },
@@ -70,13 +69,16 @@ app.use((req, res, next) => {
 
 app.use("/", require("./routes/authRoute"));
 
-app.get('/getPaging', (req, res, next) => {
+app.get("/getPaging", (req, res, next) => {
     try {
         const { page, totalPage } = req.query;
-        const html = res.render('partials/paging.ejs', { layout: false, pager: {
-            pages: totalPage, 
-            curPage: page
-        }});
+        const html = res.render("partials/paging.ejs", {
+            layout: false,
+            pager: {
+                pages: totalPage,
+                curPage: page,
+            },
+        });
         res.send(html);
     } catch (error) {
         next(error);

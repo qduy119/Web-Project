@@ -51,14 +51,13 @@ async function createProducts() {
 async function createUsers() {
     const query = `
             create table "Users" (
-                  id serial not null,
-                  username text not null,
-                  password text  UNIQUE,
+                  id text not null,
+                  username text,
+                  password text,
                   email text,
                   role text default 'customer'::text,
                   avatar text default 'https://res.cloudinary.com/dlzyiprib/image/upload/v1700326876/e-commerces/user/download_ae0aln.png'::text,
-                  gender text,
-                  dob date,
+                  "fullName" text,
                   primary key (id)
             )
       `;
@@ -69,7 +68,7 @@ async function createCartDetails() {
     const query = `
             create table "CartDetails" (
                   id serial not null,
-                  "userId" integer not null,
+                  "userId" text not null,
                   "productId" integer not null,
                   quantity integer not null,
                   foreign key ("userId") references "Users" (id),
@@ -84,7 +83,7 @@ async function createOrders() {
     const query = `
         create table "Orders" (
             id serial not null,
-            "userId" integer not null,
+            "userId" text not null,
             "orderDate" timestamptz not null,
             "totalPrice" real not null,
             status text not null,
@@ -115,7 +114,7 @@ async function createPayments() {
         create table "Payments" (
             id serial not null,
             "orderId" integer not null,
-            "userId" integer not null,
+            "userId" text not null,
             "paymentDate" date not null,
             amount real not null,
             status text not null,
@@ -130,7 +129,7 @@ async function createPayments() {
 const createPaymentAccount = async () => {
     const query = `
             create table "paymentAccount" (
-                  id serial not null,
+                  id text not null,
                   "creditBalance" real not null default 100000.0,
                   primary key (id),
                   foreign key (id) references "Users" (id)
@@ -144,7 +143,7 @@ const createHistoryTransfer = async () => {
             create table "historyTransfer" (
                   id serial not null,
                   "dateTransfer" date not null,
-                  "userID" integer not null,
+                  "userID" text not null,
                   amount real not null,
                   "orderId" integer not null,
                   foreign key ("orderId") references "Orders"(id),

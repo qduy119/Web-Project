@@ -18,18 +18,16 @@ module.exports = (sequelize, DataTypes) => {
     User.init(
         {
             id: {
-                type: DataTypes.INTEGER,
+                type: DataTypes.TEXT,
                 allowNull: false,
                 primaryKey: true,
-                autoIncrement: true,
             },
             email: DataTypes.TEXT,
             password: DataTypes.TEXT,
             role: DataTypes.TEXT,
             username: DataTypes.TEXT,
             avatar: DataTypes.TEXT,
-            gender: DataTypes.TEXT,
-            dob: DataTypes.DATEONLY,
+            fullName: DataTypes.TEXT,
         },
         {
             sequelize,
@@ -39,7 +37,10 @@ module.exports = (sequelize, DataTypes) => {
     );
     User.beforeSave(async (user) => {
         const salt = await bcrypt.genSalt(16);
-        user.password = await bcrypt.hash(user.password, salt);
+        if(user.password)
+        {
+            user.password = await bcrypt.hash(user.password, salt);
+        }
     });
     return User;
 
