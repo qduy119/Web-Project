@@ -2,7 +2,6 @@
 const express = require('express');
 const router = express.Router();
 const singleUploader = require('../utils/cloudinary');
-const multiUploader = require('../utils/cloudinary');
 
 router.get('/', (req, res, next) => {
     try {

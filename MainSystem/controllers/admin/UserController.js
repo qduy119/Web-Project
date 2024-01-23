@@ -98,7 +98,7 @@ class UserController {
             offset: (page - 1) * pageSize, 
             order: [['id', 'ASC']] });
         }
-        res.json({ data: users });
+        return res.json({ data: users });
     } catch (error) {
       next(error);
     }
@@ -113,7 +113,7 @@ class UserController {
         }
       });
 
-      res.json({ data: user });
+      return res.json({ data: user });
     } catch (error) {
       next(error);
     }
@@ -125,6 +125,7 @@ class UserController {
         await User.destroy({ where: {
           id: id
         }});
+        return;
     } catch (error) {
       next(error);
     }
@@ -171,7 +172,7 @@ class UserController {
           avatar: avatar?.path
         });
         
-        res.redirect('/admin/user/index');
+        return res.redirect('/admin/user/index');
     } catch (error) {
       next(error);
     }
@@ -230,7 +231,7 @@ class UserController {
         }, { where: { id: id } });
 
         
-        res.redirect('/admin/user/index');
+        return res.redirect('/admin/user/index');
     } catch (error) {
       next(error);
     }

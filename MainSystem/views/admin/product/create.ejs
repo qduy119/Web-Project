@@ -7,7 +7,7 @@
   <form action="/admin/product/create" method="POST" enctype="multipart/form-data" class="mt-4 w-full">
     <div class="">
       <% if (errors) { %>
-        <div class="">
+        <div class="mb-5">
 
           <% for (let i=0; i < errors.length; i++) { %>
             <div class="text-red-700 font-bold">
@@ -131,7 +131,7 @@
           </div>
 
             <!-- Start Upload product images -->
-            <input type="file" multiple name="uploadMultiple" />
+            <!-- <input type="file" multiple name="uploadMultiple" /> -->
             <!-- End Upload product images -->
           <div class="mt-10 grid md:grid-cols-2">
             <button type="submit"
