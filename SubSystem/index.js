@@ -42,7 +42,10 @@ app.engine(
 app.set("view engine", "hbs");
 app.set("views", path.join(__dirname, "views"));
 
+db.connectDB();
+
 route(app);
 app.listen(PORT, () => {
       console.log(`Sub server listening on ${PORT}`);
 });
+

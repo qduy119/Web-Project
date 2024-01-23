@@ -3,7 +3,14 @@
 const UserController = require("../controllers/UserController.js")
 const PaymentController = require("../controllers/PaymentController.js")
 const HistoryTransferController = require("../controllers/HistoryTransferController.js")
+const CreatePaymentAccount = require("../controllers/CreateAccountPayment.js")
 const route = (app) => {
+
+      app.get("/history-transfer")
+
+      app.post("/transfer-to-payment", PaymentController.Payment)
+
+      app.post("/create-account-payment", CreatePaymentAccount.CreateAccount)
 
       app.get("/detail-transaction-subsystem", HistoryTransferController.handleDetailTransaction)
 
@@ -14,10 +21,6 @@ const route = (app) => {
       app.get("/control-total-revenue", HistoryTransferController.handleControlTotalRevenue)
 
       app.post("/control-total-revenue", HistoryTransferController.handlePostControlTotalRevenue)
-
-      app.get("/get-total-expected-revenue", PaymentController.handleGetExpectedRevenue)
-
-      app.get("/get-expected-revenue-today", PaymentController.handleGetExpectedRevenueToday)
 
       app.get("/get-all-revenue", HistoryTransferController.handleGetAllRevenue)
 

@@ -4,7 +4,7 @@ const db = require("../../utils/db.js")
 module.exports = class  PaymentModel {
 
       static getAllPayByDurationTime = async (obj) => {
-            return await db.query(`
+            return await db.db.query(`
                   select id, "orderId", "userId", date, amount
                   from "Payments"
                   where "date" between $1 and $2
@@ -13,7 +13,7 @@ module.exports = class  PaymentModel {
       }
 
       static getAllPayByYear = async (obj) => {
-            return await db.query(`
+            return await db.db.query(`
                   select id, "orderId", "userId", date, amount
                   from "Payments"
                   where extract(year from "date") = $1
@@ -22,7 +22,7 @@ module.exports = class  PaymentModel {
       }
 
       static getAllPayByMonth = async (obj) => {
-            return await db.query(`
+            return await db.db.query(`
                   select id, "orderId", "userId", date, amount
                   from "Payments"
                   where extract(year from "date") = $1 and extract (month from "date") = $2
@@ -33,8 +33,8 @@ module.exports = class  PaymentModel {
       static getAllPayByDay = async (obj) => {
             let str = obj.year + "-" + obj.month + "-" + obj.day;
             console.log(str);
-            return await db.query(`
-                  select id, "orderId", "userId", date, amount
+            return await db.db.query(`
+                  select id, "orderId", "userId", "", amount
                   from "Payments"
                   where "date" = $1 and status = 'yes'
                   order by "orderId"
@@ -42,7 +42,7 @@ module.exports = class  PaymentModel {
       }
 
       static getRevenueByDurationTime = async (obj) => {
-            return await db.query(`
+            return await db.db.query(`
                   select sum(amount) as revenue
                   from "Payments"
                   where "date" between $1 and $2
@@ -50,7 +50,7 @@ module.exports = class  PaymentModel {
       }
 
       static getRevenueByYear = async (obj) => {
-            return await db.query(`
+            return await db.db.query(`
                   select  sum(amount) as revenue
                   from "Payments"
                   where EXTRACT(YEAR FROM date) = $1
@@ -58,7 +58,7 @@ module.exports = class  PaymentModel {
       }
 
       static getRevenueByMonth = async(obj) => {
-            return await db.query(`
+            return await db.db.query(`
                   select sum(amount) as revenue
                   from "Payments"
                   where EXTRACT(year FROM date) = $1 and EXTRACT(month FROM date) = $2
@@ -67,7 +67,7 @@ module.exports = class  PaymentModel {
 
       static getRevenueByDay = async (obj) => {
             let str = obj.year + "-" + obj.month + "-" + obj.day;
-            return await db.query(`
+            return await db.db.query(`
                   select  sum(amount) as revenue
                   from "Payments"
                   where date = $1
@@ -75,7 +75,7 @@ module.exports = class  PaymentModel {
       }
 
       static getExpectedRevenue = async () => {
-            return await db.one(`   
+            return await db.db.one(`   
                   select sum(amount) as revenue
                   from "Payments"
             `)
@@ -84,7 +84,7 @@ module.exports = class  PaymentModel {
       static getExpectedRevenueToday = async () => {
             const currDate = new Date().toJSON().slice(0, 10);
             // const currDate = "2023-05-12"
-            return await db.query(`
+            return await db.db.query(`
                   select date, sum(amount) as revenue
                   from "Payments"
                   where date = $1
@@ -95,7 +95,7 @@ module.exports = class  PaymentModel {
       static getRevenueToday = async () => {
             const currDate = new Date().toJSON().slice(0, 10);
             // const currDate = "2023-05-12"
-            return await db.query(`
+            return await db.db.query(`
                   select date, sum(amount) as revenue
                   from "Payments"
                   where status = 'yes' and date = $1
@@ -104,7 +104,7 @@ module.exports = class  PaymentModel {
       }
 
       static getAllRevenue = async () => {
-            return await db.one(`   
+            return await db.db.one(`   
                   select sum(amount) as revenue
                   from "Payments"
                   where status = 'yes'

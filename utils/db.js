@@ -132,23 +132,29 @@ const createPaymentAccount = async () => {
             create table "paymentAccount" (
                   id serial not null,
                   "creditBalance" real not null default 100000.0,
+                  "userId" integer,
                   primary key (id),
-                  foreign key (id) references "Users" (id)
+                  foreign key ("userId") references "Users" (id)
             )
       `;
     await db.none(query);
 };
+
+const insertDefaultMainAccount = async () => {
+    await db.none(`
+        insert into "paymentAccount"("userId") values(null)
+    `)
+}
 
 const createHistoryTransfer = async () => {
     await db.none(`
             create table "historyTransfer" (
                   id serial not null,
                   "dateTransfer" date not null,
-                  "userID" integer not null,
+                  "creditId" integer not null,
                   amount real not null,
-                  "orderId" integer not null,
-                  foreign key ("orderId") references "Orders"(id),
-                  foreign key ("userID") references "Users" (id),
+                  "balanceAfterTransfer" real not null,
+                  foreign key ("creditId") references "paymentAccount" (id),
                   primary key (id)
             )
       `);
@@ -216,13 +222,14 @@ async function connectDB() {
         //neu nhu db moi tao ta insert data
         await createTable();
         await importData();
+        await insertDefaultMainAccount();
     }
 }
 
 
-
 module.exports = {
-    connectDB
+    connectDB : connectDB,
+    db : db
 }
 
 /**
