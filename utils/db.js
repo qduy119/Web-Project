@@ -118,6 +118,7 @@ async function createPayments() {
             "paymentDate" date not null,
             amount real not null,
             status text not null,
+            message text,
             foreign key ("orderId") references "Orders" (id),
             foreign key ("userId") references "Users" (id),
             primary key (id)
@@ -129,25 +130,31 @@ async function createPayments() {
 const createPaymentAccount = async () => {
     const query = `
             create table "paymentAccount" (
-                  id text not null,
+                  id serial not null,
                   "creditBalance" real not null default 100000.0,
+                  "userId" text,
                   primary key (id),
-                  foreign key (id) references "Users" (id)
+                  foreign key ("userId") references "Users" (id)
             )
       `;
     await db.none(query);
 };
+
+const insertDefaultMainAccount = async () => {
+    await db.none(`
+        insert into "paymentAccount"("userId") values(null)
+    `)
+}
 
 const createHistoryTransfer = async () => {
     await db.none(`
             create table "historyTransfer" (
                   id serial not null,
                   "dateTransfer" date not null,
-                  "userID" text not null,
+                  "creditId" text not null,
                   amount real not null,
-                  "orderId" integer not null,
-                  foreign key ("orderId") references "Orders"(id),
-                  foreign key ("userID") references "Users" (id),
+                  "balanceAfterTransfer" real not null,
+                  foreign key ("creditId") references "paymentAccount" (id),
                   primary key (id)
             )
       `);
@@ -170,18 +177,6 @@ async function importData() {
     const { Categories, Products } = data;
     await insertBulk("Categories", Categories);
     await insertBulk("Products", Products);
-}
-
-async function isDBExist() {
-    try {
-        const isExist = await db.any(
-            `select * from pg_database where datname = $1`,
-            [process.env.DB_DATABASE]
-        );
-        return isExist.length > 0;
-    } catch (err) {
-        console.log(err.message);
-    }
 }
 
 async function insertBulk(tableName, entity) {
@@ -215,6 +210,7 @@ async function connectDB() {
         //neu nhu db moi tao ta insert data
         await createTable();
         await importData();
+        await insertDefaultMainAccount();
     }
 }
 
