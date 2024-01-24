@@ -5,10 +5,7 @@
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "watch": "node-sass --watch MainSystem/public/scss/style.scss MainSystem/public/css/style.css",
-        "sub": "cd SubSystem && nodemon index.js",
-        "main": "cd MainSystem && nodemon index.js",
-        "dev": "concurrently \"npm run sub\" \"npm run main\""
+        "watch": "node-sass --watch MainSystem/public/scss/style.scss MainSystem/public/css/style.css"
     },
     "author": "",
     "license": "ISC",
