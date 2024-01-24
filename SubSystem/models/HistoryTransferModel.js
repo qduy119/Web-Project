@@ -15,27 +15,27 @@ module.exports = class HistoryTransferModel {
       static getAllPayByDurationTime = async (obj) => {
             return await db.db.query(`
                   select * 
-                  from "historyTransfer"
-                  where "dateTransfer" between $1 and $2
-                  order by "orderId"
+                  from "historyTransfer" ht, "paymentAccount" pa
+                  where ("dateTransfer" between $1 and $2) and ht."creditId" = pa.id
+                  order by ht."orderId"
             `, [obj.start, obj.end])
       }
 
       static getAllPayByYear = async (obj) => {
             return await db.db.query(`
                   select *
-                  from "historyTransfer"
-                  where extract(year from "dateTransfer") = $1
-                  order by "orderId"
+                  from "historyTransfer" ht, "paymentAccount" pa
+                  where extract(year from "dateTransfer") = $1 and ht."creditId" = pa.id
+                  order by ht."orderId"
             `, [parseInt(obj.year)])
       }
 
       static getAllPayByMonth = async (obj) => {
             return await db.db.query(`
                   select *
-                  from "historyTransfer"
-                  where extract(year from "dateTransfer") = $1 and extract (month from "dateTransfer") = $2
-                  order by "orderId"
+                  from "historyTransfer" ht, "paymentAccount" pa
+                  where pa.id = ht."creditId" extract(year from "dateTransfer") = $1 and extract (month from "dateTransfer") = $2
+                  order by ht."orderId"
             `, [parseInt(obj.year), parseInt(obj.month)])
       }
 
@@ -43,9 +43,9 @@ module.exports = class HistoryTransferModel {
             let str = obj.year + "-" + obj.month + "-" + obj.day;
             return await db.db.query(`
                   select *
-                  from "historyTransfer"
-                  where "dateTransfer" = $1
-                  order by "orderId"
+                  from "historyTransfer" ht, "paymentAccount" pa
+                  where "dateTransfer" = $1 and pa.id = ht."creditId"
+                  order by ht."orderId"
             `, [str])
       }
 

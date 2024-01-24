@@ -76,7 +76,7 @@
                         $("#errorLogin").html("Tài khoản này không có quyền truy cập web")
                   }
                   else if (data.status === 401) {
-                        $("$errorLogin".html(data.message));
+                        $("#errorLogin").html(data.message);
                   }
                   else {
                         sessionStorage.username = username;
