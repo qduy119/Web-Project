@@ -43,27 +43,24 @@
                             </div>
                         </form>
                         <div class="my-3">
-                            <% if (message) { %>
                             <p
                                 class="ms-2 error-login text-warning fw-semibold"
-                            >
-                                <%= message.error %>
-                            </p>
-                            <% } %>
+                            ></p>
                         </div>
-                        <p class="w-100 text-center">
+                        <div class="mx-auto bar hidden"></div>
+                        <p class="w-100 text-center mt-3">
                             &mdash; Hoặc Đăng Nhập Với &mdash;
                         </p>
                         <div class="d-flex justify-content-center gap-3 my-4">
                             <a
                                 href="/auth/facebook"
-                                class="login100-social-item bg1 link-underline link-underline-opacity-0"
+                                class="login100-social-item bg1 link-underline link-underline-opacity-0 login-facebook"
                             >
                                 <i class="fa fa-facebook"></i>
                             </a>
                             <a
                                 href="/auth/google"
-                                class="login100-social-item bg2 link-underline link-underline-opacity-0"
+                                class="login100-social-item bg2 link-underline link-underline-opacity-0 login-google"
                             >
                                 <i class="fa fa-google"></i>
                             </a>
@@ -78,3 +75,38 @@
         </div>
     </section>
 </main>
+
+<script>
+    $(".login-form").on("submit", async function (e) {
+        e.preventDefault();
+        const username = $("#username").val();
+        const password = $("#password").val();
+        $(".bar").removeClass("hidden");
+        const res = await fetch("/login", {
+            method: "POST",
+            headers: {
+                "Content-type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify({ username, password }),
+        });
+        $(".bar").addClass("hidden");
+        if (!res.ok) {
+            const { message } = await res.json();
+            $(".error-login").html(message);
+        } else {
+            const { token, user } = await res.json();
+            localStorage.setItem("accessToken", token);
+            window.location.href = "/customer/homepage";
+        }
+    });
+    $(".login-google").on("click", async (e) => {
+        e.preventDefault();
+        window.location.href = "/auth/google";
+    });
+    
+    $(".login-facebook").on("click", async (e) => {
+        e.preventDefault();
+        window.location.href = "/auth/facebook";
+    });
+</script>

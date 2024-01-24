@@ -15,7 +15,7 @@ exports.home = async (req, res, next) => {
 
         const categories = await Category.findAll();
         const nCart = await CartDetail.count({
-            where: { userId: req.user?.id || "" },
+            where: { userId: req.session?.user?.id || "" },
         });
         const { rows: products, count: total } = await Product.findAndCountAll({
             where: {
@@ -31,7 +31,7 @@ exports.home = async (req, res, next) => {
         });
         if (query) {
             res.render("customer/search", {
-                user: req.user,
+                user: req.session?.user,
                 categories,
                 products,
                 nCart,
@@ -43,7 +43,7 @@ exports.home = async (req, res, next) => {
             });
         } else {
             res.render("customer/home", {
-                user: req.user,
+                user: req.session?.user,
                 categories,
                 nCart,
                 products,

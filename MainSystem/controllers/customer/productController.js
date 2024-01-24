@@ -4,7 +4,7 @@ exports.product = async (req, res, next) => {
     try {
         const { id } = req.params;
         const nCart = await CartDetail.count({
-            where: { userId: req.user?.id || "" },
+            where: { userId: req.session?.user?.id || "" },
         });
 
         const product = await Product.findByPk(id);
@@ -19,7 +19,7 @@ exports.product = async (req, res, next) => {
         const categories = await Category.findAll();
 
         res.render("customer/productDetail", {
-            user: req.user,
+            user: req.session?.user,
             product,
             categories,
             nCart,

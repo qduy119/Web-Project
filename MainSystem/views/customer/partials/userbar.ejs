@@ -16,11 +16,17 @@
         <li>
             <a class="dropdown-item" href="/customer/order">Đơn hàng của tôi</a>
         </li>
-        <li>
-            <a class="dropdown-item" href="/customer/payment"
-                >Lịch sử thanh toán</a
-            >
-        </li>
-        <li><a class="dropdown-item" href="/logout">Đăng xuất</a></li>
+        <li><a class="dropdown-item logout" href="/logout">Đăng xuất</a></li>
     </ul>
 </div>
+
+<script>
+    $(".logout").on("click", async (e) => {
+        e.preventDefault();
+        await privateAxios().get("/logout", {
+            withCredentials: true,
+        });
+        localStorage.removeItem("accessToken");
+        window.location.href = "/customer/homepage";
+    });
+</script>

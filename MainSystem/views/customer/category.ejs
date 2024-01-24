@@ -2,16 +2,18 @@
     <div class="row px-xl-5">
         <div class="col-12">
             <nav class="breadcrumb bg-light mb-30">
-                <a class="breadcrumb-item text-dark" href="/customer/homepage">Home</a>
-                <span class="breadcrumb-item active"><%= category.title %></span>
+                <a class="breadcrumb-item text-dark" href="/customer/homepage"
+                    >Home</a
+                >
+                <span class="breadcrumb-item active"
+                    ><%= category.title %></span
+                >
             </nav>
         </div>
     </div>
     <div class="row px-xl-5 userData" data-userid="<%= user ? user.id : '' %>">
         <% products.forEach(product => { %>
-            <div
-            class="col-lg-3 col-md-4 col-sm-6 pb-1"
-        >
+        <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
             <div class="product-item bg-light mb-4">
                 <div class="product-img position-relative overflow-hidden">
                     <img
@@ -76,34 +78,22 @@
             window.location.href = "/login";
         } else {
             const productId = $(this).data("productid");
-            await fetch("/customer/api/cart", {
-                method: "post",
-                headers: {
-                    "Content-type": "application/json",
-                },
-                body: JSON.stringify({
-                    quantity: 1,
-                    productId,
-                }),
+            await privateAxios().post("/customer/api/cart", {
+                quantity: 1,
+                productId,
             });
-            const res = await fetch("/customer/api/cart");
-            const { items } = await res.json();
+            const res = await privateAxios().get("/customer/api/cart");
+            const { items } = res.data;
             $(".cart-badge").html(items.length);
 
             const toastLiveExample = $("#liveToast");
-                const toastBootstrap =
-                    bootstrap.Toast.getOrCreateInstance(toastLiveExample);
-                toastBootstrap.show();
+            const toastBootstrap =
+                bootstrap.Toast.getOrCreateInstance(toastLiveExample);
+            toastBootstrap.show();
 
-            await fetch("/customer/api/product", {
-                method: "put",
-                headers: {
-                    "Content-type": "application/json",
-                },
-                body: JSON.stringify({
-                    quantity: -1,
-                    id: productId,
-                }),
+            await privateAxios().put("/customer/api/product", {
+                quantity: -1,
+                id: productId,
             });
         }
     });

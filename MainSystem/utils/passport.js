@@ -1,28 +1,8 @@
 const LocalStrategy = require("passport-local").Strategy;
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const FacebookStrategy = require("passport-facebook").Strategy;
-const JwtStrategy = require("passport-jwt").Strategy;
-const ExtractStrategy = require("passport-jwt").ExtractJwt;
-const { ExtractJwt } = require("passport-jwt");
 const passport = require("passport");
 const { User } = require("../models");
-
-passport.serializeUser(function (user, done) {
-    done(null, user.id);
-});
-
-passport.deserializeUser(async function (id, done) {
-    try {
-        const user = await User.findByPk(id);
-        if (user) {
-            done(null, user);
-        } else {
-            done(new Error("Invalid auth"), null);
-        }
-    } catch (error) {
-        done(error);
-    }
-});
 
 module.exports = (app) => {
     app.use(passport.initialize());
@@ -67,7 +47,6 @@ module.exports = (app) => {
                         picture: avatar,
                         email,
                     } = profile;
-                    // console.log({ accessToken });
                     const user = await User.findByPk(id);
                     if (user) {
                         done(null, user);
@@ -100,7 +79,6 @@ module.exports = (app) => {
                     profile = profile["_json"];
                     const { picture, id, name: fullName, email } = profile;
                     const { url: avatar } = picture.data;
-                    // console.log({ accessToken });
                     const user = await User.findByPk(id);
                     if (user) {
                         done(null, user);

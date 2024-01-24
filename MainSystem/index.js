@@ -6,8 +6,7 @@ const morgan = require("morgan");
 const session = require("express-session");
 const store = new session.MemoryStore();
 const cookieParser = require("cookie-parser");
-const flash = require("connect-flash");
-const connect = require("./connection/index");
+const connect = require("./connection");
 
 const app = express();
 
@@ -29,7 +28,6 @@ app.use(
 require("./utils/passport")(app);
 
 app.use(morgan("dev"));
-app.use(flash());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -66,7 +64,6 @@ app.use((req, res, next) => {
     next();
 });
 
-
 app.use("/", require("./routes/authRoute"));
 
 app.get("/getPaging", (req, res, next) => {
@@ -98,7 +95,10 @@ app.all("*", (req, res, next) => {
 app.use((err, req, res, next) => {
     err.statusCode = err.statusCode || 500;
     err.status = err.status || "Something went wrong";
-    res.status(err.statusCode).send(`${err.status}: ${err.message} !`);
+    res.status(err.statusCode).render("customer/error", {
+        layout: false,
+        message: `${err.status}: ${err.message} !`,
+    });
 });
 
 (async () => {
