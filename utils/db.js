@@ -152,9 +152,11 @@ const createHistoryTransfer = async () => {
                   id serial not null,
                   "dateTransfer" date not null,
                   "creditId" integer not null,
+                  "orderId" integer not null,
                   amount real not null,
                   "balanceAfterTransfer" real not null,
                   foreign key ("creditId") references "paymentAccount" (id),
+                  foreign key ("orderId") references "Orders" (id),
                   primary key (id)
             )
       `);
@@ -223,13 +225,14 @@ async function connectDB() {
         await createTable();
         await importData();
         await insertDefaultMainAccount();
+        await insertAdminAccountForSubSystem();
     }
 }
 
 
 module.exports = {
-    connectDB : connectDB,
-    db : db
+    connectDB: connectDB,
+    db: db
 }
 
 /**

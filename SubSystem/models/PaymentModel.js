@@ -5,27 +5,27 @@ module.exports = class  PaymentModel {
 
       static getAllPayByDurationTime = async (obj) => {
             return await db.db.query(`
-                  select id, "orderId", "userId", date, amount
+                  select id, "orderId", "userId", "paymentDate", amount
                   from "Payments"
-                  where "date" between $1 and $2
+                  where "paymentDate" between $1 and $2
                   order by "orderId"
             `, [obj.start, obj.end])
       }
 
       static getAllPayByYear = async (obj) => {
             return await db.db.query(`
-                  select id, "orderId", "userId", date, amount
+                  select id, "orderId", "userId", "paymentDate", amount
                   from "Payments"
-                  where extract(year from "date") = $1
+                  where extract(year from "paymentDate") = $1
                   order by "orderId"
             `, [parseInt(obj.year)])
       }
 
       static getAllPayByMonth = async (obj) => {
             return await db.db.query(`
-                  select id, "orderId", "userId", date, amount
+                  select id, "orderId", "userId", "paymentDate", amount
                   from "Payments"
-                  where extract(year from "date") = $1 and extract (month from "date") = $2
+                  where extract(year from "paymentDate") = $1 and extract (month from "paymentDate") = $2
                   order by "orderId"
             `, [parseInt(obj.year), parseInt(obj.month)])
       }
@@ -34,9 +34,9 @@ module.exports = class  PaymentModel {
             let str = obj.year + "-" + obj.month + "-" + obj.day;
             console.log(str);
             return await db.db.query(`
-                  select id, "orderId", "userId", "", amount
+                  select id, "orderId", "userId", "paymentDate", amount
                   from "Payments"
-                  where "date" = $1 and status = 'yes'
+                  where "paymentDate" = $1 and status = 'yes'
                   order by "orderId"
             `, [str])
       }
@@ -45,7 +45,7 @@ module.exports = class  PaymentModel {
             return await db.db.query(`
                   select sum(amount) as revenue
                   from "Payments"
-                  where "date" between $1 and $2
+                  where "paymentDate" between $1 and $2
             `, [obj.start, obj.end])
       }
 
@@ -53,7 +53,7 @@ module.exports = class  PaymentModel {
             return await db.db.query(`
                   select  sum(amount) as revenue
                   from "Payments"
-                  where EXTRACT(YEAR FROM date) = $1
+                  where EXTRACT(YEAR FROM "paymentDate") = $1
             `,[parseInt(obj.year)])
       }
 
@@ -61,7 +61,7 @@ module.exports = class  PaymentModel {
             return await db.db.query(`
                   select sum(amount) as revenue
                   from "Payments"
-                  where EXTRACT(year FROM date) = $1 and EXTRACT(month FROM date) = $2
+                  where EXTRACT(year FROM "paymentDate") = $1 and EXTRACT(month FROM "paymentDate") = $2
             `,[parseInt(obj.year), parseInt(obj.month)])
       }
 
@@ -70,7 +70,7 @@ module.exports = class  PaymentModel {
             return await db.db.query(`
                   select  sum(amount) as revenue
                   from "Payments"
-                  where date = $1
+                  where "paymentDate" = $1
             `, [str])
       }
 
@@ -85,10 +85,10 @@ module.exports = class  PaymentModel {
             const currDate = new Date().toJSON().slice(0, 10);
             // const currDate = "2023-05-12"
             return await db.db.query(`
-                  select date, sum(amount) as revenue
+                  select "paymentDate", sum(amount) as revenue
                   from "Payments"
-                  where date = $1
-                  group by date
+                  where "paymentDate" = $1
+                  group by "paymentDate"
             `,[currDate])
       }
 
@@ -96,10 +96,10 @@ module.exports = class  PaymentModel {
             const currDate = new Date().toJSON().slice(0, 10);
             // const currDate = "2023-05-12"
             return await db.db.query(`
-                  select date, sum(amount) as revenue
+                  select "paymentDate", sum(amount) as revenue
                   from "Payments"
-                  where status = 'yes' and date = $1
-                  group by date
+                  where status = 'yes' and "paymentDate" = $1
+                  group by "paymentDate"
             `,[currDate])
       }
 

@@ -5,7 +5,7 @@ const db = require("../../utils/db.js")
 module.exports = class UserModel {
 
       static getAccountAdmin = async (username) => {
-            return await db.query(`
+            return await db.db.query(`
                   select * 
                   from "Users"
                   where username = $1
@@ -13,7 +13,7 @@ module.exports = class UserModel {
       }
 
       static getUserByID = async (id) => {
-            return db.one(`
+            return db.db.one(`
                   select id, email, role, username, avatar, gender, dob, avatar
                   from "Users"
                   where id = $1
@@ -21,7 +21,7 @@ module.exports = class UserModel {
       }
 
       static get10User = async () => {
-            return await db.query(`
+            return await db.db.query(`
                   select id, email, role, username, avatar, gender, dob
                   from "Users"
                   where role = 'user'
@@ -29,7 +29,7 @@ module.exports = class UserModel {
             `)
       }
       static getAllUser = async () => {
-            return await db.query(`
+            return await db.db.query(`
                   select id, email, role, username, avatar, gender, dob
                   from "Users"
                   where role = 'user'

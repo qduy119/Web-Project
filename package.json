@@ -7,7 +7,8 @@
         "test": "echo \"Error: no test specified\" && exit 1",
         "watch": "node-sass --watch MainSystem/public/scss/style.scss MainSystem/public/css/style.css",
         "sub": "cd SubSystem && nodemon index.js",
-        "dev": "concurrently \"npm run sub\""
+        "main": "cd MainSystem && nodemon index.js",
+        "dev": "concurrently \"npm run sub\" \"npm run main\""
     },
     "author": "",
     "license": "ISC",
