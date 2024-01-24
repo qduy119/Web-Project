@@ -11,11 +11,11 @@ exports.category = async (req, res, next) => {
         const categories = await Category.findAll();
         const category = categories.find((category) => category.id === +id);
         const nCart = await CartDetail.count({
-            where: { userId: req.user?.id || -1 },
+            where: { userId: req.session?.user?.id || "" },
         });
 
         res.render("customer/category", {
-            user: req.user,
+            user: req.session?.user,
             products,
             category,
             nCart,

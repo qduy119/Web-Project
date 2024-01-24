@@ -34,19 +34,26 @@
                             </thead>
                             <tbody>
                                 <% items.forEach(item => { %>
-                                    <tr class="border-0">
-                                        <td class="align-middle">
-                                            <img
-                                                src="<%= item.product.thumbnail %>"
-                                                style="width: 60px; height: 60px"
-                                                class="border-primary border border-2 rounded-1"
-                                                alt="Thumbnail"
-                                            />
-                                        </td>
-                                        <td class="align-middle"><%= item.product.title %></td>
-                                        <td class="align-middle"><%= item.quantity %></td>
-                                        <td class="align-middle">$<%= (item.quantity * item.product.price).toFixed(2)%></td>
-                                    </tr>
+                                <tr class="border-0">
+                                    <td class="align-middle">
+                                        <img
+                                            src="<%= item.product.thumbnail %>"
+                                            style="width: 60px; height: 60px"
+                                            class="border-primary border border-2 rounded-1"
+                                            alt="Thumbnail"
+                                        />
+                                    </td>
+                                    <td class="align-middle">
+                                        <%= item.product.title %>
+                                    </td>
+                                    <td class="align-middle">
+                                        <%= item.quantity %>
+                                    </td>
+                                    <td class="align-middle">
+                                        $<%= (item.quantity *
+                                        item.product.price).toFixed(2)%>
+                                    </td>
+                                </tr>
                                 <% }) %>
                             </tbody>
                         </table>
@@ -97,48 +104,79 @@
                     </div>
                 </div>
                 <button
-                    class="btn btn-block btn-primary font-weight-bold py-3 place-order"
+                    class="btn btn-block btn-primary fw-semibold py-3 place-order d-flex align-items-center justify-content-center gap-3"
                     data-items="<%= JSON.stringify(items) %>"
                 >
-                    Đặt đơn hàng
+                    Đặt hàng và thanh toán
+                    <div class="spinner-border text-light hidden spinner" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
                 </button>
+                <p
+                    class="mt-3 text-danger error-payment fw-semibold"
+                ></p>
             </div>
         </div>
     </div>
 </div>
+
+<%- include('partials/toast') %>
 
 <script>
     $(".total").html(+$(".subtotal").html() + +$(".shipping").html());
     $(".place-order").on("click", async function () {
         const items = $(this).data("items");
         const totalPrice = +$(".total").html();
-        const res = await fetch("/customer/api/order", {
-            method: "post",
-            headers: {
-                "Content-type": "application/json",
-            },
-            body: JSON.stringify({
-                totalPrice,
-            }),
+        $(".spinner").removeClass("hidden");
+        const res = await privateAxios().post("/customer/api/order", {
+            totalPrice,
         });
-        const { order } = await res.json();
+        const { order } = res.data;
 
         for (const item of items) {
-            await fetch("/customer/api/orderdetail", {
-                method: "post",
-                headers: {
-                    "Content-type": "application/json",
-                },
-                body: JSON.stringify({
-                    orderId: order.id,
-                    productId: item.productId,
-                    quantity: item.quantity,
-                }),
+            await privateAxios().post("/customer/api/orderdetail", {
+                orderId: order.id,
+                productId: item.productId,
+                quantity: item.quantity,
             });
-            await fetch(`/customer/api/cart/${item.id}`, {
-                method: "delete",
-            });
+            await privateAxios().delete(`/customer/api/cart/${item.id}`);
         }
-        window.location.href = "/customer/payment";
+        const res1 = await privateAxios().post("/customer/api/payment", {
+            orderId: order.id,
+            amount: totalPrice,
+        });
+        const { payment } = res1.data;
+        // const res2 = await fetch("http://localhost:8080/transfer-to-payment", {
+        //     method: "post",
+        //     headers: {
+        //         "Content-type": "application/json",
+        //     },
+        //     body: JSON.stringify(payment),
+        //     credentials: "include",
+        // });
+        // const { status } = await res2.json();
+        const status = 404; // comment here
+        $(".spinner").addClass("hidden");
+        if (status === 200) {
+            await privateAxios().put("/customer/api/order", {
+                id: order.id,
+                status: "Success",
+            });
+            const toastLiveExample = $("#liveToast");
+            const toastBootstrap =
+                bootstrap.Toast.getOrCreateInstance(toastLiveExample);
+            toastBootstrap.show();
+            setTimeout(() => {
+                window.location.href = "/customer/order";
+            }, 1000);
+        } else if (status === 404) {
+            await privateAxios().put("/customer/api/order", {
+                id: order.id,
+                status: "Error",
+            });
+            window.location.href = "/customer/order";
+        } else if (status === 401) {
+            $(".error-payment").html("Lỗi xác thực");
+        }
     });
 </script>

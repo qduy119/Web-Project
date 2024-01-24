@@ -11,7 +11,7 @@ exports.order = async (req, res, next) => {
         const categories = await Category.findAll();
         const orders = await Order.findAll({
             where: {
-                userId: req.user.id,
+                userId: req.session.user.id,
             },
             include: [
                 {
@@ -29,11 +29,11 @@ exports.order = async (req, res, next) => {
         });
 
         const nCart = await CartDetail.count({
-            where: { userId: req.user.id },
+            where: { userId: req.session.user.id },
         });
 
         res.render("customer/order", {
-            user: req.user,
+            user: req.session.user,
             nCart,
             categories,
             orders,
@@ -46,7 +46,7 @@ exports.order = async (req, res, next) => {
 exports.createOrder = async (req, res) => {
     try {
         const { totalPrice } = req.body;
-        const userId = req.user.id;
+        const userId = req.session.user.id;
         const order = await Order.create({
             userId,
             orderDate: new Date(),

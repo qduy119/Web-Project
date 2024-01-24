@@ -2,6 +2,9 @@
 const express = require('express');
 const router = express.Router();
 const singleUploader = require('../utils/cloudinary');
+const { restrictTo } = require("../middleware/auth");
+
+router.use(restrictTo("admin"));
 
 router.get('/', (req, res, next) => {
     try {

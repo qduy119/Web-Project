@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
                 autoIncrement: true,
             },
             userId: {
-                type: DataTypes.INTEGER,
+                type: DataTypes.TEXT,
                 references: {
                     model: "Users",
                     key: "id",
@@ -36,6 +36,7 @@ module.exports = (sequelize, DataTypes) => {
             paymentDate: DataTypes.DATE,
             amount: DataTypes.FLOAT,
             status: DataTypes.TEXT,
+            message: DataTypes.TEXT,
         },
         {
             sequelize,
@@ -44,6 +45,4 @@ module.exports = (sequelize, DataTypes) => {
         }
     );
     return Payment;
-
 };
-

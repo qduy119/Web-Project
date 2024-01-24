@@ -3,7 +3,7 @@ const { CartDetail, Category } = require("../../models");
 exports.getSelectedItem = async (req, res, next) => {
     const { selectedItems } = req.body;
     req.session.selectedItems = selectedItems;
-    next();
+    res.status(200).json({});
 };
 
 exports.checkout = async (req, res, next) => {
@@ -11,10 +11,16 @@ exports.checkout = async (req, res, next) => {
         const items = req.session.selectedItems;
         const categories = await Category.findAll();
         const nCart = await CartDetail.count({
-            where: { userId: req.user.id },
+            where: { userId: req.session.user.id },
         });
 
-        res.render("customer/checkout", { user: req.user, nCart, categories, items });
+        res.render("customer/checkout", {
+            user: req.session.user,
+            nCart,
+            categories,
+            items,
+            message: "Thành công",
+        });
     } catch (error) {
         next(error);
     }
