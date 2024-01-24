@@ -95,7 +95,7 @@
             const { message } = await res.json();
             $(".error-login").html(message);
         } else {
-            const { token, user } = await res.json();
+            const { token, id } = await res.json();
             localStorage.setItem("accessToken", token);
             // const temp = await fetch(
             //     "https://localhost:8080/create-account-payment",
@@ -104,26 +104,17 @@
             //         headers: {
             //             "Content-type": "application/json",
             //         },
-            //         body: JSON.stringify(user),
+            //         body: JSON.stringify({ id }),
             //         credentials: "include",
             //     }
             // );
             // const { status } = await temp.json();
             // if (status === 200) {
             //     window.location.href = "/customer/homepage";
-            // } else if(status === 401) {
+            // } else if (status === 401) {
             //     $(".error-login").html("Lỗi xác thực");
             // }
             window.location.href = "/customer/homepage"; // comment here
         }
-    });
-    $(".login-google").on("click", async (e) => {
-        e.preventDefault();
-        window.location.href = "/auth/google";
-    });
-
-    $(".login-facebook").on("click", async (e) => {
-        e.preventDefault();
-        window.location.href = "/auth/facebook";
     });
 </script>

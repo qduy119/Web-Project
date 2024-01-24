@@ -38,7 +38,7 @@
                                 <p>$<%= order.totalPrice %></p>
                             </td>
                             <td class="align-middle">
-                                <p class="<%= order.status === 'Pending' ? 'text-warning' : order.status === "Error" ? 'text-danger' : 'text-success' %>">
+                                <p class="fw-semibold <%= order.status === 'Pending' ? 'text-warning' : order.status === "Error" ? 'text-danger' : 'text-success' %>">
                                     <%= order.status === 'Pending' ? 'Chờ xác nhận' : order.status === "Error" ? 'Thất bại' : 'Thành công' %>
                                 </p>
                             </td>
@@ -93,7 +93,7 @@
                                     </div>
                                 </div>
                             </td>
-                            <td class="align-middle"><p class="text-danger"><%= order.status === 'Error' ? order.payment.message : '' %></p></td>
+                            <td class="align-middle"><p class="text-danger fw-semibold"><%= order.status === 'Error' ? order.payment.message : '' %></p></td>
                         </tr>
                     <% }) %>
                 </tbody>

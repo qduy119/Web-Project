@@ -28,6 +28,7 @@ module.exports = (sequelize, DataTypes) => {
             username: DataTypes.TEXT,
             avatar: DataTypes.TEXT,
             fullName: DataTypes.TEXT,
+            provider: DataTypes.TEXT,
         },
         {
             sequelize,
@@ -37,12 +38,9 @@ module.exports = (sequelize, DataTypes) => {
     );
     User.beforeSave(async (user) => {
         const salt = await bcrypt.genSalt(16);
-        if(user.password)
-        {
+        if (user.password) {
             user.password = await bcrypt.hash(user.password, salt);
         }
     });
     return User;
-
 };
-

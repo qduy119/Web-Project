@@ -10,6 +10,14 @@ exports.loginView = (req, res, next) => {
     }
 };
 
+exports.authSuccessView = (req, res, next) => {
+    try {
+        res.render("auth/oauthsuccess", { layout: false });
+    } catch (error) {
+        next(error);
+    }
+};
+
 exports.registerView = (req, res, next) => {
     try {
         res.render("auth/register", { message: "Đăng ký thành công" });
@@ -71,7 +79,7 @@ const sendAuth2SystemToken = (res, user) => {
         expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
     };
     res.cookie("jwt", token, options);
-}
+};
 
 exports.handleAuthentication =
     (req, res, next) => async (error, user, info) => {
@@ -91,7 +99,32 @@ exports.handleAuthentication =
                 sendRefreshToken(res, user);
                 sendAuth2SystemToken(res, user);
 
-                return res.status(200).json({ token, user });
+                return res.status(200).json({ token, id: user.id });
+            });
+        } catch (error) {
+            next(error);
+        }
+    };
+
+exports.handleThirdPartyAuthentication =
+    (req, res, next) => async (error, user, info) => {
+        try {
+            if (error) {
+                return next(error);
+            }
+            if (!user) {
+                const { message } = info;
+                return res.status(401).json({ message });
+            }
+            req.login(user, { session: false }, async (error) => {
+                if (error) return next(error);
+                delete user.get().password;
+                req.session.user = user;
+                const token = accessToken(user);
+                sendRefreshToken(res, user);
+                sendAuth2SystemToken(res, user);
+
+                res.redirect(`/oauth-success?token=${token}&id=${user.id}`);
             });
         } catch (error) {
             next(error);
