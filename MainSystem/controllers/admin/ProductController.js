@@ -3,7 +3,7 @@ const { Product } = require("../../models");
 const pageSize = 5;
 const cloudinary = require("cloudinary").v2;
 const Joi = require("joi");
-const { Op } = require("sequelize");
+const { Op, FLOAT } = require("sequelize");
 
 const schema = Joi.object({
   id: Joi.number().required(),
@@ -20,13 +20,40 @@ class ProductController {
   async index_GET(req, res, next) {
     try {
       let text = req.query.search;
+      let { priceFrom, priceTo, cat } = req.query;
+      if (!cat) cat = 0;
+      let flag = 1;
+      if (!priceFrom) {
+        priceFrom = 0; 
+        flag = 0;
+      }
+      if (!priceTo) {
+        priceTo = 100000000;
+        flag = 0; 
+      }
       if (!text || text == "null") text = "";
-      const count = (
+      const count = cat == 0 ? (
         await Product.findAll({
           where: {
             title: {
               [Op.substring]: text,
             },
+            price: {
+              [Op.between]: [priceFrom, priceTo],
+            },
+            
+          },
+        })
+      ).length : (
+        await Product.findAll({
+          where: {
+            title: {
+              [Op.substring]: text,
+            },
+            price: {
+              [Op.between]: [priceFrom, priceTo],
+            },
+            categoryId: cat
           },
         })
       ).length;
@@ -35,18 +62,39 @@ class ProductController {
         pages: Math.ceil(count / pageSize),
         curPage: 1,
       };
-      const products = await Product.findAll({
+      const products = cat == 0 ? await Product.findAll({
         where: {
           title: {
             [Op.substring]: text,
+          },
+          price: {
+            [Op.between]: [priceFrom, priceTo],
           },
         },
         limit: pageSize,
         offset: 0,
         order: [["id", "ASC"]],
+      }) : await Product.findAll({
+        where: {
+          title: {
+            [Op.substring]: text,
+          },
+          price: {
+            [Op.between]: [priceFrom, priceTo],
+          },
+          categoryId: cat
+        },
+        limit: pageSize,
+        offset: 0,
+        order: [["id", "ASC"]],
       });
-      
-      BaseController.View(req, res, { list: products, pager: pager, text: text });
+
+      if (flag == 0) {
+        priceFrom = '';
+        priceTo = '';
+      }
+
+      BaseController.View(req, res, { list: products, pager: pager, text: text, priceFrom: priceFrom, priceTo: priceTo });
     } catch (error) {
       next(error);
     }
@@ -55,13 +103,36 @@ class ProductController {
   async getEntity_GET(req, res, next) {
     try {
       let text = req.query.search;
+      let { priceFrom, priceTo, cat } = req.query;
+      if (!cat) cat = 0;
+      if (!priceFrom) {
+        priceFrom = 0; 
+      }
+      if (!priceTo) {
+        priceTo = 100000000;
+      }
       if (!text || text == "null") text = "";
-      const count = (
+      const count = cat == 0 ? (
         await Product.findAll({
           where: {
             title: {
               [Op.substring]: text,
             },
+            price: {
+              [Op.between]: [priceFrom, priceTo],
+            },
+          },
+        })
+      ).length : (
+        await Product.findAll({
+          where: {
+            title: {
+              [Op.substring]: text,
+            },
+            price: {
+              [Op.between]: [priceFrom, priceTo],
+            },
+            categoryId: cat
           },
         })
       ).length;
@@ -69,29 +140,61 @@ class ProductController {
       const { page } = req.query;
       const numOfPages = Math.ceil(count / pageSize);
       if (page == numOfPages) {
-        products = await Product.findAll({
+        products = cat == 0 ? await Product.findAll({
           where: {
             title: {
               [Op.substring]: text,
+            },
+            price: {
+              [Op.between]: [priceFrom, priceTo],
             },
           },
           limit: count - (page - 1) * pageSize,
           offset: (page - 1) * pageSize,
           order: [["id", "ASC"]],
-        });
-      } else {
-        products = await Product.findAll({
+        }) : await Product.findAll({
           where: {
             title: {
               [Op.substring]: text,
             },
+            price: {
+              [Op.between]: [priceFrom, priceTo],
+            },
+            categoryId: cat
+          },
+          limit: pageSize,
+          offset: (page - 1) * pageSize,
+          order: [["id", "ASC"]],
+        });
+      } else {
+        products = cat == 0 ? await Product.findAll({
+          where: {
+            title: {
+              [Op.substring]: text,
+            },
+            price: {
+              [Op.between]: [priceFrom, priceTo],
+            },
+          },
+          limit: pageSize,
+          offset: (page - 1) * pageSize,
+          order: [["id", "ASC"]],
+        }) : await Product.findAll({
+          where: {
+            title: {
+              [Op.substring]: text,
+            },
+            price: {
+              [Op.between]: [priceFrom, priceTo],
+            },
+            categoryId: cat
           },
           limit: pageSize,
           offset: (page - 1) * pageSize,
           order: [["id", "ASC"]],
         });
       }
-      res.json({ data: products });
+      return res.json({ data: products });
     } catch (error) {
       next(error);
     }
@@ -106,7 +209,7 @@ class ProductController {
         }
       });
 
-      res.json({ data: product });
+      return res.json({ data: product });
     } catch (error) {
       next(error);
     }

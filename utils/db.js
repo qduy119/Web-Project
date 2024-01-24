@@ -151,7 +151,7 @@ const createHistoryTransfer = async () => {
             create table "historyTransfer" (
                   id serial not null,
                   "dateTransfer" date not null,
-                  "creditId" text not null,
+                  "creditId" integer not null,
                   amount real not null,
                   "balanceAfterTransfer" real not null,
                   foreign key ("creditId") references "paymentAccount" (id),
@@ -214,9 +214,11 @@ async function connectDB() {
     }
 }
 
-connectDB();
 
-module.exports = db;
+module.exports = {
+    connectDB : connectDB,
+    db : db
+}
 
 /**
        try {
