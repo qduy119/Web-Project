@@ -91,39 +91,4 @@
             e.preventDefault();
         }
     });
-    $(".register-form").on("submit", async (e) => {
-        e.preventDefault();
-        const username = $("#username").val();
-        const password = $("#password").val();
-        const confirmPassword = $("#confirm-password").val();
-        let block = 0;
-
-        if (password !== confirmPassword) {
-            $(".error-register").html("Mật khẩu xác nhận không chính xác");
-            block = 1;
-        }
-        if (block === 0) {
-            $(".bar").removeClass("hidden");
-            const res = await fetch("/customer/api/register", {
-                method: "post",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ username, password }),
-            });
-            const { status, message } = await res.json();
-            $(".bar").addClass("hidden");
-            if (status === "success") {
-                const toastLiveExample = $("#liveToast");
-                const toastBootstrap =
-                    bootstrap.Toast.getOrCreateInstance(toastLiveExample);
-                toastBootstrap.show();
-                setTimeout(() => {
-                    window.location.href = "/login";
-                }, 1000);
-            } else {
-                $(".error-register").html(message);
-            }
-        }
-    });
 })(jQuery);

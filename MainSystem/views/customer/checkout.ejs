@@ -34,19 +34,26 @@
                             </thead>
                             <tbody>
                                 <% items.forEach(item => { %>
-                                    <tr class="border-0">
-                                        <td class="align-middle">
-                                            <img
-                                                src="<%= item.product.thumbnail %>"
-                                                style="width: 60px; height: 60px"
-                                                class="border-primary border border-2 rounded-1"
-                                                alt="Thumbnail"
-                                            />
-                                        </td>
-                                        <td class="align-middle"><%= item.product.title %></td>
-                                        <td class="align-middle"><%= item.quantity %></td>
-                                        <td class="align-middle">$<%= (item.quantity * item.product.price).toFixed(2)%></td>
-                                    </tr>
+                                <tr class="border-0">
+                                    <td class="align-middle">
+                                        <img
+                                            src="<%= item.product.thumbnail %>"
+                                            style="width: 60px; height: 60px"
+                                            class="border-primary border border-2 rounded-1"
+                                            alt="Thumbnail"
+                                        />
+                                    </td>
+                                    <td class="align-middle">
+                                        <%= item.product.title %>
+                                    </td>
+                                    <td class="align-middle">
+                                        <%= item.quantity %>
+                                    </td>
+                                    <td class="align-middle">
+                                        $<%= (item.quantity *
+                                        item.product.price).toFixed(2)%>
+                                    </td>
+                                </tr>
                                 <% }) %>
                             </tbody>
                         </table>
@@ -112,32 +119,18 @@
     $(".place-order").on("click", async function () {
         const items = $(this).data("items");
         const totalPrice = +$(".total").html();
-        const res = await fetch("/customer/api/order", {
-            method: "post",
-            headers: {
-                "Content-type": "application/json",
-            },
-            body: JSON.stringify({
-                totalPrice,
-            }),
+        const res = await privateAxios().post("/customer/api/order", {
+            totalPrice,
         });
-        const { order } = await res.json();
+        const { order } = res.data;
 
         for (const item of items) {
-            await fetch("/customer/api/orderdetail", {
-                method: "post",
-                headers: {
-                    "Content-type": "application/json",
-                },
-                body: JSON.stringify({
-                    orderId: order.id,
-                    productId: item.productId,
-                    quantity: item.quantity,
-                }),
+            await privateAxios().post("/customer/api/orderdetail", {
+                orderId: order.id,
+                productId: item.productId,
+                quantity: item.quantity,
             });
-            await fetch(`/customer/api/cart/${item.id}`, {
-                method: "delete",
-            });
+            await privateAxios().delete(`/customer/api/cart/${item.id}`);
         }
         window.location.href = "/customer/payment";
     });

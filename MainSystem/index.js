@@ -6,8 +6,7 @@ const morgan = require("morgan");
 const session = require("express-session");
 const store = new session.MemoryStore();
 const cookieParser = require("cookie-parser");
-const flash = require("connect-flash");
-const connect = require("./connection/index");
+const connect = require("./connection");
 
 const app = express();
 
@@ -18,7 +17,6 @@ app.use(
         secret: process.env.SESSION_SECRET,
         saveUninitialized: true,
         cookie: {
-            sameSite: true,
             httpOnly: true,
             maxAge: +process.env.SESSION_EXPIRATION,
         },
@@ -30,7 +28,6 @@ app.use(
 require("./utils/passport")(app);
 
 app.use(morgan("dev"));
-app.use(flash());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -67,16 +64,18 @@ app.use((req, res, next) => {
     next();
 });
 
-
 app.use("/", require("./routes/authRoute"));
 
-app.get('/getPaging', (req, res, next) => {
+app.get("/getPaging", (req, res, next) => {
     try {
         const { page, totalPage } = req.query;
-        const html = res.render('partials/paging.ejs', { layout: false, pager: {
-            pages: totalPage, 
-            curPage: page
-        }});
+        const html = res.render("partials/paging.ejs", {
+            layout: false,
+            pager: {
+                pages: totalPage,
+                curPage: page,
+            },
+        });
         res.send(html);
     } catch (error) {
         next(error);
@@ -96,7 +95,10 @@ app.all("*", (req, res, next) => {
 app.use((err, req, res, next) => {
     err.statusCode = err.statusCode || 500;
     err.status = err.status || "Something went wrong";
-    res.status(err.statusCode).send(`${err.status}: ${err.message} !`);
+    res.status(err.statusCode).render("customer/error", {
+        layout: false,
+        message: `${err.status}: ${err.message} !`,
+    });
 });
 
 (async () => {

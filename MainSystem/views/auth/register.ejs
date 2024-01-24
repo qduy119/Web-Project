@@ -34,6 +34,21 @@
                             </div>
                             <div class="form-group">
                                 <input
+                                    type="text"
+                                    id="fullname"
+                                    name="fullname"
+                                    class="form-control custom-form-input"
+                                    placeholder="Fullname"
+                                    aria-describedby="fullNameHelpBlock"
+                                    required
+                                />
+                                <div
+                                    id="fullNameHelpBlock"
+                                    class="form-text text-warning ms-2"
+                                ></div>
+                            </div>
+                            <div class="form-group">
+                                <input
                                     id="password"
                                     name="password"
                                     type="password"
@@ -72,7 +87,9 @@
                             </div>
                         </form>
                         <div class="my-3">
-                            <p class="ms-2 error-register text-warning fw-semibold"></p>
+                            <p
+                                class="ms-2 error-register text-warning fw-semibold"
+                            ></p>
                         </div>
                         <div class="mx-auto bar hidden"></div>
                     </div>
@@ -88,3 +105,42 @@
 </main>
 
 <%- include('../customer/partials/toast') %>
+
+<script>
+    $(".register-form").on("submit", async (e) => {
+        e.preventDefault();
+        const username = $("#username").val();
+        const password = $("#password").val();
+        const fullName = $("#fullname").val();
+        const confirmPassword = $("#confirm-password").val();
+        let block = 0;
+
+        if (password !== confirmPassword) {
+            $(".error-register").html("Mật khẩu xác nhận không chính xác");
+            block = 1;
+        }
+        if (block === 0) {
+            $(".bar").removeClass("hidden");
+            const res = await fetch("/register", {
+                method: "post",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ username, password, fullName }),
+            });
+            const { status, message } = await res.json();
+            $(".bar").addClass("hidden");
+            if (status === "success") {
+                const toastLiveExample = $("#liveToast");
+                const toastBootstrap =
+                    bootstrap.Toast.getOrCreateInstance(toastLiveExample);
+                toastBootstrap.show();
+                setTimeout(() => {
+                    window.location.href = "/login";
+                }, 1000);
+            } else {
+                $(".error-register").html(message);
+            }
+        }
+    });
+</script>
