@@ -26,28 +26,28 @@ router.route("/order").get(orderController.order);
 router.route("/checkout").get(checkoutController.checkout);
 router.route("/payment").get(paymentController.payment);
 
-router.use(protect);
-router.use(restrictTo("customer"));
+// router.use(protect);
+// router.use(restrictTo("customer"));
 
 router
     .route("/api/cart")
-    .get(cartController.getAll)
-    .post(cartController.addToCart)
-    .put(cartController.modifyQuantity);
-router.route("/api/cart/:id").delete(cartController.deleteFromCart);
+    .get(protect, restrictTo("customer"), cartController.getAll)
+    .post(protect, restrictTo("customer"), cartController.addToCart)
+    .put(protect, restrictTo("customer"), cartController.modifyQuantity);
+router.route("/api/cart/:id").delete(protect, restrictTo("customer"), cartController.deleteFromCart);
 
 router
     .route("/api/order")
-    .post(orderController.createOrder)
-    .put(orderController.updateOrder);
-router.route("/api/orderdetail").post(orderDetailController.createOrderDetail);
+    .post(protect, restrictTo("customer"), orderController.createOrder)
+    .put(protect, restrictTo("customer"), orderController.updateOrder);
+router.route("/api/orderdetail").post(protect, restrictTo("customer"), orderDetailController.createOrderDetail);
 
-router.route("/api/product").put(productController.modifyQuantity);
-router.route("/api/checkout").post(checkoutController.getSelectedItem);
+router.route("/api/product").put(protect, restrictTo("customer"), productController.modifyQuantity);
+router.route("/api/checkout").post(protect, restrictTo("customer"), checkoutController.getSelectedItem);
 
 router
     .route("/api/payment")
-    .post(paymentController.createPayment)
-    .put(paymentController.updatePayment);
+    .post(protect, restrictTo("customer"), paymentController.createPayment)
+    .put(protect, restrictTo("customer"), paymentController.updatePayment);
 
 module.exports = router;

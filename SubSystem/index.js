@@ -6,6 +6,7 @@ const hbsEngine = require("express-handlebars");
 const morgan = require("morgan");
 const path = require("path");
 const session = require("express-session");
+const cors = require("cors");
 const db = require("../utils/db");
 const cookieParser = require("cookie-parser");
 const route = require("./routes/route.js")
@@ -25,6 +26,10 @@ app.use(
       })
 );
 
+app.use(cors({
+      origin: "http://localhost:5050",
+      credentials: true,
+}))
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
