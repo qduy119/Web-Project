@@ -21,6 +21,7 @@
                         <th>Ngày tạo đơn</th>
                         <th>Tổng tiền</th>
                         <th>Trạng thái</th>
+                        <th>Xem chi tiết</th>
                         <th>Khác</th>
                     </tr>
                 </thead>
@@ -37,7 +38,9 @@
                                 <p>$<%= order.totalPrice %></p>
                             </td>
                             <td class="align-middle">
-                                <p><%= order.status %></p>
+                                <p class="<%= order.status === 'Pending' ? 'text-warning' : order.status === "Error" ? 'text-danger' : 'text-success' %>">
+                                    <%= order.status === 'Pending' ? 'Chờ xác nhận' : order.status === "Error" ? 'Thất bại' : 'Thành công' %>
+                                </p>
                             </td>
                             <td class="align-middle d-flex justify-content-center">
                                 <button type="button" class="btn btn-outline-dark btn-square"
@@ -90,6 +93,7 @@
                                     </div>
                                 </div>
                             </td>
+                            <td class="align-middle"><p class="text-danger"><%= order.status === 'Error' ? order.message : '' %></p></td>
                         </tr>
                     <% }) %>
                 </tbody>

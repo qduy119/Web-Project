@@ -62,6 +62,17 @@ const sendRefreshToken = (res, user) => {
     res.cookie("refreshToken", token, options);
 };
 
+const sendAuth2SystemToken = (res, user) => {
+    const token = jwt.sign({ id: user.id }, process.env.AUTH_2SYSTEM_SECRET, {
+        expiresIn: process.env.AUTH_2SYSTEM_EXPIRATION,
+    });
+    const options = {
+        httpOnly: true,
+        expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
+    };
+    res.cookie("jwt", token, options);
+}
+
 exports.handleAuthentication =
     (req, res, next) => async (error, user, info) => {
         try {
@@ -78,6 +89,7 @@ exports.handleAuthentication =
                 req.session.user = user;
                 const token = accessToken(user);
                 sendRefreshToken(res, user);
+                sendAuth2SystemToken(res, user);
 
                 return res.status(200).json({ token, user });
             });
@@ -93,6 +105,7 @@ exports.logout = (req, res) => {
         };
         req.session.user = null;
         res.clearCookie("refreshToken", options);
+        res.clearCookie("jwt", options);
         res.status(200).json({ status: "success" });
     } catch (error) {
         res.status(404).json({ status: "error", message: error.message });
@@ -113,6 +126,7 @@ exports.requestRefreshToken = (req, res, next) => {
             }
             const newAccessToken = accessToken(user);
             sendRefreshToken(res, user);
+            sendAuth2SystemToken(res, user);
             res.status(200).json({ token: newAccessToken });
         }
     );
