@@ -22,7 +22,7 @@ router
 router.route("/auth/google/callback").get((req, res, next) => {
     passport.authenticate(
         "google",
-        authController.handleAuthentication(req, res, next)
+        authController.handleThirdPartyAuthentication(req, res, next)
     )(req, res, next);
 });
 
@@ -32,7 +32,7 @@ router.route("/auth/facebook").get(passport.authenticate("facebook"));
 router.route("/auth/facebook/callback").get((req, res, next) => {
     passport.authenticate(
         "facebook",
-        authController.handleAuthentication(req, res, next)
+        authController.handleThirdPartyAuthentication(req, res, next)
     )(req, res, next);
 });
 
@@ -45,5 +45,7 @@ router
     .route("/logout")
     .get(protect, restrictTo("customer"), authController.logout);
 router.route("/refresh").get(authController.requestRefreshToken);
+
+router.route("/oauth-success").get(authController.authSuccessView);
 
 module.exports = router;

@@ -2,6 +2,7 @@ const {
     CartDetail,
     Category,
     Order,
+    Payment,
     OrderDetail,
     Product,
 } = require("../../models");
@@ -24,6 +25,7 @@ exports.order = async (req, res, next) => {
                         },
                     ],
                 },
+                "payment",
             ],
             order: [["orderDate", "desc"]],
         });
