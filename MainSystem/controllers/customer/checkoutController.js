@@ -19,6 +19,7 @@ exports.checkout = async (req, res, next) => {
             nCart,
             categories,
             items,
+            message: "Thành công",
         });
     } catch (error) {
         next(error);

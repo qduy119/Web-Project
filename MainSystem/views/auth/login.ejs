@@ -97,14 +97,31 @@
         } else {
             const { token, user } = await res.json();
             localStorage.setItem("accessToken", token);
-            window.location.href = "/customer/homepage";
+            // const temp = await fetch(
+            //     "http://localhost:8080/create-account-payment",
+            //     {
+            //         method: "post",
+            //         headers: {
+            //             "Content-type": "application/json",
+            //         },
+            //         body: JSON.stringify(user),
+            //         credentials: "include",
+            //     }
+            // );
+            // const { status } = await temp.json();
+            // if (status === 200) {
+            //     window.location.href = "/customer/homepage";
+            // } else if(status === 401) {
+            //     $(".error-login").html("Lỗi xác thực");
+            // }
+            window.location.href = "/customer/homepage"; // comment here
         }
     });
     $(".login-google").on("click", async (e) => {
         e.preventDefault();
         window.location.href = "/auth/google";
     });
-    
+
     $(".login-facebook").on("click", async (e) => {
         e.preventDefault();
         window.location.href = "/auth/facebook";

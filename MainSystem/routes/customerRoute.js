@@ -45,4 +45,9 @@ router.route("/api/orderdetail").post(orderDetailController.createOrderDetail);
 router.route("/api/product").put(productController.modifyQuantity);
 router.route("/api/checkout").post(checkoutController.getSelectedItem);
 
+router
+    .route("/api/payment")
+    .post(paymentController.createPayment)
+    .put(paymentController.updatePayment);
+
 module.exports = router;
