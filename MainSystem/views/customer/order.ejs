@@ -93,7 +93,7 @@
                                     </div>
                                 </div>
                             </td>
-                            <td class="align-middle"><p class="text-danger"><%= order.status === 'Error' ? order.message : '' %></p></td>
+                            <td class="align-middle"><p class="text-danger"><%= order.status === 'Error' ? order.payment.message : '' %></p></td>
                         </tr>
                     <% }) %>
                 </tbody>
