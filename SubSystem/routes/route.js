@@ -18,9 +18,9 @@ const route = (app) => {
 
       // app.get("/history-transfer")
 
-      app.post("/transfer-to-payment",authenSystem, PaymentController.Payment)
+      app.post("/transfer-to-payment", PaymentController.Payment)
 
-      app.post("/create-account-payment",authenSystem, CreatePaymentAccount.CreateAccount)
+      app.post("/create-account-payment", CreatePaymentAccount.CreateAccount)
 
       app.post("/detail-transaction",authenAccount, HistoryTransferController.handlePostDetailTransaction)
 

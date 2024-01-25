@@ -5,8 +5,13 @@ const db = require("../../utils/db")
 
 module.exports = class PaymentController {
     static Payment = async (req, res) => {
+        console.log("=============================")
+        console.log("thanh toán")
+        console.log("body => ", req.body);
+        console.log("cookie => ", req.cookies.jwt);
+        console.log("=============================")
         const amount = parseFloat(req.body.amount)
-        const idUser = parseInt(req.body.userId);
+        const idUser = req.body.userId;
         let target = await db.db.query(`
             select * from "paymentAccount" where "userId" = $1
         `, [idUser])

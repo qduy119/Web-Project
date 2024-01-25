@@ -10,25 +10,31 @@ const cors = require("cors");
 const db = require("../utils/db");
 const cookieParser = require("cookie-parser");
 const route = require("./routes/route.js")
+const https = require("https")
+const fs = require("fs")
 
 const app = express();
+const options = {
+    key: fs.readFileSync("server.key"),
+    cert: fs.readFileSync("server.cert"),
+};
 
 app.use(
-      session({
-            secret: process.env.SESSION_SECRET,
-            saveUninitialized: true,
-            cookie: {
-                  sameSite: true,
-                  httpOnly: true,
-                  maxAge: +process.env.SESSION_EXPIRATION,
-            },
-            resave: false,
-      })
+    session({
+        secret: process.env.SESSION_SECRET,
+        saveUninitialized: true,
+        cookie: {
+            sameSite: true,
+            httpOnly: true,
+            maxAge: +process.env.SESSION_EXPIRATION,
+        },
+        resave: false,
+    })
 );
 
 app.use(cors({
-      origin: "http://localhost:5050",
-      credentials: true,
+    origin: "http://localhost:5050",
+    credentials: true,
 }))
 app.use(morgan("dev"));
 app.use(express.json());
@@ -37,11 +43,11 @@ app.use(cookieParser());
 app.use(express.static("public"));
 
 app.engine(
-      "hbs",
-      hbsEngine.engine({
-            extname: "hbs",
-            helpers: {},
-      })
+    "hbs",
+    hbsEngine.engine({
+        extname: "hbs",
+        helpers: {},
+    })
 );
 
 app.set("view engine", "hbs");
@@ -50,7 +56,8 @@ app.set("views", path.join(__dirname, "views"));
 db.connectDB();
 
 route(app);
-app.listen(PORT, () => {
-      console.log(`Sub server listening on ${PORT}`);
-});
 
+https.createServer(options, app)
+    .listen(PORT, function (req, res) {
+        console.log("Server started at port => ", PORT);
+    });
