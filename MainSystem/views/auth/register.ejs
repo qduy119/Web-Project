@@ -128,16 +128,31 @@
                 },
                 body: JSON.stringify({ username, password, fullName }),
             });
-            const { status, message } = await res.json();
+            const { status, message, id } = await res.json();
             $(".bar").addClass("hidden");
             if (status === "success") {
-                const toastLiveExample = $("#liveToast");
-                const toastBootstrap =
-                    bootstrap.Toast.getOrCreateInstance(toastLiveExample);
-                toastBootstrap.show();
-                setTimeout(() => {
-                    window.location.href = "/login";
-                }, 1000);
+                const temp = await fetch(
+                    "https://localhost:8080/create-account-payment",
+                    {
+                        method: "post",
+                        headers: {
+                            "Content-type": "application/json",
+                        },
+                        body: JSON.stringify({ id }),
+                    }
+                );
+                const { status: stt } = await temp.json();
+                if (stt === 200) {
+                    const toastLiveExample = $("#liveToast");
+                    const toastBootstrap =
+                        bootstrap.Toast.getOrCreateInstance(toastLiveExample);
+                    toastBootstrap.show();
+                    setTimeout(() => {
+                        window.location.href = "/login";
+                    }, 1000);    
+                } else if (stt === 401) {
+                    $(".error-register").html("Lỗi xác thực");
+                }
             } else {
                 $(".error-register").html(message);
             }

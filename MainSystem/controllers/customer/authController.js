@@ -44,7 +44,7 @@ exports.register = async (req, res) => {
             const id = uuidv4();
             await User.create({ id, username, password });
 
-            res.status(200).json({ status: "success" });
+            res.status(200).json({ status: "success", id });
         }
     } catch (error) {
         res.status(500).json({ status: "error", message: error.message });
