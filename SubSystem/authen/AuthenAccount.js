@@ -6,7 +6,7 @@ const  authenAccount = (req, res, next) => {
           return;
     }; //authorize
   
-    jwt.verify(tokenAccess, process.env.SESSION_SECRET, (err, data) => {
+    jwt.verify(tokenAccess, process.env.SUBSYTEM_SECRET_KEY_TOKEN, (err, data) => {
           if (err){
                 res.sendStatus(403);//forbidden     
                 return;

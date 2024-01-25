@@ -5,16 +5,20 @@ module.exports = class CreateAccountPayment {
         console.log("==================================")
         console.log("create account payment")
         console.log(req.body);
-        console.log(req.cookies.jwt);
         console.log("==================================")
         let idUser = req.body.id
+        let target = db.db.query(`select * from "paymentAccount" where "userId" = $1`, [idUser])
+        if(target.length !== 0) {
+            res.statusCode(200);
+            return
+        }
         try{
             await db.db.none(`
                 insert into "paymentAccount"("userId") values(${idUser})
             `)
-            res.json({status : 200});
+            res.statusCode(200);
         }catch(e) {
-            res.json({status : 401});
+            res.statusCode(404);
         }
     }
 }

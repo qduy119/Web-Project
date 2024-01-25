@@ -65,6 +65,13 @@ async function createUsers() {
     await db.none(query);
 }
 
+const insertAdminAccountSubsystem = async () => {
+    await db.none(`
+        insert into "Users"(id, username, password, email, role)
+        values('1', 'admin1', '123', 'dangtuananh3012003@gmail.com', 'admin')
+    `)
+}
+
 async function createCartDetails() {
     const query = `
             create table "CartDetails" (
@@ -142,7 +149,7 @@ const createPaymentAccount = async () => {
     await db.none(query);
 };
 
-const insertDefaultMainAccount = async () => {
+const insertDefaultMainAccountPayment = async () => {
     await db.none(`
         insert into "paymentAccount"("userId") values(null)
     `)
@@ -214,7 +221,8 @@ async function connectDB() {
         //neu nhu db moi tao ta insert data
         await createTable();
         await importData();
-        await insertDefaultMainAccount();
+        await insertDefaultMainAccountPayment();
+        await insertAdminAccountSubsystem();
     }
 }
 

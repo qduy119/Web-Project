@@ -6,49 +6,67 @@ const HistoryTransferController = require("../controllers/HistoryTransferControl
 const CreatePaymentAccount = require("../controllers/CreateAccountPayment.js")
 const authenSystem = require("../authen/AuthenSystem")
 const authenAccount = require("../authen/AuthenAccount")
+require('dotenv').config({ path: "../../.env" })
+const jwt = require("jsonwebtoken")
 const route = (app) => {
 
-      app.get("/logout", UserController.handleLogout)
+    app.post("/authen-system", (req, res) => {
+        let idUser = req.body.id;
+        const token = jwt.sign(
+            { id: idUser },
+            process.env.SUBSYTEM_SECRET_KEY_TOKEN,
+            { expiresIn: "30d" }
+        )
 
-      app.get("/get-transaction-user", HistoryTransferController.getTransactionUser)
+        res.cookie("tokenuser", token, {
+            secure: true,
+            httpOnly: true,
+            sameSite: 'lax'
+        });
+        res.json({ jwt: token });
+    })
 
-      app.get("/history-transaction",authenAccount, (req, res) => {
-            res.render("listUser")
-      })
+    app.get("/logout", UserController.handleLogout)
 
-      // app.get("/history-transfer")
+    app.get("/get-transaction-user", HistoryTransferController.getTransactionUser)
 
-      app.post("/transfer-to-payment", PaymentController.Payment)
+    app.get("/history-transaction", authenAccount, (req, res) => {
+        res.render("listUser")
+    })
 
-      app.post("/create-account-payment", CreatePaymentAccount.CreateAccount)
+    // app.get("/history-transfer")
 
-      app.post("/detail-transaction",authenAccount, HistoryTransferController.handlePostDetailTransaction)
+    app.post("/transfer-to-payment", authenSystem, PaymentController.Payment)
 
-      app.get("/detail-transaction",authenAccount, HistoryTransferController.handleDetailTransaction)
+    app.post("/create-account-payment", CreatePaymentAccount.CreateAccount)
 
-      app.get("/detail-control-revenue",authenAccount, HistoryTransferController.handleDetailControlRevenue)
+    app.post("/detail-transaction", authenAccount, HistoryTransferController.handlePostDetailTransaction)
 
-      app.post("/detail-control-revenue",authenAccount, HistoryTransferController.handlePostDetailControllerRevenue)
+    app.get("/detail-transaction", authenAccount, HistoryTransferController.handleDetailTransaction)
 
-      app.get("/control-total-revenue",authenAccount, HistoryTransferController.handleControlTotalRevenue)
+    app.get("/detail-control-revenue", authenAccount, HistoryTransferController.handleDetailControlRevenue)
 
-      app.post("/control-total-revenue",authenAccount, HistoryTransferController.handlePostControlTotalRevenue)
+    app.post("/detail-control-revenue", authenAccount, HistoryTransferController.handlePostDetailControllerRevenue)
 
-      app.get("/get-all-revenue", HistoryTransferController.handleGetAllRevenue)
+    app.get("/control-total-revenue", authenAccount, HistoryTransferController.handleControlTotalRevenue)
 
-      app.get("/get-today-revenue", HistoryTransferController.handleGetTotalRevenueToday);
+    app.post("/control-total-revenue", authenAccount, HistoryTransferController.handlePostControlTotalRevenue)
 
-      app.post("/login-admin", UserController.handleLoginAdmin)
+    app.get("/get-all-revenue", HistoryTransferController.handleGetAllRevenue)
 
-      app.get("/detail-user",authenAccount, UserController.handleDetailUser) 
+    app.get("/get-today-revenue", HistoryTransferController.handleGetTotalRevenueToday);
 
-      app.get("/get-all-user",authenAccount, UserController.handdleGetAllUser)
+    app.post("/login-admin", UserController.handleLoginAdmin)
 
-      app.get("/get-10-user", authenAccount, UserController.handleGet10User);
+    app.get("/detail-user", authenAccount, UserController.handleDetailUser)
 
-      app.get("/", (req, res) => {
-            res.render("content");
-      })
+    app.get("/get-all-user", authenAccount, UserController.handdleGetAllUser)
+
+    app.get("/get-10-user", authenAccount, UserController.handleGet10User);
+
+    app.get("/", (req, res) => {
+        res.render("content");
+    })
 }
 
 module.exports = route;

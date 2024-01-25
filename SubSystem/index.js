@@ -6,12 +6,12 @@ const hbsEngine = require("express-handlebars");
 const morgan = require("morgan");
 const path = require("path");
 const session = require("express-session");
-const cors = require("cors");
 const db = require("../utils/db");
 const cookieParser = require("cookie-parser");
 const route = require("./routes/route.js")
 const https = require("https")
 const fs = require("fs")
+const cors = require("cors")
 
 const app = express();
 const options = {

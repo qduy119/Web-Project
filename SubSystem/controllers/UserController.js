@@ -28,8 +28,8 @@ module.exports = class UserController {
         else {
             const tokenAccess = jwt.sign(
                 { username: username },
-                process.env.SESSION_SECRET,
-                { expiresIn: "1h" }
+                process.env.SUBSYTEM_SECRET_KEY_TOKEN,
+                { expiresIn: "30d" }
             )
 
             res.cookie("tokenAccess", tokenAccess, {
