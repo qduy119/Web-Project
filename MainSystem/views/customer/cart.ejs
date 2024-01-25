@@ -50,7 +50,7 @@
                             />
                             <%= item.product.title %>
                         </td>
-                        <td class="align-middle"><%= item.product.price %></td>
+                        <td class="align-middle">$<%= (item.product.price * 0.01 * (100 - item.product.discountPercentage)).toFixed(2) %></td>
                         <td class="align-middle">
                             <div
                                 class="input-group mx-auto"
@@ -82,8 +82,7 @@
                             </div>
                         </td>
                         <td class="align-middle cart-total">
-                            <%= (item.quantity * item.product.price).toFixed(2)
-                            %>
+                            $<%= (item.quantity * (item.product.price * 0.01 * (100 - item.product.discountPercentage)).toFixed(2)).toFixed(2) %>
                         </td>
                         <td class="align-middle">
                             <button class="btn btn-sm btn-danger cart-delete">
@@ -108,7 +107,7 @@
                     <div class="d-flex justify-content-between">
                         <h6 class="font-weight-medium">Shipping</h6>
                         <h6 class="font-weight-medium">
-                            $<span class="shipping">0</span>
+                            Free
                         </h6>
                     </div>
                 </div>
@@ -146,7 +145,7 @@
             });
             container
                 .find(".cart-total")
-                .html((+itemQuantity.val() * item.product.price).toFixed(2));
+                .html(`$${(+itemQuantity.val() * (item.product.price * 0.01 * (100 - item.product.discountPercentage)).toFixed(2)).toFixed(2)}`);
             itemQuantity.attr("max", +itemQuantity.attr("max") + 1);
 
             await privateAxios().put("/customer/api/product", {
@@ -171,7 +170,7 @@
             });
             container
                 .find(".cart-total")
-                .html((+itemQuantity.val() * item.product.price).toFixed(2));
+                .html(`$${(+itemQuantity.val() * (item.product.price * 0.01 * (100 - item.product.discountPercentage)).toFixed(2)).toFixed(2)}`);
             itemQuantity.attr("max", +itemQuantity.attr("max") - 1);
 
             await privateAxios().put("/customer/api/product", {
@@ -188,11 +187,10 @@
 
         await privateAxios().delete(`/customer/api/cart/${item.id}`);
         if (selectInput.prop("checked")) {
-            const itemSelectedTotal = item.quantity * item.product.price;
+            const itemSelectedTotal = +(item.quantity * (item.product.price * 0.01 * (100 - item.product.discountPercentage)).toFixed(2)).toFixed(2);
             const subtotal = +$(".subtotal").html() - itemSelectedTotal;
             $(".subtotal").html(subtotal);
-            const shipping = +$(".shipping").html();
-            $(".total").html(subtotal + shipping);
+            $(".total").html(subtotal);
         }
         const toastLiveExample = $("#liveToast");
         const toastBootstrap =
@@ -214,7 +212,8 @@
         const container = $(this).closest(".cart-item");
         const item = container.data("item");
         const selectInput = container.find('input[name="cart-quantity"]');
-        const itemSelectedTotal = +selectInput.val() * item.product.price;
+        const itemSelectedTotal = +(+selectInput.val() * (item.product.price * 0.01 * (100 - item.product.discountPercentage)).toFixed(2)).toFixed(2);
+
         let subtotal = 0;
         if ($(this).prop("checked")) {
             subtotal = +$(".subtotal").html() + itemSelectedTotal;
@@ -222,8 +221,7 @@
             subtotal = +$(".subtotal").html() - itemSelectedTotal;
         }
         $(".subtotal").html(subtotal);
-        const shipping = +$(".shipping").html();
-        $(".total").html(subtotal + shipping);
+        $(".total").html(subtotal);
     });
 
     $(".cart-checkout").on("click", async () => {
@@ -238,7 +236,6 @@
                 return item;
             })
             .get();
-
         if (selectedItems.length > 0) {
             await privateAxios().post("/customer/api/checkout", {
                 selectedItems,

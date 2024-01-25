@@ -97,24 +97,24 @@
         } else {
             const { token, id } = await res.json();
             localStorage.setItem("accessToken", token);
-            // const temp = await fetch(
-            //     "https://localhost:8080/create-account-payment",
-            //     {
-            //         method: "post",
-            //         headers: {
-            //             "Content-type": "application/json",
-            //         },
-            //         body: JSON.stringify({ id }),
-            //         credentials: "include",
-            //     }
-            // );
-            // const { status } = await temp.json();
-            // if (status === 200) {
-            //     window.location.href = "/customer/homepage";
-            // } else if (status === 401) {
-            //     $(".error-login").html("Lỗi xác thực");
-            // }
-            window.location.href = "/customer/homepage"; // comment here
+            const temp = await fetch(
+                "https://localhost:8080/create-account-payment",
+                {
+                    method: "post",
+                    headers: {
+                        "Content-type": "application/json",
+                    },
+                    body: JSON.stringify({ id }),
+                    credentials: "include",
+                }
+            );
+            const { status } = await temp.json();
+            if (status === 200) {
+                window.location.href = "/customer/homepage";
+            } else if (status === 401) {
+                $(".error-login").html("Lỗi xác thực");
+            }
+            // window.location.href = "/customer/homepage"; // comment here
         }
     });
 </script>

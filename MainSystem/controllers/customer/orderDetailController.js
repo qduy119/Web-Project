@@ -2,11 +2,12 @@ const { OrderDetail } = require("../../models");
 
 exports.createOrderDetail = async (req, res) => {
     try {
-        const { orderId, productId, quantity } = req.body;
+        const { orderId, productId, quantity, totalPrice } = req.body;
         await OrderDetail.create({
             orderId,
             productId,
             quantity,
+            totalPrice
         });
 
         res.status(200).json({ status: "success" });

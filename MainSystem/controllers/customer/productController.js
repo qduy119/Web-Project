@@ -1,4 +1,10 @@
-const { Category, Product, CartDetail } = require("../../models");
+const {
+    Category,
+    Product,
+    CartDetail,
+    OrderDetail,
+    Order,
+} = require("../../models");
 
 exports.product = async (req, res, next) => {
     try {
@@ -8,6 +14,18 @@ exports.product = async (req, res, next) => {
         });
 
         const product = await Product.findByPk(id);
+        const soldQuantity = await OrderDetail.sum("quantity", {
+            where: { productId: id },
+            include: [
+                {
+                    model: Order,
+                    attributes: [],
+                    where: {
+                        status: "Success",
+                    },
+                },
+            ],
+        }) ?? 0;
         const products = await Product.findAll({
             where: {
                 categoryId: product.categoryId,
@@ -21,6 +39,7 @@ exports.product = async (req, res, next) => {
         res.render("customer/productDetail", {
             user: req.session?.user,
             product,
+            soldQuantity,
             categories,
             nCart,
             relatedProducts,
