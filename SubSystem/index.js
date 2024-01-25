@@ -33,7 +33,7 @@ app.use(
 );
 
 app.use(cors({
-    origin: "http://localhost:5050",
+    origin: "https://localhost:5050",
     credentials: true,
 }))
 app.use(morgan("dev"));

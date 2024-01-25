@@ -6,6 +6,8 @@ const morgan = require("morgan");
 const session = require("express-session");
 const store = new session.MemoryStore();
 const cookieParser = require("cookie-parser");
+const https = require("https");
+const fs = require("fs");
 const connect = require("./connection");
 
 const app = express();
@@ -18,6 +20,8 @@ app.use(
         saveUninitialized: true,
         cookie: {
             httpOnly: true,
+            secure: true,
+            sameSite: "none",
             maxAge: +process.env.SESSION_EXPIRATION,
         },
         resave: false,
@@ -105,6 +109,13 @@ app.use((err, req, res, next) => {
     await connect();
 })();
 
-app.listen(PORT, () => {
+const options = {
+    key: fs.readFileSync("server.key"),
+    cert: fs.readFileSync("server.cert"),
+};
+
+const server = https.createServer(options, app);
+
+server.listen(PORT, () => {
     console.log(`Main server listening on ${PORT}`);
 });
