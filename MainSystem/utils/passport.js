@@ -40,6 +40,7 @@ module.exports = (app) => {
             },
             async (accessToken, refreshToken, profile, done) => {
                 try {
+                    const { provider } = profile;
                     profile = profile["_json"];
                     const {
                         sub: id,
@@ -56,6 +57,7 @@ module.exports = (app) => {
                             fullName,
                             avatar,
                             email,
+                            provider,
                         });
                         done(null, newUser);
                     }
@@ -76,8 +78,14 @@ module.exports = (app) => {
             },
             async (accessToken, refreshToken, profile, done) => {
                 try {
+                    const { provider } = profile;
                     profile = profile["_json"];
-                    const { picture, id, name: fullName, email } = profile;
+                    const {
+                        picture,
+                        id,
+                        name: fullName,
+                        email,
+                    } = profile;
                     const { url: avatar } = picture.data;
                     const user = await User.findByPk(id);
                     if (user) {
@@ -88,6 +96,7 @@ module.exports = (app) => {
                             fullName,
                             avatar,
                             email,
+                            provider,
                         });
                         done(null, newUser);
                     }

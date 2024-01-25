@@ -146,7 +146,7 @@
             amount: totalPrice,
         });
         const { payment } = res1.data;
-        // const res2 = await fetch("http://localhost:8080/transfer-to-payment", {
+        // const res2 = await fetch("https://localhost:8080/transfer-to-payment", {
         //     method: "post",
         //     headers: {
         //         "Content-type": "application/json",
@@ -162,6 +162,10 @@
                 id: order.id,
                 status: "Success",
             });
+            await privateAxios().put("/customer/api/payment", {
+                id: payment.id,
+                status: "Success"
+            });
             const toastLiveExample = $("#liveToast");
             const toastBootstrap =
                 bootstrap.Toast.getOrCreateInstance(toastLiveExample);
@@ -170,6 +174,11 @@
                 window.location.href = "/customer/order";
             }, 1000);
         } else if (status === 404) {
+            await privateAxios().put("/customer/api/payment", {
+                id: payment.id,
+                status: "Error",
+                message: "Tài khoản không đủ tiền"
+            });
             await privateAxios().put("/customer/api/order", {
                 id: order.id,
                 status: "Error",

@@ -58,6 +58,7 @@ async function createUsers() {
                   role text default 'customer'::text,
                   avatar text default 'https://res.cloudinary.com/dlzyiprib/image/upload/v1700326876/e-commerces/user/download_ae0aln.png'::text,
                   "fullName" text,
+                  provider text default 'default'::text,
                   primary key (id)
             )
       `;
@@ -212,7 +213,7 @@ async function connectDB() {
         //neu nhu db moi tao ta insert data
         await createTable();
         await importData();
-        await insertDefaultMainAccount();
+        // await insertDefaultMainAccount();
     }
 }
 

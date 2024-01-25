@@ -7,7 +7,11 @@ const protect = async (req, res, next) => {
         req.headers.authorization &&
         req.headers.authorization.startsWith("Bearer")
     ) {
-        token = req.headers.authorization.split(" ")[1];
+        if(req.headers.authorization.split(" ")[1] === "null") {
+            token = null;
+        } else {
+            token = req.headers.authorization.split(" ")[1];
+        }
     }
     if (!token) {
         return next(new Error("You are not logged in"));
