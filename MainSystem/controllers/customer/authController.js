@@ -65,6 +65,8 @@ const sendRefreshToken = (res, user) => {
     const token = refreshToken(user);
     const options = {
         httpOnly: true,
+        secure: true,
+        sameSite: "none",
         expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
     };
     res.cookie("refreshToken", token, options);
@@ -122,6 +124,8 @@ exports.logout = (req, res) => {
     try {
         const options = {
             httpOnly: true,
+            secure: true,
+            sameSite: "none",
         };
         req.session.user = null;
         res.clearCookie("refreshToken", options);
