@@ -8,7 +8,7 @@
         "watch": "node-sass --watch MainSystem/public/scss/style.scss MainSystem/public/css/style.css",
         "main": "cd MainSystem && nodemon index.js",
         "sub": "cd SubSystem && nodemon index.js",
-        "dev": "concurrently \"npm run main\" \"npm run sub\""
+        "dev": "concurrently \"npm run sub\" \"npm run main\""
     },
     "author": "",
     "license": "ISC",

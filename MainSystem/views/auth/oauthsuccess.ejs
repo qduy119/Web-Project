@@ -45,28 +45,28 @@
             const params = new URLSearchParams(window.location.search);
             const [id, token] = [params.get("id"), params.get("token")];
             localStorage.setItem("accessToken", token);
-            // const temp = await fetch(
-            //     "https://localhost:8080/create-account-payment",
-            //     {
-            //         method: "post",
-            //         headers: {
-            //             "Content-type": "application/json",
-            //         },
-            //         body: JSON.stringify({ id }),
-            //         credentials: "include",
-            //     }
-            // );
-            // const { status } = await temp.json();
-            // if (status === 200) {
-            //     setTimeout(() => {
-            //         window.location.href = "/customer/homepage"; // comment here
-            //     }, 1000);
-            // } else if (status === 401) {
-            //     $(".error-login").html("Lỗi xác thực");
-            // }
-            setTimeout(() => {
-                window.location.href = "/customer/homepage"; // comment here
-            }, 1000);
+            const temp = await fetch(
+                "https://localhost:8080/create-account-payment",
+                {
+                    method: "post",
+                    headers: {
+                        "Content-type": "application/json",
+                    },
+                    body: JSON.stringify({ id }),
+                    credentials: "include",
+                }
+            );
+            const { status } = await temp.json();
+            if (status === 200) {
+                setTimeout(() => {
+                    window.location.href = "/customer/homepage";
+                }, 1000);
+            } else if (status === 401) {
+                $(".error-login").html("Lỗi xác thực");
+            }
+            // setTimeout(() => {
+            //     window.location.href = "/customer/homepage"; // comment here
+            // }, 1000);
         </script>
     </body>
 </html>

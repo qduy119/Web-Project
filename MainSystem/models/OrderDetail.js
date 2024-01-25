@@ -43,6 +43,7 @@ module.exports = (sequelize, DataTypes) => {
                 },
             },
             quantity: DataTypes.INTEGER,
+            totalPrice: DataTypes.FLOAT,
         },
         {
             sequelize,

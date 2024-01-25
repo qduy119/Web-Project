@@ -102,6 +102,7 @@ async function createOrderDetails() {
             "orderId" integer not null,
             "productId" integer not null,
             quantity integer not null,
+            "totalPrice" real not null,
             foreign key ("orderId") references "Orders" (id),
             foreign key ("productId") references "Products" (id),
             primary key (id)
