@@ -2,6 +2,8 @@
       <h5><b><i class="fa fa-bank"></i> Đối soát giao dịch</b></h5>
       <div class="mb-2 decorItemNavbar" id = "controlTotalRevenue"><i class="fa fa-key"></i> Đối soát tổng doanh thu</div>
       <div class="mb-2 decorItemNavbar" id = "detailControlRevenue"><i class="fa fa-key"></i> Đối soát doanh thu chi tiết</div>
+      <h5><b><i class="fa fa-bank"></i> Giao dịch</b></h5>
+      <div class="mb-2 decorItemNavbar" id = "historyTransaction"><i class="fa fa-key"></i> Lịch sử giao dịch</div>
 </div>
 
 <script type = "module">
@@ -10,5 +12,8 @@
       })
       $("#detailControlRevenue").click(() => {
             location.href = "/detail-control-revenue"
+      })
+      $("#historyTransaction").click(() => {
+            location.href = "/history-transaction"
       })
 </script>

@@ -5,10 +5,10 @@ const db = require("../../utils/db.js")
 module.exports = class HistoryTransferModel {
 
       static getDetailTransaction = async (id) => {
-            return await db.db.one(`
+            return await db.db.query(`
                   select *
                   from "historyTransfer" as ht, "Orders" as o, "Users" as u, "OrderDetails" as od, "Products" as p
-                  where ht."orderId" = $1 and o.id = $1 and ht."userID" = u.id and od."orderId" = $1 and od."productId" = p.id
+                  where ht."id" = $1 and o.id = ht."orderId" and o."userId" = u.id and od."orderId" = o.id and od."productId" = p.id
             `, [id])
       }
 

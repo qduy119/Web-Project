@@ -14,7 +14,7 @@ module.exports = class UserModel {
 
       static getUserByID = async (id) => {
             return db.db.one(`
-                  select id, email, role, username, avatar, gender, dob, avatar
+                  select *
                   from "Users"
                   where id = $1
             `, [id])
@@ -22,17 +22,17 @@ module.exports = class UserModel {
 
       static get10User = async () => {
             return await db.db.query(`
-                  select id, email, role, username, avatar, gender, dob
+                  select *
                   from "Users"
-                  where role = 'user'
+                  where role = 'customer'
                   limit 10
             `)
       }
       static getAllUser = async () => {
             return await db.db.query(`
-                  select id, email, role, username, avatar, gender, dob
+                  select *
                   from "Users"
-                  where role = 'user'
+                  where role = 'customer'
             `)
       }
 }

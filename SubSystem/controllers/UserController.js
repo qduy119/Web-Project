@@ -8,6 +8,7 @@ require("dotenv").config({ path: "../../.env" });
 module.exports = class UserController {
 
     static handleLogout = async (req, res) => {
+        console.log("logout")
         res.clearCookie("tokenAccess");
         res.redirect("/");
     }
@@ -36,8 +37,8 @@ module.exports = class UserController {
                 httpOnly: true,
                 sameSite: 'lax'
             });
+            res.json({ status: 200 });
         }
-        res.json({ status: 200 });
 
     }
 

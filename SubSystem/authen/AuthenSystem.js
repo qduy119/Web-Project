@@ -1,5 +1,5 @@
 const  authenSystem = (req, res, next) => {
-    const tokenAccess = req.getHeader("jwt");
+    const tokenAccess = req.cookies["jwt"];
     if (!tokenAccess) {
           res.sendStatus(401);//chua dang nhap
           return;

@@ -1,10 +1,51 @@
-<div class="d-flex detailUser">
-      <img src={{data.avatar}} alt="image" style="width: 200px; height :200px">
-      <div class="bg-light" style="width: 100%;">
-            <div><b>Email : </b> {{data.email}}</div>
-            <div><b>Role : </b> {{data.role}}</div>
+<div>
+    <div class="d-flex detailUser" id = {{data.id}}>
+        <img src={{data.avatar}} alt="image" style="width: 200px; height :200px">
+        <div class="bg-light" style="width: 100%;">
             <div><b>Username : </b> {{data.username}}</div>
-            <div><b>Gender : </b> {{data.gender}}</div>
-            <div><b>Date of birth : </b> {{data.dob}}</div>
-      </div>
+            <div><b>Role : </b> {{data.role}}</div>
+            <div><b>Email : </b> {{data.email}}</div>
+            <div><b>Full Name : </b> {{data.fullName}}</div>
+        </div>
+    </div>
+    <h5><b><i class="fa fa-bank"></i> Lịch Sử Giao dịch</b></h5>
+    <table class="table table-striped text-start align-middle table-bordered table-hover mb-0 decorTableListUser">
+        <thead>
+            <tr class="text-white">
+                <th scope="col">ID</th>
+                <th scope="col">Date Transaction</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Detail</th>
+            </tr>
+        </thead>
+        <tbody id="contentTransaction">
+        </tbody>
+    </table>
 </div>
+<script type = "module">
+    let idUser = $(".detailUser").attr("id").trim();
+    let res = await fetch(`/get-transaction-user?id=${idUser}`);
+    let data = await res.json();
+    let strRenderListTransaction = "";
+    for(let i = 0; i < data.length; i++) {
+        const item = data[i];
+        strRenderListTransaction += `
+            <tr>
+                <td>${item.id}</td>
+                <td>${item.dateTransfer}</td>
+                <td>${item.amount}</td>
+                <td style="text-align: center;"><button class="btn btn-sm btn-primary viewDetailTransaction"
+                            type="button">Detail</button></td>
+            </tr>
+        `
+    }
+
+    let listBtnViewDetailTransaction = $(".viewDetailTransaction");
+    for(let i = 0 ; i < listBtnViewDetailTransaction.length; i++) {
+        const item = listBtnViewDetailTransaction.eq(i);
+        item.click(() => {
+            let idTran = item.prev().prev().prev().text();
+            location.href = `/detail-transaction?id=${idTran}`
+        })
+    }   
+</script>

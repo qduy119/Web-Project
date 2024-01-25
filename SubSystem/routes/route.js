@@ -4,23 +4,35 @@ const UserController = require("../controllers/UserController.js")
 const PaymentController = require("../controllers/PaymentController.js")
 const HistoryTransferController = require("../controllers/HistoryTransferController.js")
 const CreatePaymentAccount = require("../controllers/CreateAccountPayment.js")
+const authenSystem = require("../authen/AuthenSystem")
+const authenAccount = require("../authen/AuthenAccount")
 const route = (app) => {
 
-      app.get("/history-transfer")
+      app.get("/logout", UserController.handleLogout)
 
-      app.post("/transfer-to-payment", PaymentController.Payment)
+      app.get("/get-transaction-user", HistoryTransferController.getTransactionUser)
 
-      app.post("/create-account-payment", CreatePaymentAccount.CreateAccount)
+      app.get("/history-transaction",authenAccount, (req, res) => {
+            res.render("listUser")
+      })
 
-      app.get("/detail-transaction-subsystem", HistoryTransferController.handleDetailTransaction)
+      // app.get("/history-transfer")
 
-      app.get("/detail-control-revenue", HistoryTransferController.handleDetailControlRevenue)
+      app.post("/transfer-to-payment",authenSystem, PaymentController.Payment)
 
-      app.post("/detail-control-revenue", HistoryTransferController.handlePostDetailControllerRevenue)
+      app.post("/create-account-payment",authenSystem, CreatePaymentAccount.CreateAccount)
 
-      app.get("/control-total-revenue", HistoryTransferController.handleControlTotalRevenue)
+      app.post("/detail-transaction",authenAccount, HistoryTransferController.handlePostDetailTransaction)
 
-      app.post("/control-total-revenue", HistoryTransferController.handlePostControlTotalRevenue)
+      app.get("/detail-transaction",authenAccount, HistoryTransferController.handleDetailTransaction)
+
+      app.get("/detail-control-revenue",authenAccount, HistoryTransferController.handleDetailControlRevenue)
+
+      app.post("/detail-control-revenue",authenAccount, HistoryTransferController.handlePostDetailControllerRevenue)
+
+      app.get("/control-total-revenue",authenAccount, HistoryTransferController.handleControlTotalRevenue)
+
+      app.post("/control-total-revenue",authenAccount, HistoryTransferController.handlePostControlTotalRevenue)
 
       app.get("/get-all-revenue", HistoryTransferController.handleGetAllRevenue)
 
@@ -28,11 +40,11 @@ const route = (app) => {
 
       app.post("/login-admin", UserController.handleLoginAdmin)
 
-      app.get("/detail-user", UserController.handleDetailUser) 
+      app.get("/detail-user",authenAccount, UserController.handleDetailUser) 
 
-      app.get("/get-all-user", UserController.handdleGetAllUser)
+      app.get("/get-all-user",authenAccount, UserController.handdleGetAllUser)
 
-      app.get("/get-10-user", UserController.handleGet10User);
+      app.get("/get-10-user", authenAccount, UserController.handleGet10User);
 
       app.get("/", (req, res) => {
             res.render("content");

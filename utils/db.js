@@ -213,7 +213,6 @@ async function connectDB() {
         await createTable();
         await importData();
         await insertDefaultMainAccount();
-        await insertAdminAccountForSubSystem();
     }
 }
 

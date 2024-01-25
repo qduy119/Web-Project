@@ -5,10 +5,20 @@ const PaymentModel = require("../models/PaymentModel.js");
 
 module.exports = class HistoryTransferController {
 
-    static handleDetailTransaction = async (req, res) => {
-        const id = req.query.id;
+    static getTransactionUser = async (req, res) => {
+        let idUser = req.query.id;
+
+    }
+
+    static handlePostDetailTransaction = async (req, res) => {
+        const id = req.body.id;
         const data = await HistoryTransferModel.getDetailTransaction(id);
         res.json(data);
+    }
+
+    static handleDetailTransaction = async (req, res) => {
+        const id = req.query.id;
+        res.render("detailTransaction", {id : id})
     }
 
     static handlePostDetailControllerRevenue = async (req, res) => {
@@ -34,7 +44,7 @@ module.exports = class HistoryTransferController {
         for (let i = 0; i < res1.length; i++) {
             const item1 = res1[i];
             const item2 = res2[i];
-            if (item1.userID !== item2.userId) {
+            if (item1.userId !== item2.userId) {
                 console.log("user id");
                 index = i;
                 break;

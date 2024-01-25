@@ -75,7 +75,8 @@
             $("#logoutHeader").css("display", "none");
       }
 
-      $("#logoutHeader").click(() => {
+      $("#logoutHeader").click(async () => {
+            await fetch("/logout");
             sessionStorage.removeItem("username");
             location.href = "/"
       })
