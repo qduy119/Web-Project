@@ -213,7 +213,7 @@ async function connectDB() {
         //neu nhu db moi tao ta insert data
         await createTable();
         await importData();
-        // await insertDefaultMainAccount();
+        await insertDefaultMainAccount();
     }
 }
 
