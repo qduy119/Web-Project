@@ -129,6 +129,7 @@ exports.logout = (req, res) => {
         };
         req.session.user = null;
         res.clearCookie("refreshToken", options);
+        res.clearCookie("token", options);
         res.status(200).json({ status: "success" });
     } catch (error) {
         res.status(404).json({ status: "error", message: error.message });

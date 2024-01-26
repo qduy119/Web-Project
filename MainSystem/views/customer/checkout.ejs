@@ -64,7 +64,7 @@
                         <h6>
                             $<span class="subtotal">
                                 <%= items.reduce((subtotal, i) => subtotal +
-                                +(i.quantity * (i.product.price * 0.01 * (100 - i.product.discountPercentage)).toFixed(2)).toFixed(2), 0) %>
+                                +(i.quantity * (i.product.price * 0.01 * (100 - i.product.discountPercentage)).toFixed(2)).toFixed(2), 0).toFixed(2) %>
                             </span>
                         </h6>
                     </div>
