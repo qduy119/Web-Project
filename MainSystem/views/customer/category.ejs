@@ -78,6 +78,8 @@
             window.location.href = "/login";
         } else {
             const productId = $(this).data("productid");
+            const stock = +$(this).data("productstock");
+            if (stock < 1) return;
             await privateAxios().post("/customer/api/cart", {
                 quantity: 1,
                 productId,
@@ -95,6 +97,7 @@
                 quantity: -1,
                 id: productId,
             });
+            $(this).data("productstock", stock - 1);
         }
     });
 </script>
