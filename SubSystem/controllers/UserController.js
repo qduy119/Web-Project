@@ -9,7 +9,11 @@ module.exports = class UserController {
 
     static handleLogout = async (req, res) => {
         console.log("logout")
-        res.clearCookie("tokenAccess");
+        res.clearCookie("tokenAccess", {
+            secure: true,
+            httpOnly: true,
+            sameSite: 'lax'
+        });
         res.redirect("/");
     }
 

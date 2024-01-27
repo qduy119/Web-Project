@@ -2,10 +2,10 @@
     <div class="row px-xl-5">
         <div class="col-12">
             <nav class="breadcrumb bg-light mb-30">
-                <a class="breadcrumb-item text-dark" href="/customer/homepage"
+                <a class="breadcrumb-item text-dark" href="/"
                     >Home</a
                 >
-                <a class="breadcrumb-item text-dark" href="/customer/cart"
+                <a class="breadcrumb-item text-dark" href="/cart"
                     >Shopping Cart</a
                 >
                 <span class="breadcrumb-item active">Checkout</span>
@@ -64,7 +64,7 @@
                         <h6>
                             $<span class="subtotal">
                                 <%= items.reduce((subtotal, i) => subtotal +
-                                +(i.quantity * (i.product.price * 0.01 * (100 - i.product.discountPercentage)).toFixed(2)).toFixed(2), 0) %>
+                                +(i.quantity * (i.product.price * 0.01 * (100 - i.product.discountPercentage)).toFixed(2)).toFixed(2), 0).toFixed(2) %>
                             </span>
                         </h6>
                     </div>
@@ -128,22 +128,22 @@
         const items = $(this).data("items");
         const totalPrice = +$(".total").html();
         $(".spinner").removeClass("hidden");
-        const res = await privateAxios().post("/customer/api/order", {
+        const res = await privateAxios().post("/api/order", {
             totalPrice,
         });
         const { order } = res.data;
 
         for (const item of items) {
-            await privateAxios().post("/customer/api/orderdetail", {
+            await privateAxios().post("/api/orderdetail", {
                 orderId: order.id,
                 productId: item.productId,
                 quantity: item.quantity,
                 totalPrice: +(item.quantity * (item.product.price * 0.01 * (100 - item.product.discountPercentage)).toFixed(2)).toFixed(2)
                 
             });
-            await privateAxios().delete(`/customer/api/cart/${item.id}`);
+            await privateAxios().delete(`/api/cart/${item.id}`);
         }
-        const res1 = await privateAxios().post("/customer/api/payment", {
+        const res1 = await privateAxios().post("/api/payment", {
             orderId: order.id,
             amount: totalPrice,
         });
@@ -160,11 +160,11 @@
         // const status = 200; // comment here
         $(".spinner").addClass("hidden");
         if (status === 200) {
-            await privateAxios().put("/customer/api/order", {
+            await privateAxios().put("/api/order", {
                 id: order.id,
                 status: "Success",
             });
-            await privateAxios().put("/customer/api/payment", {
+            await privateAxios().put("/api/payment", {
                 id: payment.id,
                 status: "Success",
             });
@@ -173,25 +173,25 @@
                 bootstrap.Toast.getOrCreateInstance(toastLiveExample);
             toastBootstrap.show();
             setTimeout(() => {
-                window.location.href = "/customer/order";
+                window.location.href = "/order";
             }, 1000);
         } else if (status === 404) {
             for (const item of items) {
-                await privateAxios().put("/customer/api/product", {
+                await privateAxios().put("/api/product", {
                     quantity: item.quantity,
                     id: item.productId,
                 });
             }
-            await privateAxios().put("/customer/api/payment", {
+            await privateAxios().put("/api/payment", {
                 id: payment.id,
                 status: "Error",
                 message: "Tài khoản không đủ tiền",
             });
-            await privateAxios().put("/customer/api/order", {
+            await privateAxios().put("/api/order", {
                 id: order.id,
                 status: "Error",
             });
-            window.location.href = "/customer/order";
+            window.location.href = "/order";
         } else {
             $(".error-payment").html("Lỗi xác thực");
         }

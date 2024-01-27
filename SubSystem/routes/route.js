@@ -18,12 +18,12 @@ const route = (app) => {
             { expiresIn: "30d" }
         )
 
-        res.cookie("tokenuser", token, {
+        res.cookie("token", token, {
             secure: true,
             httpOnly: true,
-            sameSite: 'lax'
+            sameSite: 'none'
         });
-        res.json({ jwt: token });
+        res.json({});
     })
 
     app.get("/logout", UserController.handleLogout)

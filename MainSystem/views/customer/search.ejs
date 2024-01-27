@@ -77,11 +77,12 @@
                                 class="btn btn-outline-dark btn-square addToCart"
                                 href="javascript:void(0);"
                                 data-productid="<%= product.id %>"
+                                data-productstock="<%= product.stock %>"
                                 ><i class="fa fa-cart-plus"></i
                             ></a>
                             <a
                                 class="btn btn-outline-dark btn-square"
-                                href="/customer/product/<%= product.id %>"
+                                href="/product/<%= product.id %>"
                                 ><i class="fa fa-eye"></i
                             ></a>
                         </div>
@@ -169,11 +170,13 @@
             window.location.href = "/login";
         } else {
             const productId = $(this).data("productid");
-            await privateAxios().post("/customer/api/cart", {
+            const stock = +$(this).data("productstock");
+            if (stock < 1) return;
+            await privateAxios().post("/api/cart", {
                 quantity: 1,
                 productId,
             });
-            const res = await privateAxios().get("/customer/api/cart");
+            const res = await privateAxios().get("/api/cart");
             const { items } = res.data;
             $(".cart-badge").html(items.length);
 
@@ -182,10 +185,11 @@
                 bootstrap.Toast.getOrCreateInstance(toastLiveExample);
             toastBootstrap.show();
 
-            await privateAxios().put("/customer/api/product", {
+            await privateAxios().put("/api/product", {
                 quantity: -1,
                 id: productId,
             });
+            $(this).data("productstock", stock - 1);
         }
     });
 </script>

@@ -24,8 +24,10 @@ app.use(
         secret: process.env.SESSION_SECRET,
         saveUninitialized: true,
         cookie: {
-            sameSite: true,
             httpOnly: true,
+            secure: true,
+            sameSite: "none",
+            domain: "https://localhost:5050",
             maxAge: +process.env.SESSION_EXPIRATION,
         },
         resave: false,

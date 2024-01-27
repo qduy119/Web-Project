@@ -37,7 +37,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static("www"));
 app.use(express.static("public"));
-app.use(/^\/customer(\/(\w+))?/i, express.static("public"));
+app.use(/^(\/(\w+))?/i, express.static("public"));
 
 // Đặt đường dẫn thư mục views và sử dụng EJS làm view engine
 app.set("views", path.join(__dirname, "views"));
@@ -53,9 +53,14 @@ app.use((req, res, next) => {
         req.originalUrl.startsWith("/register")
     ) {
         app.set("layout", "layouts/authLayout");
-    } else if (req.originalUrl.split("/").filter(Boolean)[0] === "customer") {
-        app.set("layout", "layouts/customerLayout");
     } else {
+        if (
+            req.originalUrl.split("/").filter(Boolean) < 3 ||
+            req.originalUrl.startsWith("/api")
+        ) {
+            app.set("layout", "layouts/customerLayout");
+            return next();
+        }
         const [area] = req.originalUrl.split("/").filter(Boolean)[0];
         let renderArea = area;
         if (req.originalUrl.split("/").filter(Boolean).length == 3) {
@@ -86,7 +91,7 @@ app.get("/getPaging", (req, res, next) => {
     }
 });
 
-app.use("/customer", require("./routes/customerRoute"));
+app.use("/", require("./routes/customerRoute"));
 app.use("/:area/:controller/:action", require("./routes/route"));
 
 app.all("*", (req, res, next) => {

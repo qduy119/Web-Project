@@ -2,7 +2,7 @@
     <div class="row px-xl-5">
         <div class="col-12">
             <nav class="breadcrumb bg-light mb-30">
-                <a class="breadcrumb-item text-dark" href="/customer/homepage"
+                <a class="breadcrumb-item text-dark" href="/"
                     >Home</a
                 >
                 <span class="breadcrumb-item active"><%= product.title %></span>
@@ -119,11 +119,11 @@
                         <input
                             type="text"
                             class="form-control bg-secondary border-0 text-center"
-                            value="1"
+                            value="<%= product.stock === 0 ? 0 : 1 %>"
                             id="product-quantity"
                             name="product-quantity"
                             max="<%= product.stock %>"
-                            min="1"
+                            min="<%= product.stock === 0 ? 0 : 1 %>"
                         />
                         <div class="input-group-btn">
                             <button
@@ -167,7 +167,7 @@
                         <div class="product-action">
                             <a
                                 class="btn btn-outline-dark btn-square"
-                                href="/customer/product/<%= product.id %>"
+                                href="/product/<%= product.id %>"
                                 ><i class="fa fa-eye"></i
                             ></a>
                         </div>
@@ -216,6 +216,14 @@
         } else {
             const productId = $(this).data("productid");
             const quantityInput = $("#product-quantity");
+            if (
+                +quantityInput.val() < +quantityInput.attr("min") ||
+                +quantityInput.val() > +quantityInput.attr("max") ||
+                +quantityInput.val() === 0
+            ) {
+                $(".invalid-quantity").removeClass("hidden");
+                return;
+            }
             const quantity = +quantityInput.val();
             if (!Number.isInteger(quantity)) {
                 $(".invalid-quantity").removeClass("hidden");
@@ -231,11 +239,14 @@
                 "max",
                 +quantityInput.attr("max") - +quantityInput.val()
             );
-            await privateAxios().post("/customer/api/cart", {
+            if (+quantityInput.attr("max") === 0) {
+                quantityInput.attr("min", 0);
+            }
+            await privateAxios().post("/api/cart", {
                 quantity,
                 productId,
             });
-            const res = await privateAxios().get("/customer/api/cart");
+            const res = await privateAxios().get("/api/cart");
             const { items } = res.data;
             $(".cart-badge").html(items.length);
 
@@ -244,7 +255,7 @@
                 bootstrap.Toast.getOrCreateInstance(toastLiveExample);
             toastBootstrap.show();
 
-            await privateAxios().put("/customer/api/product", {
+            await privateAxios().put("/api/product", {
                 quantity: -quantity,
                 id: productId,
             });
