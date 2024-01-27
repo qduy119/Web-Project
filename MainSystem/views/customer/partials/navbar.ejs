@@ -20,7 +20,7 @@
                 <div class="navbar-nav w-100">
                     <% categories.forEach(category => { %>
                     <a
-                        href="/customer/category/<%= category.id %>"
+                        href="/category/<%= category.id %>"
                         class="nav-item nav-link"
                         ><%= category.title %></a
                     >
@@ -31,7 +31,7 @@
         <div class="col-lg-9">
             <nav class="navbar navbar-expand-lg bg-dark navbar-dark py-0">
                 <a
-                    href="/customer/homepage"
+                    href="/"
                     class="text-decoration-none d-block d-lg-none"
                 >
                     <span class="h1 text-uppercase text-primary bg-dark px-2"
@@ -52,13 +52,13 @@
                 >
                     <div class="navbar-nav mr-auto py-0">
                         <a
-                            href="/customer/homepage"
+                            href="/"
                             class="nav-item nav-link active"
                             >Home</a
                         >
                     </div>
                     <div class="navbar-nav ml-auto py-0 d-none d-lg-block">
-                        <a href="/customer/cart" class="btn px-0 ml-3">
+                        <a href="/cart" class="btn px-0 ml-3">
                             <i class="fas fa-shopping-cart text-primary"></i>
                             <span
                                 class="badge text-secondary border border-secondary rounded-circle cart-badge"
@@ -90,7 +90,7 @@
                         <div class="navbar-nav w-100">
                             <% categories.forEach(category => { %>
                             <a
-                                href="/customer/category/<%= category.id %>"
+                                href="/category/<%= category.id %>"
                                 class="nav-item nav-link"
                                 ><%= category.title %></a
                             >
@@ -99,7 +99,7 @@
                     </nav>
                 </div>
                 <form
-                    action="/customer/homepage"
+                    action="/"
                     class="form-lg-search mt-3 d-block d-lg-none"
                 >
                     <div class="input-group">

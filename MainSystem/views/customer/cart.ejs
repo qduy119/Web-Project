@@ -2,7 +2,7 @@
     <div class="row px-xl-5">
         <div class="col-12">
             <nav class="breadcrumb bg-light mb-30">
-                <a class="breadcrumb-item text-dark" href="/customer/homepage"
+                <a class="breadcrumb-item text-dark" href="/"
                     >Home</a
                 >
                 <span class="breadcrumb-item active">My Cart</span>
@@ -139,7 +139,7 @@
 
         if (+itemQuantity.val() > +itemQuantity.attr("min")) {
             itemQuantity.val(+itemQuantity.val() - 1);
-            await privateAxios().put("/customer/api/cart", {
+            await privateAxios().put("/api/cart", {
                 quantity: -1,
                 id: item.id,
             });
@@ -148,7 +148,7 @@
                 .html(`$${(+itemQuantity.val() * (item.product.price * 0.01 * (100 - item.product.discountPercentage)).toFixed(2)).toFixed(2)}`);
             itemQuantity.attr("max", +itemQuantity.attr("max") + 1);
 
-            await privateAxios().put("/customer/api/product", {
+            await privateAxios().put("/api/product", {
                 quantity: 1,
                 id: item.product.id,
             });
@@ -164,7 +164,7 @@
 
         if (+itemQuantity.attr("max") > 0) {
             itemQuantity.val(+itemQuantity.val() + 1);
-            await privateAxios().put("/customer/api/cart", {
+            await privateAxios().put("/api/cart", {
                 quantity: 1,
                 id: item.id,
             });
@@ -173,7 +173,7 @@
                 .html(`$${(+itemQuantity.val() * (item.product.price * 0.01 * (100 - item.product.discountPercentage)).toFixed(2)).toFixed(2)}`);
             itemQuantity.attr("max", +itemQuantity.attr("max") - 1);
 
-            await privateAxios().put("/customer/api/product", {
+            await privateAxios().put("/api/product", {
                 quantity: -1,
                 id: item.product.id,
             });
@@ -185,7 +185,7 @@
         const item = container.data("item");
         const selectInput = container.find('input[name="cart-select"]');
 
-        await privateAxios().delete(`/customer/api/cart/${item.id}`);
+        await privateAxios().delete(`/api/cart/${item.id}`);
         if (selectInput.prop("checked")) {
             const itemSelectedTotal = +(item.quantity * (item.product.price * 0.01 * (100 - item.product.discountPercentage)).toFixed(2)).toFixed(2);
             const subtotal = (+$(".subtotal").html() - itemSelectedTotal).toFixed(2);
@@ -196,11 +196,11 @@
         const toastBootstrap =
             bootstrap.Toast.getOrCreateInstance(toastLiveExample);
         toastBootstrap.show();
-        const res = await privateAxios().get("/customer/api/cart");
+        const res = await privateAxios().get("/api/cart");
         const { items } = res.data;
         $(".cart-badge").html(items.length);
 
-        await privateAxios().put("/customer/api/product", {
+        await privateAxios().put("/api/product", {
             quantity: item.quantity,
             id: item.product.id,
         });
@@ -237,10 +237,10 @@
             })
             .get();
         if (selectedItems.length > 0) {
-            await privateAxios().post("/customer/api/checkout", {
+            await privateAxios().post("/api/checkout", {
                 selectedItems,
             });
-            window.location.href = "/customer/checkout";
+            window.location.href = "/checkout";
         }
     });
 </script>
