@@ -95,20 +95,24 @@
             const { message } = await res.json();
             $(".error-login").html(message);
         } else {
-            const { token, id } = await res.json();
+            const { token, id, role } = await res.json();
             localStorage.setItem("accessToken", token);
-            try {
-                await fetch("https://localhost:8080/authen-system", {
-                    method: "post",
-                    headers: {
-                        "Content-type": "application/json",
-                    },
-                    body: JSON.stringify({ id }),
-                    credentials: "include",
-                });
-                window.location.href = "/";
-            } catch (error) {
-                console.log(error);
+            if (role === "admin") {
+                window.location.href = "/admin/statistic/index";
+            } else if (role === "customer") {
+                try {
+                    await fetch("https://localhost:8080/authen-system", {
+                        method: "post",
+                        headers: {
+                            "Content-type": "application/json",
+                        },
+                        body: JSON.stringify({ id }),
+                        credentials: "include",
+                    });
+                    window.location.href = "/";
+                } catch (error) {
+                    console.log(error);
+                }
             }
         }
     });
