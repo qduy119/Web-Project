@@ -7,7 +7,7 @@ const protect = async (req, res, next) => {
         req.headers.authorization &&
         req.headers.authorization.startsWith("Bearer")
     ) {
-        if(req.headers.authorization.split(" ")[1] === "null") {
+        if (req.headers.authorization.split(" ")[1] === "null") {
             token = null;
         } else {
             token = req.headers.authorization.split(" ")[1];
@@ -43,7 +43,7 @@ const restrictTo =
     (...roles) =>
     (req, res, next) => {
         if (!roles.includes(req.session?.user?.role)) {
-            res.render("notallow", { layout: false });
+            return res.render("auth/notallow", { layout: false });
         }
         next();
     };
