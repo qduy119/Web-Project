@@ -162,7 +162,7 @@
         if (selectInput.prop("checked")) return;
         const item = container.data("item");
 
-        if (+itemQuantity.val() < +itemQuantity.attr("max")) {
+        if (+itemQuantity.attr("max") > 0) {
             itemQuantity.val(+itemQuantity.val() + 1);
             await privateAxios().put("/customer/api/cart", {
                 quantity: 1,
@@ -188,7 +188,7 @@
         await privateAxios().delete(`/customer/api/cart/${item.id}`);
         if (selectInput.prop("checked")) {
             const itemSelectedTotal = +(item.quantity * (item.product.price * 0.01 * (100 - item.product.discountPercentage)).toFixed(2)).toFixed(2);
-            const subtotal = +$(".subtotal").html() - itemSelectedTotal;
+            const subtotal = (+$(".subtotal").html() - itemSelectedTotal).toFixed(2);
             $(".subtotal").html(subtotal);
             $(".total").html(subtotal);
         }
@@ -216,9 +216,9 @@
 
         let subtotal = 0;
         if ($(this).prop("checked")) {
-            subtotal = +$(".subtotal").html() + itemSelectedTotal;
+            subtotal = (+$(".subtotal").html() + itemSelectedTotal).toFixed(2);
         } else {
-            subtotal = +$(".subtotal").html() - itemSelectedTotal;
+            subtotal = (+$(".subtotal").html() - itemSelectedTotal).toFixed(2);
         }
         $(".subtotal").html(subtotal);
         $(".total").html(subtotal);

@@ -6,8 +6,9 @@ const PaymentModel = require("../models/PaymentModel.js");
 module.exports = class HistoryTransferController {
 
     static getTransactionUser = async (req, res) => {
-        let idUser = req.query.id;
-
+        let id = req.query.id;
+        let data = await HistoryTransferModel.getListTransaction(id);
+        res.json(data);
     }
 
     static handlePostDetailTransaction = async (req, res) => {
@@ -17,6 +18,7 @@ module.exports = class HistoryTransferController {
     }
 
     static handleDetailTransaction = async (req, res) => {
+        console.log("id transaction => ", req.query.id);
         const id = req.query.id;
         res.render("detailTransaction", {id : id})
     }

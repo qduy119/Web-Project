@@ -38,13 +38,15 @@
                             type="button">Detail</button></td>
             </tr>
         `
+        $("#contentTransaction").html(strRenderListTransaction)
     }
 
     let listBtnViewDetailTransaction = $(".viewDetailTransaction");
     for(let i = 0 ; i < listBtnViewDetailTransaction.length; i++) {
         const item = listBtnViewDetailTransaction.eq(i);
         item.click(() => {
-            let idTran = item.prev().prev().prev().text();
+            let idTran = item.parent().prev().prev().prev().text();
+            
             location.href = `/detail-transaction?id=${idTran}`
         })
     }   

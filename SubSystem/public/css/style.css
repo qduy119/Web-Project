@@ -1,307 +1,349 @@
 .headerDecor {
-      border-top-right-radius: 3px;
-      border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    border-top-left-radius: 3px;
 }
 
 .navbarContent {
-      padding: 2px;
-      margin-top: 2px;
-      background-color: black;
-      border-radius: 3px;
-      border: solid 1px rgb(219, 211, 211);
+    padding: 2px;
+    margin-top: 2px;
+    background-color: black;
+    border-radius: 3px;
+    border: solid 1px rgb(219, 211, 211);
 }
 
 .bodyContent {
-      height: 100%;
-      margin-top: 2px;
-      background-color:  rgba(238, 238, 238, 0);
-      border-radius:  3px;
-      padding: 0;
-      padding-left: 2px;
+    height: 100%;
+    margin-top: 2px;
+    background-color: rgba(238, 238, 238, 0);
+    border-radius: 3px;
+    padding: 0;
+    padding-left: 2px;
 }
 
-.footerDecor{ 
-      height: 3rem;
-      margin-top: 4px;
-      border-bottom-left-radius: 3px;
-      border-bottom-right-radius: 3px;
-      color: brown;
-      text-align: center;
-      font-size: 30px;
-      margin-bottom: 2px;
+.footerDecor {
+    height: 3rem;
+    margin-top: 4px;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+    color: brown;
+    text-align: center;
+    font-size: 30px;
+    margin-bottom: 2px;
 }
 
 .chart-container {
-      width: 50%;
-      height: 50%;
-      margin: auto;
-    }
+    width: 50%;
+    height: 50%;
+    margin: auto;
+}
 
 /* Import Google font - Poppins */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
-*{
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Poppins', sans-serif;
-}
-.wrapper{
-      background-color: #dfeced;
-      border-radius: 10px;
-      box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
 }
 
-.icons span:last-child{
-      margin-right: -10px;
+.wrapper {
+    background-color: #dfeced;
+    border-radius: 10px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
 }
 
-.calendar{
-      padding: 2px;
+.icons span:last-child {
+    margin-right: -10px;
 }
 
-.calendar ul{
-      display: flex;
-      flex-wrap: wrap;
-      list-style: none;
-      text-align: center;
+.calendar {
+    padding: 2px;
 }
-.calendar .days{
-      margin-bottom: 20px;
+
+.calendar ul {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    text-align: center;
 }
-.calendar li{
-      color: #4b0505;
-      width: calc(100% / 7);
-      font-size: 1.07rem;
+
+.calendar .days {
+    margin-bottom: 20px;
 }
-.calendar .weeks li{
-      font-weight: 500;
-      cursor: default;
+
+.calendar li {
+    color: #4b0505;
+    width: calc(100% / 7);
+    font-size: 1.07rem;
 }
-.calendar .days li{
-      z-index: 1;
-      cursor: pointer;
-      position: relative;
-      margin-top: 30px;
+
+.calendar .weeks li {
+    font-weight: 500;
+    cursor: default;
 }
-.days li.inactive{
-      color: #846161;
+
+.calendar .days li {
+    z-index: 1;
+    cursor: pointer;
+    position: relative;
+    margin-top: 30px;
 }
-.days li.active{
-      color: #530707;
+
+.days li.inactive {
+    color: #846161;
 }
-.days li::before{
-      position: absolute;
-      content: "";
-      left: 50%;
-      top: 50%;
-      height: 40px;
-      width: 40px;
-      z-index: -1;
-      border-radius: 50%;
-      transform: translate(-50%, -50%);
+
+.days li.active {
+    color: #530707;
 }
-.days li.active::before{
-      background: #1174e4;
+
+.days li::before {
+    position: absolute;
+    content: "";
+    left: 50%;
+    top: 50%;
+    height: 40px;
+    width: 40px;
+    z-index: -1;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
 }
-.days li:not(.active):hover::before{
-      background: #f2f2f2;
+
+.days li.active::before {
+    background: #1174e4;
 }
-.icons:hover{
-      cursor: pointer;
+
+.days li:not(.active):hover::before {
+    background: #f2f2f2;
+}
+
+.icons:hover {
+    cursor: pointer;
 }
 
 /* table decoration */
-.text-white{
-      color: antiquewhite;
+.text-white {
+    color: antiquewhite;
 }
 
-#contentTableInListUser{
-      height: 100px;
-      overflow-y:auto;
+#contentTableInListUser {
+    height: 100px;
+    overflow-y: auto;
 }
 
-.title{
-      color: rgb(0, 132, 255)
+.title {
+    color: rgb(0, 132, 255)
 }
 
 /* decoration list admin */
-.decorListAdmin{
-      border-radius: 4px;
-      margin-bottom: 4px;
-      padding: 1px;
+.decorListAdmin {
+    border-radius: 4px;
+    margin-bottom: 4px;
+    padding: 1px;
 }
 
-.decorListAdmin:hover{
-      cursor: pointer;
+.decorListAdmin:hover {
+    cursor: pointer;
 }
 
 .detailUser {
-      border: solid 1px rgb(227, 221, 221);
-      border-radius: 3px;
-      padding: 2px;
+    border: solid 1px rgb(227, 221, 221);
+    border-radius: 3px;
+    padding: 2px;
 }
 
-.backgroundDecor{
-      background-color: rgb(232, 243, 241);
+.backgroundDecor {
+    background-color: rgb(232, 243, 241);
 }
 
-.removePadding{
-      padding: 0;
+.removePadding {
+    padding: 0;
 }
 
 /*  */
-.Hidden{
-      display: none;
+.Hidden {
+    display: none;
 }
 
-.hoverClass:hover{
-      cursor: pointer;
+.hoverClass:hover {
+    cursor: pointer;
 }
 
 /* =============================form log in ========================== */
 /* Full-width input fields */
-input[type=text], input[type=password] {
-      width: 100%;
-      padding: 12px 20px;
-      margin: 8px 0;
-      display: inline-block;
-      border: 1px solid #ccc;
-      box-sizing: border-box;
+input[type=text],
+input[type=password] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
 }
-    
-    /* Set a style for all buttons */
+
+/* Set a style for all buttons */
 button {
-      background-color: #04AA6D;
-      color: white;
-      padding: 14px 20px;
-      margin: 8px 0;
-      border: none;
-      cursor: pointer;
-      width: 100%;
+    background-color: #04AA6D;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
 }
-    
+
 button:hover {
-      opacity: 0.8;
+    opacity: 0.8;
 }
-    
-    /* Extra styles for the cancel button */
+
+/* Extra styles for the cancel button */
 .cancelbtn {
-      width: auto;
-      padding: 10px 18px;
-      background-color: #f44336;
+    width: auto;
+    padding: 10px 18px;
+    background-color: #f44336;
 }
-    
-    /* Center the image and position the close button */
+
+/* Center the image and position the close button */
 .imgcontainer {
-      text-align: center;
-      margin: 24px 0 12px 0;
-      position: relative;
+    text-align: center;
+    margin: 24px 0 12px 0;
+    position: relative;
 }
-    
+
 img.avatar {
-      width: 40%;
-      border-radius: 50%;
+    width: 40%;
+    border-radius: 50%;
 }
-    
+
 .container {
-      padding: 16px;
+    padding: 16px;
 }
-    
+
 span.psw {
-      float: right;
-      padding-top: 16px;
+    float: right;
+    padding-top: 16px;
 }
-    
-    /* The Modal (background) */
+
+/* The Modal (background) */
 .modal {
-      display: none; /* Hidden by default */
-      position: fixed; /* Stay in place */
-      z-index: 1; /* Sit on top */
-      left: 0;
-      top: 0;
-      width: 100%; /* Full width */
-      height: 100%; /* Full height */
-      overflow: auto; /* Enable scroll if needed */
-      background-color: rgb(0,0,0); /* Fallback color */
-      background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-      padding-top: 60px;
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    /* Stay in place */
+    z-index: 1;
+    /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%;
+    /* Full width */
+    height: 100%;
+    /* Full height */
+    overflow: auto;
+    /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0);
+    /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4);
+    /* Black w/ opacity */
+    padding-top: 60px;
 }
-    
-    /* Modal Content/Box */
+
+/* Modal Content/Box */
 .modal-content {
-      background-color: #fefefe;
-      margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
-      border: 1px solid #888;
-      width: 80%; /* Could be more or less, depending on screen size */
+    background-color: #fefefe;
+    margin: 5% auto 15% auto;
+    /* 5% from the top, 15% from the bottom and centered */
+    border: 1px solid #888;
+    width: 80%;
+    /* Could be more or less, depending on screen size */
 }
-    
-    /* The Close Button (x) */
+
+/* The Close Button (x) */
 .close {
-      position: absolute;
-      right: 25px;
-      top: 0;
-      color: #000;
-      font-size: 35px;
-      font-weight: bold;
+    position: absolute;
+    right: 25px;
+    top: 0;
+    color: #000;
+    font-size: 35px;
+    font-weight: bold;
 }
-    
+
 .close:hover,
 .close:focus {
-      color: red;
-      cursor: pointer;
+    color: red;
+    cursor: pointer;
 }
-    
-    /* Add Zoom Animation */
+
+/* Add Zoom Animation */
 .animate {
-      -webkit-animation: animatezoom 0.6s;
-      animation: animatezoom 0.6s
+    -webkit-animation: animatezoom 0.6s;
+    animation: animatezoom 0.6s
 }
-    
+
 @-webkit-keyframes animatezoom {
-      from {-webkit-transform: scale(0)} 
-      to {-webkit-transform: scale(1)}
+    from {
+        -webkit-transform: scale(0)
+    }
+
+    to {
+        -webkit-transform: scale(1)
+    }
 }
-      
+
 @keyframes animatezoom {
-      from {transform: scale(0)} 
-      to {transform: scale(1)}
+    from {
+        transform: scale(0)
+    }
+
+    to {
+        transform: scale(1)
+    }
 }
-    
-    /* Change styles for span and cancel button on extra small screens */
+
+/* Change styles for span and cancel button on extra small screens */
 @media screen and (max-width: 300px) {
-      span.psw {
-            display: block;
-            float: none;
-      }
-      .cancelbtn {
-            width: 100%;
-      }
+    span.psw {
+        display: block;
+        float: none;
+    }
+
+    .cancelbtn {
+        width: 100%;
+    }
 }
 
 img.avatar {
-      width: 10%;
-      height: 40px;
-      border-radius: 50%;
-  }
+    width: 10%;
+    height: 40px;
+    border-radius: 50%;
+}
 
-#inforAdminHeader{
-      border-radius: 2px;
-      background-color: #f9f4f4;
+#inforAdminHeader {
+    border-radius: 2px;
+    background-color: #f9f4f4;
 }
 
 .itemNavbar {
-     padding: 3px;
-     padding-left: 7px;
+    padding: 3px;
+    padding-left: 7px;
 }
 
-.decorItemNavbar{
-      border-radius: 3px;
-      box-sizing: border-box;
-      margin-left: 3px;
-      padding-left: 8px;
-      background-color: #ccc;
+.decorItemNavbar {
+    border-radius: 3px;
+    box-sizing: border-box;
+    margin-left: 3px;
+    padding-left: 8px;
+    background-color: #ccc;
 }
-.decorItemNavbar:hover{
-      cursor: pointer;
-      background-color: #d4baba;
+
+.decorItemNavbar:hover {
+    cursor: pointer;
+    background-color: #d4baba;
+}
+
+.detailTransaction {
+    margin-left: 2px;
+    border-radius : 2px;
+    border : solid rgb(149, 134, 134) 1px;
+    padding: 3px;
 }

@@ -1,3 +1,23 @@
 <div class = "detailTransaction" id = {{id}}>
 
 </div>
+<script type = "module">
+    let id = $(".detailTransaction").attr("id").trim();
+    let res = await fetch(`/detail-transaction`, {
+        method: "POST", // or 'PUT'
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({id : id}),
+    });
+    let data = await res.json();
+    console.log("data => ", data)
+    let strRender = ""
+    strRender += `
+        <div><b>Id : </b> ${data.id}</div>
+        <div><b>Ngày giao dịch : </b> ${data.dateTransfer.slice(0, 10)}</div>
+        <div><b>Tiền giao dịch : </b> $ ${data.amount}</div>
+        <div><b>Số tiền sau giao dịch: </b>$ ${data.balanceAfterTransfer}</div>
+    `
+    $(".detailTransaction").html(strRender);
+</script>

@@ -1,29 +1,22 @@
+const jwt = require("jsonwebtoken");
+
 const authenSystem = (req, res, next) => {
-    const token = req.cookies["jwt"];
+    const token = req.cookies["token"];
     if (!token) {
-        res.sendStatus(401);//chua dang nhap
+        res.status(401).json({ status: 401 }); //chua dang nhap
         return;
-    }; //authorize
+    } //authorize
 
     jwt.verify(token, process.env.SUBSYTEM_SECRET_KEY_TOKEN, (err, data) => {
         if (err) {
-            res.sendStatus(403);//forbidden     
-            return;
-        }
-        else {
-            jwt.verify(req.cookies.tokenuser, process.env.SUBSYTEM_SECRET_KEY_TOKEN, (error , da) => {
-                if(error){
-                    res.sendStatus(403);
-                    return;
-                }
-                else if(da.id !== data.id){
-                    res.sendStatus(403);
-                    return;
-                }
-            })
+            res.status(403).json({ status: 403 }); //forbidden
+        } else {
+            if(data.id !== req.body.userId) {
+                return res.status(403).json({ status: 403 });
+            }
             next();
         }
     });
-}
+};
 
 module.exports = authenSystem;

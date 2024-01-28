@@ -119,11 +119,11 @@
                         <input
                             type="text"
                             class="form-control bg-secondary border-0 text-center"
-                            value="1"
+                            value="<%= product.stock === 0 ? 0 : 1 %>"
                             id="product-quantity"
                             name="product-quantity"
                             max="<%= product.stock %>"
-                            min="1"
+                            min="<%= product.stock === 0 ? 0 : 1 %>"
                         />
                         <div class="input-group-btn">
                             <button
@@ -216,6 +216,14 @@
         } else {
             const productId = $(this).data("productid");
             const quantityInput = $("#product-quantity");
+            if (
+                +quantityInput.val() < +quantityInput.attr("min") ||
+                +quantityInput.val() > +quantityInput.attr("max") ||
+                +quantityInput.val() === 0
+            ) {
+                $(".invalid-quantity").removeClass("hidden");
+                return;
+            }
             const quantity = +quantityInput.val();
             if (!Number.isInteger(quantity)) {
                 $(".invalid-quantity").removeClass("hidden");
@@ -231,6 +239,9 @@
                 "max",
                 +quantityInput.attr("max") - +quantityInput.val()
             );
+            if (+quantityInput.attr("max") === 0) {
+                quantityInput.attr("min", 0);
+            }
             await privateAxios().post("/customer/api/cart", {
                 quantity,
                 productId,
