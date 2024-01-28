@@ -264,7 +264,7 @@
       return x;
     })
       .filter(x => {
-        return x.orderDate < curDate && x.orderDate > dateInThePass;
+        return x.orderDate < curDate && x.orderDate > dateInThePass && x.status === "Success";
       }).sort((a, b) => a.orderDate - b.orderDate);
 
     let revenues = [];
@@ -272,20 +272,25 @@
     const dateString = [];
     const tempDate = new Date(dateInThePass);
     while (tempDate < curDate) {
-      if (i < orders.length && areDatesEqual(orders[i].orderDate, tempDate)) {
-        revenues.push(orders[i].totalPrice);
+      // if (i < orders.length && areDatesEqual(orders[i].orderDate, tempDate)) {
+      //   revenues.push(orders[i].totalPrice);
+      //   i++;
+      // } else {
+      //   revenues.push(0);
+      // }
+      let totalPriceInOneDay = 0;
+      while(i < orders.length && areDatesEqual(orders[i].orderDate, tempDate)) {
+        totalPriceInOneDay += orders[i].totalPrice;
         i++;
-      } else {
-        revenues.push(0);
       }
+      revenues.push(+totalPriceInOneDay.toFixed(2));
 
 
       dateString.push(formatDate(tempDate));
       tempDate.setDate(tempDate.getDate() + 1);
     }
-
     const chart = document.getElementById(chartId);
-    chart.querySelector('#totalRevenue').innerHTML = `Total: ${revenues.reduce((total, x) => total += x, 0)} $`;
+    chart.querySelector('#totalRevenue').innerHTML = `Total: ${revenues.reduce((total, x) => total += x, 0).toFixed(2)} $`;
 
 
     // ApexCharts options and config

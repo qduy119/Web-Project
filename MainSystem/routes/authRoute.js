@@ -43,7 +43,7 @@ router
 
 router
     .route("/logout")
-    .get(protect, restrictTo("customer"), authController.logout);
+    .get(protect, restrictTo("customer", "admin"), authController.logout);
 
 router.route("/refresh").get(authController.requestRefreshToken);
 
