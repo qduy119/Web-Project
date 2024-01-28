@@ -23,7 +23,7 @@
                 <i class="fa fa-chart-area fa-3x text-primary "></i>
                 <div class="ms-3">
                     <p class="mb-2"><b>Today Revenue</b></p>
-                    <h6 class="mb-0 title" id="todayRevenue"><b>$1234</b></h6>
+                    <h6 class="mb-0 title" id="todayRevenue"></h6>
                 </div>
             </div>
         </div>
@@ -32,7 +32,7 @@
                 <i class="fa fa-chart-pie fa-3x text-primary "></i>
                 <div class="ms-3">
                     <p class="mb-2"><b>Total Revenue</b></p>
-                    <h6 class="mb-0 title" id="totalRevenue"><b>$1234</b></h6>
+                    <h6 class="mb-0 title" id="totalRevenue"></h6>
                 </div>
             </div>
         </div>
@@ -42,10 +42,12 @@
 <script type="module">
     const resTotalRevenue = await fetch("/get-all-revenue");
     const dataTotalRevenue = await resTotalRevenue.json();
-    $("#totalRevenue").html(`<b>$ ${dataTotalRevenue.revenue ? dataTodayRevenue.revenue : 0}</b>`)
+    console.log("total revenue => ", dataTotalRevenue)
+    $("#totalRevenue").html(`<b>$ ${dataTotalRevenue.revenue ? dataTotalRevenue .revenue : 0}</b>`)
 
     const resTodayRevenue = await fetch("/get-today-revenue");
     const dataTodayRevenue = await resTodayRevenue.json();
+    console.log("today revenue => ", dataTodayRevenue)
     if (dataTodayRevenue.length !== 0) {
         $("#todayRevenue").html(`<b>$ ${dataTodayRevenue[0].revenue ? dataTodayRevenue[0].revenue : 0}</b>`)
     }

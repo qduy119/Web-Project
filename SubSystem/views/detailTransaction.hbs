@@ -14,10 +14,11 @@
     console.log("data => ", data)
     let strRender = ""
     strRender += `
-        <div><b>Id : </b> ${data.id}</div>
-        <div><b>Ngày giao dịch : </b> ${data.dateTransfer.slice(0, 10)}</div>
-        <div><b>Tiền giao dịch : </b> $ ${data.amount}</div>
-        <div><b>Số tiền sau giao dịch: </b>$ ${data.balanceAfterTransfer}</div>
+        <h1 style = "text-align : center; background-color : rgb(149, 134, 134); color : #ccc">CHI TIẾT GIAO DỊCH</h1>
+        <h5><b>Id                   : </b> ${data.id}</h5>
+        <h5><b>Ngày giao dịch       : </b> ${data.dateTransfer.slice(0, 10)}</h5>
+        <h5><b>Tiền giao dịch       : $ ${data.amount} </b></h5>
+        <h5><b>Số tiền sau giao dịch: $ ${data.balanceAfterTransfer}</b></h5>
     `
     $(".detailTransaction").html(strRender);
 </script>

@@ -346,4 +346,5 @@ img.avatar {
     border-radius : 2px;
     border : solid rgb(149, 134, 134) 1px;
     padding: 3px;
+    height : 480px;
 }
