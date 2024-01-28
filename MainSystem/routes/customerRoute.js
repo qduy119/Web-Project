@@ -10,7 +10,7 @@ const paymentController = require("../controllers/customer/paymentController");
 const checkoutController = require("../controllers/customer/checkoutController");
 const { protect, restrictTo } = require("../middleware/auth");
 
-router.route("/homepage").get(mainController.home);
+router.route("/").get(mainController.home);
 router.route("/category/:id").get(categoryController.category);
 router.route("/product/:id").get(productController.product);
 
@@ -24,7 +24,6 @@ router.use((req, res, next) => {
 router.route("/cart").get(cartController.cart);
 router.route("/order").get(orderController.order);
 router.route("/checkout").get(checkoutController.checkout);
-router.route("/payment").get(paymentController.payment);
 
 // router.use(protect);
 // router.use(restrictTo("customer"));

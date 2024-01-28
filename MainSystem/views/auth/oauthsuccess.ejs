@@ -66,7 +66,7 @@
                             credentials: "include",
                         });
                         setTimeout(() => {
-                            window.location.href = "/customer/homepage";
+                            window.location.href = "/";
                         }, 1000);
                     } catch (error) {
                         console.log(error);
@@ -75,9 +75,6 @@
                     $(".error-login").html("Lỗi xác thực");
                 }
             })();
-            setTimeout(() => {
-                window.location.href = "/customer/homepage"; // comment here
-            }, 1000);
         </script>
     </body>
 </html>

@@ -89,7 +89,7 @@ exports.handleAuthentication =
                 const token = accessToken(user);
                 sendRefreshToken(res, user);
 
-                return res.status(200).json({ token, id: user.id });
+                return res.status(200).json({ token, id: user.id, role: user.role });
             });
         } catch (error) {
             next(error);

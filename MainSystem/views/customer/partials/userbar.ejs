@@ -14,7 +14,7 @@
     </div>
     <ul class="dropdown-menu dropdown-menu-end">
         <li>
-            <a class="dropdown-item" href="/customer/order">Đơn hàng của tôi</a>
+            <a class="dropdown-item" href="/order">Đơn hàng của tôi</a>
         </li>
         <li><a class="dropdown-item logout" href="/logout">Đăng xuất</a></li>
     </ul>
@@ -27,6 +27,6 @@
             withCredentials: true,
         });
         localStorage.removeItem("accessToken");
-        window.location.href = "/customer/homepage";
+        window.location.href = "/";
     });
 </script>

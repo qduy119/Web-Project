@@ -1,5 +1,5 @@
 const { Op } = require("sequelize");
-const { Category, Product, CartDetail } = require("../../models");
+const { Category, Product, CartDetail, sequelize } = require("../../models");
 
 exports.home = async (req, res, next) => {
     try {
@@ -12,6 +12,7 @@ exports.home = async (req, res, next) => {
         };
         const { page = 1, range = "", query = "" } = req.query;
         const limit = 12;
+        const defaultRange = [0, 2147483647];
 
         const categories = await Category.findAll();
         const nCart = await CartDetail.count({
@@ -22,9 +23,11 @@ exports.home = async (req, res, next) => {
                 title: {
                     [Op.iLike]: `%${query}%`,
                 },
-                price: {
-                    [Op.between]: hashRange[range] ?? [0, 2147483647],
-                },
+                [Op.and]: sequelize.literal(
+                    `"price" * (1 - "discountPercentage" * 0.01) BETWEEN ${
+                        hashRange[range]?.[0] || defaultRange[0]
+                    } AND ${hashRange[range]?.[1] || defaultRange[1]}`
+                ),
             },
             offset: (page - 1) * limit,
             limit,
