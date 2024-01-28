@@ -44,6 +44,7 @@ router
 router
     .route("/logout")
     .get(protect, restrictTo("customer"), authController.logout);
+
 router.route("/refresh").get(authController.requestRefreshToken);
 
 router.route("/oauth-success").get(authController.authSuccessView);

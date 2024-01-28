@@ -190,14 +190,7 @@
                 <label for="role" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Vai trò</label>
                 <input disabled type="text" name="role" id="role" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required="">
             </div>
-            <div class="col-span-2">
-                <label for="gender" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Giới tính</label>
-                <input disabled type="text" name="gender" id="gender" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required="">
-            </div>
-            <div class="col-span-2">
-                <label for="dob" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Ngày sinh</label>
-                <input disabled type="text" name="dob" id="dob" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required="">
-            </div>
+
         </div>
     </div>
 </div>
@@ -360,7 +353,7 @@
         const submitBtn = modal.querySelector('#submitBtn');
         submitBtn.addEventListener('click', () => {
 
-            const id = parseInt(closestRow.querySelectorAll('td')[0].innerText);
+            const id = closestRow.querySelectorAll('td')[0].innerText.trim();
 
             closestRow.parentNode.removeChild(closestRow);
 
@@ -376,20 +369,16 @@
     async function viewDetailsHandler(btn, e) {
         e.preventDefault();
         const closestRow = btn.closest('tr');
-        const id = parseInt(closestRow.querySelectorAll('td')[0].innerText);
+        const id = closestRow.querySelectorAll('td')[0].innerText.trim();
         const modal = document.getElementById('crud-modal');
 
         const data = (await GetData(`/admin/user/getUserById?id=${id}`)).data[0];
-        let gender = 'Khác';
-        if (data.role == 'nam') gender = 'Nam';
-        else if (data.role == 'nu') gender = 'Nữ';
+
 
         let role = 'Không rõ';
-        if (data.role == 'customer') gender = 'Khách hàng';
-        else if (data.role == 'admin') gender = 'Quản trị viên';
-        modal.querySelector('#role').value = role;
-        modal.querySelector('#gender').value = gender;
-        modal.querySelector('#dob').value = formatDate(data.dob);
+        if (data.role == 'customer') role = 'Khách hàng';
+        else if (data.role == 'admin') role = 'Quản trị viên';
+        modal.querySelector('#role').value = role;  
 
         modal.classList.remove('hidden');
         const closeBtn = modal.querySelector('#closeBtn');
@@ -397,12 +386,6 @@
             modal.classList.add('hidden');
         });
         
-    }
-
-    function formatDate(inputDate) {
-        const parts = inputDate.split("-");
-        const formattedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
-        return formattedDate;
     }
 
 </script>

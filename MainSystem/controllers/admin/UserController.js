@@ -4,9 +4,9 @@ const pageSize = 5;
 const cloudinary = require('cloudinary').v2;
 const Joi = require('joi');
 const { Op } = require("sequelize");
+const { v4: uuidv4 } = require("uuid");
 
 const schema = Joi.object({
-  id: Joi.number().required(),
   email: Joi.string().required().messages({
     'string.empty': 'Email không được để trống'
   }),
@@ -21,13 +21,7 @@ const schema = Joi.object({
   }),
   avatar: Joi.string().messages({
     'string.empty': 'Avartar không được để trống'
-  }),
-  gender: Joi.string().messages({
-    'string.empty': 'Gender không được để trống'
-  }),
-  dob: Joi.string().messages({
-    'string.empty': 'Dob không được để trống'
-  }),
+  })
 });
 
 class UserController {
@@ -39,7 +33,7 @@ class UserController {
         const count = (await User.findAll({
           where: {
             username: {
-              [Op.substring]: text    
+              [Op.iLike]: `%${text}%`    
             }
           }
         })).length;
@@ -47,7 +41,7 @@ class UserController {
         const users = await User.findAll({ 
           where: {
             username: {
-              [Op.substring]: text    
+              [Op.iLike]: `%${text}%`    
             }
           },
           limit: pageSize, 
@@ -69,7 +63,7 @@ class UserController {
         const count = (await User.findAll({
           where: {
             username: {
-              [Op.substring]: text    
+              [Op.iLike]: `%${text}%`    
             }
           }
         })).length;
@@ -80,7 +74,7 @@ class UserController {
             users = await User.findAll({ 
             where: {
               username: {
-                [Op.substring]: text    
+                [Op.iLike]: `%${text}%`    
               }
             },
             limit: count - (page - 1) * pageSize, 
@@ -91,7 +85,7 @@ class UserController {
           users = await User.findAll({
             where: {
               username: {
-                [Op.substring]: text    
+                [Op.iLike]: `%${text}%`    
               }
             }, 
             limit: pageSize, 
@@ -122,10 +116,11 @@ class UserController {
   async delete_POST(req, res, next) {
     try {
         const { id } = req.body;
+        console.log(id)
         await User.destroy({ where: {
           id: id
         }});
-        return;
+        return res.json({message: 'deleted successfully'});
     } catch (error) {
       next(error);
     }
@@ -143,15 +138,11 @@ class UserController {
     try {
         const { username, password, email, role, gender, dob } = req.body;
         const avatar = req.file;
-        const maxId = await User.max('id');
-        const value = schema.validate({
-          id: maxId + 1, 
+        const value = schema.validate({ 
           username: username, 
           password: password,
           email: email,
-          role: role,
-          gender: gender,
-          dob: dob
+          role: role
          });
         
         if (value.error) {
@@ -162,13 +153,11 @@ class UserController {
         
         
         const user = await User.create({
-          id: maxId + 1, 
+          id: uuidv4(),
           username: username, 
           password: password,
           email: email,
           role: role,
-          gender: gender,
-          dob: dob,
           avatar: avatar?.path
         });
         
@@ -193,13 +182,10 @@ class UserController {
       const { id, username, email, role, gender, dob } = req.body;
         const avatar = req.file;
         const value = schema.validate({
-          id: id, 
           password: 'xyz',
           username: username, 
           email: email,
-          role: role,
-          gender: gender,
-          dob: dob
+          role: role
          });
 
         
@@ -211,8 +197,6 @@ class UserController {
               username: username, 
               email: email,
               role: role,
-              gender: gender,
-              dob: dob,
               avatar: avatar?.path
             }, 
             errors: value.error.details 
@@ -225,8 +209,6 @@ class UserController {
               username: username, 
               email: email,
               role: role,
-              gender: gender,
-              dob: dob,
               avatar: avatar?.path
         }, { where: { id: id } });
 

@@ -285,7 +285,7 @@
     }
 
     const chart = document.getElementById(chartId);
-    chart.querySelector('#totalRevenue').innerHTML = `Total: ${revenues.reduce((total, x) => total += x, 0)} VNĐ`;
+    chart.querySelector('#totalRevenue').innerHTML = `Total: ${revenues.reduce((total, x) => total += x, 0)} $`;
 
 
     // ApexCharts options and config
@@ -317,7 +317,7 @@
             cssClass: 'text-xs font-normal fill-gray-500 dark:fill-gray-400'
           },
           formatter: function (value) {
-            return value + ' VNĐ';
+            return value + ' $';
           }
         },
         axisTicks: {

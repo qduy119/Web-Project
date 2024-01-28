@@ -24,7 +24,7 @@ class CategoryController {
         const count = (await Category.findAll({
           where: {
             title: {
-              [Op.substring]: text    
+              [Op.iLike]: `%${text}%`    
             }
           }
         })).length;
@@ -32,7 +32,7 @@ class CategoryController {
         const categories = await Category.findAll({ 
           where: {
             title: {
-              [Op.substring]: text    
+              [Op.iLike]: `%${text}%`    
             }
           },
           limit: pageSize, 
@@ -54,7 +54,7 @@ class CategoryController {
         const count = (await Category.findAll({
           where: {
             title: {
-              [Op.substring]: text    
+              [Op.iLike]: `%${text}%`    
             }
           }
         })).length;
@@ -65,7 +65,7 @@ class CategoryController {
           categories = await Category.findAll({ 
             where: {
               title: {
-                [Op.substring]: text    
+                [Op.iLike]: `%${text}%`    
               }
             },
             limit: count - (page - 1) * pageSize, 
@@ -76,7 +76,7 @@ class CategoryController {
           categories = await Category.findAll({
             where: {
               title: {
-                [Op.substring]: text    
+                [Op.iLike]: `%${text}%`    
               }
             }, 
             limit: pageSize, 

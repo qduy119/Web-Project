@@ -36,7 +36,7 @@ class ProductController {
         await Product.findAll({
           where: {
             title: {
-              [Op.substring]: text,
+              [Op.iLike]: `%${text}%`,
             },
             price: {
               [Op.between]: [priceFrom, priceTo],
@@ -48,7 +48,7 @@ class ProductController {
         await Product.findAll({
           where: {
             title: {
-              [Op.substring]: text,
+              [Op.iLike]: `%${text}%`,
             },
             price: {
               [Op.between]: [priceFrom, priceTo],
@@ -65,7 +65,7 @@ class ProductController {
       const products = cat == 0 ? await Product.findAll({
         where: {
           title: {
-            [Op.substring]: text,
+            [Op.iLike]: `%${text}%`,
           },
           price: {
             [Op.between]: [priceFrom, priceTo],
@@ -77,7 +77,7 @@ class ProductController {
       }) : await Product.findAll({
         where: {
           title: {
-            [Op.substring]: text,
+            [Op.iLike]: `%${text}%`,
           },
           price: {
             [Op.between]: [priceFrom, priceTo],
@@ -116,7 +116,7 @@ class ProductController {
         await Product.findAll({
           where: {
             title: {
-              [Op.substring]: text,
+              [Op.iLike]: `%${text}%`,
             },
             price: {
               [Op.between]: [priceFrom, priceTo],
@@ -127,7 +127,7 @@ class ProductController {
         await Product.findAll({
           where: {
             title: {
-              [Op.substring]: text,
+              [Op.iLike]: `%${text}%`,
             },
             price: {
               [Op.between]: [priceFrom, priceTo],
@@ -143,7 +143,7 @@ class ProductController {
         products = cat == 0 ? await Product.findAll({
           where: {
             title: {
-              [Op.substring]: text,
+              [Op.iLike]: `%${text}%`,
             },
             price: {
               [Op.between]: [priceFrom, priceTo],
@@ -155,7 +155,7 @@ class ProductController {
         }) : await Product.findAll({
           where: {
             title: {
-              [Op.substring]: text,
+              [Op.iLike]: `%${text}%`,
             },
             price: {
               [Op.between]: [priceFrom, priceTo],
@@ -170,7 +170,7 @@ class ProductController {
         products = cat == 0 ? await Product.findAll({
           where: {
             title: {
-              [Op.substring]: text,
+              [Op.iLike]: `%${text}%`,
             },
             price: {
               [Op.between]: [priceFrom, priceTo],
@@ -182,7 +182,7 @@ class ProductController {
         }) : await Product.findAll({
           where: {
             title: {
-              [Op.substring]: text,
+              [Op.iLike]: `%${text}%`,
             },
             price: {
               [Op.between]: [priceFrom, priceTo],
